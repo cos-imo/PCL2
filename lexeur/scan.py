@@ -1,17 +1,10 @@
 mots_cles = [
-    "if",
-    "else",
-    "while",
-    "for",
-    "int",
-    "float",
-    "char",
-    "void",
-    "return",
+    "access", "and", "begin", "else", "elsif", "end", "false", "for", "function", "if", "in", "is", "loop", "new", "not", "null", "or", "out", "procedure", "record", "rem", "return", "reverse", "then", "true", "type", "use", "while", "with"
 ]
 
+
 #Classe StringTab qui contient une chaine de caractère et lui associe son token
-class TableDeString:
+class StringTable:
     def __init__(self):
         self.mapping = {}  # Un dictionnaire pour stocker les associations chaîne de caractères -> token
 
@@ -24,10 +17,10 @@ class TableDeString:
         return self.mapping.get(chaine)
 
 
-tdc = TableDeString()
+st = StringTable()
 #On ajoute les mots clés dans notre table
 for mot_cle in mots_cles:
-    tdc.add_string(mot_cle, f"<{mot_cle}>")
+    st.add_string(mot_cle, f"<{mot_cle}>")
     
 
 
@@ -59,13 +52,13 @@ def scan_number(source_code, position):
 #Fonction qui permet de scanner les identifiants ou les mots clés
 def scan_identifier(source_code, position):
     buffer = ''
-    while position < len(source_code) and source_code[position]!=' ' and source_code[position]!='\n':
+    while position < len(source_code) and  (source_code[position].isalpha() or source_code[position].isdigit() or source_code[position] == '_') :
         buffer += source_code[position]
         position += 1
-    if tdc.get_token(buffer) != None:
-        return position, tdc.get_token(buffer)
+    if st.get_token(buffer) != None:
+        return position, st.get_token(buffer)
     else:
-        tdc.add_string(buffer, f"<id, {buffer}>")
+        st.add_string(buffer, f"<id, {buffer}>")
         return position, f"<id, {buffer}>"
 
 
@@ -96,6 +89,7 @@ def scan(source_code):
         #Identifier ici les symboles restants:
         else:
             tokens.append((source_code[position],))
+            print("problème: " , source_code[position])
             position += 1
 
     return tokens
@@ -108,8 +102,8 @@ def scan(source_code):
 #Programme principale
 
 #Récupération du fichier code source
-#source_code = open("code.txt", "r").read()
-source_code = "Bonjour je suis un arbre de 15 metres de haut"
+source_code = open("code.txt", "r").read()
+#source_code = "Bonjour je suis un arbre de 15 metres de haut"
 
 #Création de la liste des tokens
 tokens = scan(source_code)
@@ -121,6 +115,6 @@ for token in tokens:
     print(token)
     
 #Affichage de la table de string
-#print("Affichage de la table de string:")
-#print(tdc.mapping)
+print("Affichage de la table de string:")
+print(st.mapping)
 
