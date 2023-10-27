@@ -1,120 +1,88 @@
-mots_cles = [
-    "access", "and", "begin", "else", "elsif", "end", "false", "for", "function", "if", "in", "is", "loop", "new", "not", "null", "or", "out", "procedure", "record", "rem", "return", "reverse", "then", "true", "type", "use", "while", "with"
-]
+def scan_key_identifier(source_code: str, position: int, mc: list) -> tuple[int, str, int]:
+    string = source_code[position]
+    position += 1
+    t = 0
+
+    while position < len(source_code) and (source_code[position].isalnum() or source_code[position] == "_"):
+        string += source_code[position]
+        position += 1
+
+    # we need to check that rem is followed by ' ', if not we will to retreive a syntax error in the analysis
+    if string == "rem" and source_code[position] != ' ': return 5, string, position
+
+    return 0 if string in mc else 3, string, position
 
 
-#Classe StringTab qui contient une chaine de caractère et lui associe son token
-class StringTable:
-    def __init__(self):
-        self.mapping = {}  # Un dictionnaire pour stocker les associations chaîne de caractères -> token
+def scan_operator(source_code: str, position: int, op: list) -> tuple[int, str, int]:
+    temp = source_code[position : position + 2]
 
-    def add_string(self, chaine, token):
-        # Ajouter une association chaine -> token à la table
-        self.mapping[chaine] = token
-
-    def get_token(self, chaine):
-        # Obtenir le token associé à une chaîne donnée, ou None si la chaîne n'est pas présente dans la table
-        return self.mapping.get(chaine)
+    if temp[0] in op and temp[1] in op: return 1, temp, position + 2
+    else: return 1 if temp[0] in op else 2, temp[0], position + 1
 
 
-st = StringTable()
-#On ajoute les mots clés dans notre table
-for mot_cle in mots_cles:
-    st.add_string(mot_cle, f"<{mot_cle}>")
-    
+def get_int(source_code: str, position: int) -> tuple[int, int]:
+    temp = 0
 
-
-
-
-
-#Fonction qui permet de passer les espaces et les retours à la ligne
-def skip_whitespace(source_code, position,ligne):
-    while position < len(source_code) and (source_code[position] == ' ' or source_code[position] == '\n'):
-        if source_code[position]=='\n':
-            ligne+=1
-            position+=1
-        elif source_code[position] == ' ':
-            position += 1
-        
-    return position
-
-
-#Fonction qui permet de scanner les nombres
-def scan_number(source_code, position):
-    v= 0
     while position < len(source_code) and source_code[position].isdigit():
-        v= v*10 + int(source_code[position])
+        temp = temp * 10 + int(source_code[position])
         position += 1
-    return position, v
 
+    return temp, position
 
+def scan_number(source_code: str, position: int) -> tuple[int, int or float, int]:
+    number, position = get_int(source_code, position)
 
-#Fonction qui permet de scanner les identifiants ou les mots clés
-def scan_identifier(source_code, position):
-    buffer = ''
-    while position < len(source_code) and  (source_code[position].isalpha() or source_code[position].isdigit() or source_code[position] == '_') :
-        buffer += source_code[position]
+    if position < len(source_code)-1 and source_code[position] == '.' and source_code[position+1].isdigit():
         position += 1
-    if st.get_token(buffer) != None:
-        return position, st.get_token(buffer)
-    else:
-        st.add_string(buffer, f"<id, {buffer}>")
-        return position, f"<id, {buffer}>"
+        decimal, position = get_int(source_code, position)
+        number += float("0."+str(decimal))
+
+    return 4, number, position
 
 
+def scan(source_code: str) -> tuple[list, dict]:
+    # init the lexical table with 0 as key words, 1 as operator, 2 as syntax operator, 3 as identifier, 4 as constant number, 5 invalid char
+    lexical_table = {
+        0: ["access", "and", "begin", "else", "elsif", "end", "false", "for", "function", "if", "in", "is", "loop",
+            "new", "not", "null", "or", "out", "procedure", "record", "rem", "return", "reverse", "then", "true",
+            "type", "use", "while", "with"],
+        1: ["+", "-", "*", "/", "<", ">", "<=", ">=", "=", "/=", "=>", "."],
+        2: ["!", chr(34), "#", "$", "%", "&", "'", "(", ")", ",", ":", ";", "?", "@", "[",chr(92), "]", "^", "_", "`", "{", "|", "}" ,"~"],
+        3: [], 4: [], 5: []}
 
-
-#Fonction principale qui permet de scanner le code source
-def scan(source_code):
-    position = 0
-    tokens = []
-    peek = 1
-    ligne=1
+    token = []
+    position, line = 0, 1
 
     while position < len(source_code):
-        #On saute les espaces et les retours à la ligne
-        position = skip_whitespace(source_code, position, ligne)
-        
+        actual = source_code[position]
 
-        #Identifier des nombres
-        if position < len(source_code) and source_code[position].isdigit():
-            position, token = scan_number(source_code, position)
-            tokens.append(f"<num,{token}>")
+        # try if we have a blank to skip
+        if actual == ' ': position += 1; continue
+        if actual == '\n': position += 1; line += 1; continue
 
-        #Identifier des identifiants ou des mots clés
-        elif position < len(source_code) and source_code[position].isalpha():
-            position, token = scan_identifier(source_code, position)
-            tokens.append(token)
+        # try if we have a non-printable charater in the code
+        if ord(actual) in range(0, 10) or ord(actual) in range(11, 33) or (actual) == 127:
+            type_, value, position = 5, source_code[position], position + 1
+            lexical_table[type_].append((value, line))
+            token.append((type_, len(lexical_table[5])))
+            continue
 
-        #Identifier ici les symboles restants:
-        else:
-            tokens.append((source_code[position],))
-            print("problème: " , source_code[position])
+        # get rid of commentary line
+        if actual == "-" and source_code[position+1] == "-":
+            while source_code[position] != "\n": position += 1
             position += 1
+            continue
 
-    return tokens
+        # check if we have a key word, operator, constant number or ...
+        if actual.isalpha(): type_, value, position = scan_key_identifier(source_code, position, lexical_table[0])
+        elif actual.isdigit(): type_, value, position = scan_number(source_code, position)
+        else: type_, value, position = scan_operator(source_code, position, lexical_table[1])
 
+        # add in the lexical table if necessary
+        if type_ == 3 or type_ == 4 and value not in lexical_table[type_]: lexical_table[type_].append(value)
+        if type_ == 5: lexical_table[type_].append((value, line))
 
+        # add the new token in the list
+        token.append((type_,lexical_table[type_].index(value))) if type_ != 4 else token.append((type_,value))
 
-
-
-
-#Programme principale
-
-#Récupération du fichier code source
-source_code = open("code.txt", "r").read()
-#source_code = "Bonjour je suis un arbre de 15 metres de haut"
-
-#Création de la liste des tokens
-tokens = scan(source_code)
-
-
-# Affichage des tokens
-for token in tokens:
-
-    print(token)
-    
-#Affichage de la table de string
-print("Affichage de la table de string:")
-print(st.mapping)
-
+    return token, lexical_table
