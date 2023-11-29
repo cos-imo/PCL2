@@ -1,5 +1,5 @@
-from scan import scanner
-from error import RemWithoutSpace, IdenfierBeginWithNumber, ForbiddenAscii
+from .scan import scanner
+from .error import RemWithoutSpace, IdenfierBeginWithNumber, ForbiddenAscii
 
 
 def lexical_analysis(code_source: str) -> (tuple[list, dict] or bool):
