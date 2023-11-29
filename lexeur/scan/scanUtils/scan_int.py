@@ -6,6 +6,6 @@ def scan_int(source_code: str, position: int) -> tuple[int, int, int]:
         position += 1
 
     if position < len(source_code) and source_code[position].isalpha():
-        return 5, temp, position
+        return 5, str(temp), position
 
     return 4, temp, position
