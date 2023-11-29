@@ -3,9 +3,6 @@
 class RemWithoutSpace(Exception):
     """
         Raised when a rem operator is used without space after him
-
-        Attribute:
-            -- line
     """
     pass
 
@@ -13,9 +10,11 @@ class RemWithoutSpace(Exception):
 class ForbiddenAscii(Exception):
     """
         Raised when a non-printable ascii character is used
+    """
+    pass
 
-        Attribute:
-            -- line
-            -- character
+class IdenfierBeginWithNumber(Exception):
+    """
+        Raised when a identifier begin by a number
     """
     pass

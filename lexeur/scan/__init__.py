@@ -1,1 +1,2 @@
-from .scanner import scan
+from .scanner import scanner
+
