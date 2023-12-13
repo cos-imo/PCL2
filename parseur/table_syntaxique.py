@@ -209,7 +209,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -262,7 +262,7 @@ table_syntaxique = {
         # '
         (2,6): ['error'],
         # (
-        (2,7): ['error'],
+        (2,7): ['OPE', 'ACCES'],
         # )
         (2,8): ['error'],
         # ,
@@ -298,11 +298,11 @@ table_syntaxique = {
         
         # Identifier
 
-        (3,0): ['error'],
+        (3,0): ['OPE', 'ACCES'],
         
         # Constant number
         
-        (4,0): ['error']
+        (4,0): ['OPE', 'ACCES']
     },
     'ACCES': {
         # Keywords
@@ -364,7 +364,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -519,7 +519,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -674,7 +674,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -829,7 +829,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -984,7 +984,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -1139,7 +1139,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -1294,7 +1294,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -1449,7 +1449,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -1604,7 +1604,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -1759,7 +1759,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -1914,7 +1914,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -2069,7 +2069,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -2224,7 +2224,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -2379,7 +2379,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -2534,7 +2534,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -2689,7 +2689,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -2844,7 +2844,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -2999,7 +2999,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -3154,7 +3154,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -3309,7 +3309,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -3464,7 +3464,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -3619,7 +3619,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -3774,7 +3774,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -3929,7 +3929,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -4084,7 +4084,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -4239,7 +4239,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -4394,7 +4394,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -4549,7 +4549,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -4704,7 +4704,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -4859,7 +4859,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -5014,7 +5014,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -5169,7 +5169,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -5324,7 +5324,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -5479,7 +5479,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -5634,7 +5634,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -5789,7 +5789,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -5944,7 +5944,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -6099,7 +6099,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -6254,7 +6254,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -6409,7 +6409,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -6564,7 +6564,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -6719,7 +6719,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -6874,7 +6874,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -7029,7 +7029,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -7184,7 +7184,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -7339,7 +7339,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -7494,7 +7494,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -7649,7 +7649,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -7804,7 +7804,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],
@@ -7959,7 +7959,7 @@ table_syntaxique = {
         (0,26): ['error'],
         # with
         (0,27): ['error'],
-        # charcater
+        # character'val
         (0,28): ['error'],
         # integer
         (0,29): ['error'],

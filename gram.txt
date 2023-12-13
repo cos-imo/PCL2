@@ -1,7 +1,7 @@
-F -> with adatext_io; use adatext_io; procedure IDENT is DECL_STAR begin INSTR_PLUS end IDENT_BIN ; eof.
+F -> with adatext_io ; use adatext_io ; procedure IDENT is DECL_STAR begin INSTR_PLUS end IDENT_BIN ; eof.
 DECL -> type IDENT DECL' | IDENT_VIRG_PLUS : TYPE EXPR_EG_BIN ; | procedure IDENT PARAMS_BIN is DECL_STAR begin INSTR_PLUS end IDENT_BIN ; | function IDENT PARAMS_BIN return TYPE is DECL_STAR begin INSTR_PLUS end IDENT_BIN ; .
 DECL' -> ; | is DECL''.
-DECL'' -> access IDENT ; | record CHAMPS_PLUS end record;.
+DECL'' -> access IDENT ; | record CHAMPS_PLUS end record ;.
 CHAMPS -> IDENT_VIRG_PLUS : TYPE ;.
 TYPE-> IDENT | access IDENT.
 PARAMS -> ( PARAM_POINT_VIRG_PLUS ).
@@ -10,7 +10,7 @@ MODE -> in MODE'.
 MODE' -> out | .
 EXPR -> OPE ACCES .
 ACCES -> pt IDENT ACCESS | .
-INSTR -> EXPR INSTR' | return EXPR_BIN ; | begin INSTR_PLUS end; | while EXPR loop INSTR_PLUS end loop; | if EXPR then INSTR_PLUS ELSIF_STAR ELSE_BIN end if; | for IDENT in reverse? EXPR _ EXPR loop INSTR_PLUS end loop ;.
+INSTR -> EXPR INSTR' | return EXPR_BIN ; | begin INSTR_PLUS end ; | while EXPR loop INSTR_PLUS end loop ; | if EXPR then INSTR_PLUS ELSIF_STAR ELSE_BIN end if ; | for IDENT in reverse ? EXPR _ EXPR loop INSTR_PLUS end loop ;.
 INSTR' -> :egal EXPR ; | ; .
 OPE -> OPE1 OPE'.
 OPE' -> ORELS OPE1 OPE' |.
@@ -59,3 +59,74 @@ EXPR_EG_BIN -> :egal EXPR |.
 IDENT -> id.
 ENTIER -> en.
 CARACTERE -> ca .
+
+
+########################################################################################
+
+F -> with adatext_io ; use adatext_io ; procedure IDENT is DECL_STAR begin INSTR_PLUS end IDENT_BIN ; eof.
+DECL -> type IDENT DECL' | IDENT_VIRG_PLUS : TYPE EXPR_EG_BIN ; | procedure IDENT PARAMS_BIN is DECL_STAR begin INSTR_PLUS end IDENT_BIN ; | function IDENT PARAMS_BIN return TYPE is DECL_STAR begin INSTR_PLUS end IDENT_BIN ; .
+DECL' -> ; | is DECL''.
+DECL'' -> access IDENT ; | record CHAMPS_PLUS end record ;.
+CHAMPS -> IDENT_VIRG_PLUS : TYPE ;.
+TYPE-> IDENT | access IDENT.
+PARAMS -> ( PARAM_POINT_VIRG_PLUS ).
+PARAM -> IDENT_VIRG_PLUS : MODE_BIN TYPE.
+MODE -> in MODE'.
+MODE' -> out | .
+EXPR -> OPE ACCES .
+ACCES -> pt IDENT ACCESS | .
+
+### remettre IDENT à la place de EXPR en dessous ?
+
+INSTR -> EXPR INSTR' | return EXPR_BIN ; | begin INSTR_PLUS end ; | while EXPR loop INSTR_PLUS end loop ; | if EXPR then INSTR_PLUS ELSIF_STAR ELSE_BIN end if ; | for IDENT in reverse ? EXPR _ EXPR loop INSTR_PLUS end loop ;.
+INSTR' -> :egal EXPR ; | ; .
+OPE -> OPE1 OPE'.
+OPE' -> ORELS OPE1 OPE' |.
+OPE1 -> OPE2 OPE1'.
+OPE1' -> AND OPE2 OPE1' |.
+OPE2 -> OPE3 OPE2'.
+OPE2' -> not OPE3 OPE2' |.
+OPE3 -> OPE4 OPE3'.
+OPE3' -> EGAL OPE4 OPE3' |.
+OPE4 -> OPE5 OPE4'.
+OPE4' -> ORDRE OPE5 OPE4' |.
+OPE5 -> OPE6 OPE5'.
+OPE5' -> ADD OPE6 OPE5' |.
+OPE6 -> OPE7 OPE6'.
+OPE6' -> MULT OPE7 OPE6' |.
+OPE7 -> moinsun OPE8 | OPE8.
+OPE8 -> EXPR' .
+EXPR' -> ENTIER | ca | true | false | null | ( EXPR ) | new IDENT | character'val ( EXPR ) | ALPHA ALPHA_EXPR.
+EXPR'' -> ( EXPR_VIRG_PLUS ) | .
+ORELS -> or ORELS'.
+ORELS' -> else |.
+AND -> and AND'.
+AND' -> then |.
+EGAL -> egal | dif.
+ORDRE -> inf | infeg | sup | supeg.
+ADD -> + | moins.
+MULT -> * | / | rem.
+CHAMPS_PLUS -> CHAMPS CHAMPS_PLUS'.
+CHAMPS_PLUS' -> CHAMPS_PLUS | .
+INSTR_PLUS -> INSTR INSTR_PLUS'.
+INSTR_PLUS'-> INSTR_PLUS | .
+IDENT_VIRG_PLUS -> IDENT IDENT_VIRG_PLUS'.
+IDENT_VIRG_PLUS' -> v IDENT_VIRG_PLUS | .
+EXPR_VIRG_PLUS -> EXPR EXPR_VIRG_PLUS'.
+EXPR_VIRG_PLUS' -> v EXPR_VIRG_PLUS | .
+PARAM_POINT_VIRG_PLUS -> PARAM PARAM_POINT_VIRG_PLUS' .
+PARAM_POINT_VIRG_PLUS' -> v PARAM_POINT_VIRG_PLUS | .
+PARAMS_BIN -> PARAMS |.
+IDENT_BIN -> IDENT |.
+MODE_BIN -> MODE |.
+EXPR_BIN -> EXPR |.
+ELSE_BIN -> else INSTR_PLUS |.
+DECL_STAR -> DECL DECL_STAR | .
+ELSIF_STAR -> elsif EXPR then INSTR_PLUS ELSIF_STAR |.
+EXPR_EG_BIN -> :egal EXPR |.
+IDENT -> ALPHA ALPHA_CHIFFRE_UNDERSCORE_STAR.
+ENTIER -> en.
+CARACTERE -> ca | ALPHA. ### ca = caractère ascii imprimable sauf lettre
+ALPHA_CHIFFRE_UNDERSCORE_STAR -> ALPHA ALPHA_CHIFFRE_UNDERSCORE_STAR | ENTIER ALPHA_CHIFFRE_UNDERSCORE_STAR | _ ALPHA_CHIFFRE_UNDERSCORE_STAR.
+ALPHA -> lettre.
+ALPHA_EXPR -> IDENT EXPR'' | . ### créé pour factorisé le conflit dans EXPR
