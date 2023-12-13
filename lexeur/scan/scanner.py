@@ -61,4 +61,6 @@ def scanner(source_code: str) -> tuple[list, dict]:
             (type_, value, line)) if type_ != 5 else token.append(
             (type_, lexical_table[type_].index((value, line)), line))
 
+    token.append((-1, "EOF", -1))
+
     return token, lexical_table
