@@ -6,7 +6,7 @@ def scanner(source_code: str) -> tuple[list, dict]:
     lexical_table = {
         0: ["access", "and", "begin", "else", "elsif", "end", "false", "for", "function", "if", "in", "is", "loop",
             "new", "not", "null", "or", "out", "procedure", "record", "rem", "return", "reverse", "then", "true",
-            "type", "use", "while", "with", "character", "integer"],
+            "type", "use", "while", "with", "character", "integer","adatext_io","eof"],
         1: ["+", "-", "*", "/", "<", ">", "<=", ">=", "=", "/=", "=>", ".", ":=", ".."],
         2: ["!", chr(34), "#", "$", "%", "&", "'", "(", ")", ",", ":", ";", "?", "@", "[", chr(92), "]", "^", "_", "`",
             "{", "|", "}", "~"],

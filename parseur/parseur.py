@@ -31,9 +31,12 @@ class Node:
 
 
 #Fonction qui permet de dire si une chaines de caractères est un terminal ou non
-def est_terminal(token) :
-    #les non terminaux dans la grammaire sont en majuscule
-    return token.isupper()
+def est_terminal(element) :
+    #Si l'élément de la pile est un tuple alors c'est un terminal ou que c'est "eof" alors c'est un terminal sinon si c'est une string alors c'est un non terminal
+    if (type(element) == tuple) or (element == "eof") :
+        return True
+    else :
+        return False
     
 
 #début du parseur:
@@ -50,6 +53,7 @@ def parse(list_tokens,lexical_table) :
     succes = False 
     erreur = False
     ind = 0 #indice de la liste de token
+    pile_arbre = [] #pile qui va contenir les noeuds de l'arbre
 
     while not(succes or erreur) :
         
@@ -59,6 +63,10 @@ def parse(list_tokens,lexical_table) :
         if (not est_terminal(sommet_pile)) :
             
             if lexical_table[sommet_pile][token_lu]: #Si la table contient une règle pour le couple (sommet_pile,token_lu)
+                
+                #Oncstruire l'arbre avec les éléments de la règle
+                
+                
                 pile.pop() #on dépile le sommet de la pile
                 regle = lexical_table[sommet_pile][token_lu] #on récupère la règle correspondante, qui sera une liste de token
                 regle.reverse()
@@ -69,15 +77,23 @@ def parse(list_tokens,lexical_table) :
             else :
                 erreur = True #si la table ne contient pas de règle pour le couple (sommet_pile,token_lu) alors on a une erreur
                 
-        else : #si x le sommet de la pile est un terminal
-            if (sommet_pile == "eof") : #la pile est vide
-                if (token_lu == "eof") :
+        else : #si x le sommet de la pile est un terminal, donc les éléments de la pile son des tokens de la forme <type_token, valeur_token> ou "eof"
+            if (sommet_pile == "eof") : #la pile n'est plus composé que de eof, c'est la fin
+                if (token_lu[1] == "eof") :
                     succes = True #si on est à la fin de la liste de token et que le sommet de la pile est eof alors on a réussi
                 else :
                     erreur = True
                 
-            else: #la pile n'est pas vide
-                if (sommet_pile == token_lu) :
+            else: #la pile n'est pas vide, on a donc que des élément sommet_pile de la forme <type_token, valeur_token>
+                if (sommet_pile[0] == 3) and (token_lu[0] == 3) : #On s'attend à avoir un identifiant
+                    
+                    #Il faut récupérer la valeur de l'identifiant pour construire l'arbre
+                    
+                    
+                    pile.pop()
+                    ind += 1
+                  
+                elif (sommet_pile[0] == token_lu[0]) and (sommet_pile[1] == token_lu[1]) :
                     pile.pop()
                     ind += 1 #On lit le token suivant
                 else :
