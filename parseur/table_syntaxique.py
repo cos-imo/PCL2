@@ -23,7 +23,7 @@
 # MODE' -> out | .
 # EXPR -> OPE ACCES .
 # ACCES -> pt IDENT ACCESS | .
-# INSTR -> EXPR INSTR' | return EXPR_BIN ; | begin INSTR_PLUS end ; | while EXPR loop INSTR_PLUS end loop ; | if EXPR then INSTR_PLUS ELSIFE ELSEB end if ; | for IDENT in reverse ? EXPR _ EXPR loop INSTR_PLUS end loop ;.
+# INSTR -> EXPR INSTR' | return EXPR_BIN ; | begin INSTR_PLUS end ; | while EXPR loop INSTR_PLUS end loop ; | if EXPR then INSTR_PLUS ELSIF_STAR ELSE_BIN end if ; | for IDENT in reverse ? EXPR _ EXPR loop INSTR_PLUS end loop ;.
 # INSTR' -> :egal EXPR ; | ; .
 # OPE -> OPE1 OPE'.
 # OPE' -> ORELS OPE1 OPE' |.
@@ -65,9 +65,9 @@
 # INDENT_BIN -> IDENT |.
 # MODE_BIN -> MODE |.
 # EXPR_BIN -> EXPR |.
-# ELSEB -> else INSTR_PLUS |.
+# ELSE_BIN -> else INSTR_PLUS |.
 # DECL_STAR -> DECL DECL_STAR | .
-# ELSIFE -> elsif EXPR then INSTR_PLUS ELSIFE |.
+# ELSIF_STAR -> elsif EXPR then INSTR_PLUS ELSIF_STAR |.
 # EXPR_EG_BIN -> :egal EXPR |.
 # IDENT -> id.
 # ENTIER -> en.
@@ -210,7 +210,7 @@ table_syntaxique = {
         # for
         (0,7): [(0, 7), 'IDENT', (0, 10), (0, 22), (2, 12), 'EXPR', (2, 18), 'EXPR', (0, 12), 'INSTR_PLUS', (0, 5), (0, 12), (2, 11)],
         # if
-        (0,9): [(0, 9), 'EXPR', (0, 23), 'INSTR_PLUS', 'ELSIFE', 'ELSE_BIN', (0, 5), (0, 9), (2, 11)],
+        (0,9): [(0, 9), 'EXPR', (0, 23), 'INSTR_PLUS', 'ELSIF_STAR', 'ELSE_BIN', (0, 5), (0, 9), (2, 11)],
         # new
         (0,13): ['EXPR', "INSTR'"],
         # null
