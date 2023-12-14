@@ -41,7 +41,7 @@
 # OPE6' -> MULT OPE7 OPE6' |.
 # OPE7 -> moinsun OPE8 | OPE8.
 # OPE8 -> EXPR' .
-# EXPR' -> ENTIER | CARACTERE | true | false | null | ( EXPR ) | IDENT EXPR'' | new IDENT | character'val ( EXPR ).
+# EXPR' -> ENTIER | true | false | null | ( EXPR ) | IDENT EXPR'' | new IDENT | character'val ( EXPR ).
 # EXPR'' -> ( EXPR_VIRG_PLUS ) | .
 # ORELS -> or ORELS'.
 # ORELS' -> else |.
@@ -71,7 +71,6 @@
 # EXPR_EG_BIN -> :egal EXPR |.
 # IDENT -> id.
 # ENTIER -> en.
-# CARACTERE -> ca .
 #############################################################
 
 table_syntaxique = {
