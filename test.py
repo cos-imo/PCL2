@@ -10,7 +10,7 @@ mes_listes = {
 }
 
 # Phrase à découper
-phrase = "OPE ACCES"
+phrase = ";"
 
 # Fonction pour découper la phrase
 def decouper_phrase(phrase, mes_listes):
