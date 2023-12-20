@@ -1046,7 +1046,7 @@ table_syntaxique = {
     },
     'IDENT_VIRG_PLUS': {
         # Identifier
-        (3,0): ['IDENT', "IDENT_VIRG_PLUS'"],
+        (3,0): ["IDENT", "IDENT_VIRG_PLUS'"],
     },
     "IDENT_VIRG_PLUS'": {
         # Syntax operator
@@ -1199,7 +1199,7 @@ table_syntaxique = {
     },
     'IDENT': {        
         # Constant number
-        (4,0): ['error']
+        (3,0): [(3,0)]
     },
     'ENTIER': {
         # Constant number
