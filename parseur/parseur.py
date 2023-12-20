@@ -44,7 +44,7 @@ def est_terminal(element) :
 #Pour réaliser l'analyse on crée une pile qui à l'initialisation contient l'axiome de la grammaire 
 #L'analyseur donne en sortie la liste des règles qui permettent de construire la phrase. Avec cette liste on va créer l'AST
 
-def parse(list_tokens,lexical_table) :
+def parse(list_tokens,lexical_table, table_ll1) :
     pile = [] #on crée la pile
     pile.append("F") #on empile l'axiome de la grammaire
     
@@ -62,13 +62,13 @@ def parse(list_tokens,lexical_table) :
         
         if (not est_terminal(sommet_pile)) :
             
-            if lexical_table[sommet_pile][token_lu]: #Si la table contient une règle pour le couple (sommet_pile,token_lu)
+            if table_ll1[sommet_pile][token_lu]: #Si la table contient une règle pour le couple (sommet_pile,token_lu)
                 
                 #Oncstruire l'arbre avec les éléments de la règle
                 
                 
                 pile.pop() #on dépile le sommet de la pile
-                regle = lexical_table[sommet_pile][token_lu] #on récupère la règle correspondante, qui sera une liste de token
+                regle = table_ll1[sommet_pile][token_lu] #on récupère la règle correspondante, qui sera une liste de token
                 regle.reverse()
                 for i in regle:
                     pile.append(i)
@@ -88,6 +88,7 @@ def parse(list_tokens,lexical_table) :
                 if (sommet_pile[0] == 3) and (token_lu[0] == 3) : #On s'attend à avoir un identifiant
                     
                     #Il faut récupérer la valeur de l'identifiant pour construire l'arbre
+                    #créer une feuille avec la valeur de l'identifiant comme enfant du noeud IDENT
                     
                     
                     pile.pop()
