@@ -3,7 +3,7 @@
 # lexical_table = {
 #         0: ["access", "and", "begin", "else", "elsif", "end", "false", "for", "function", "if", "in", "is", "loop",
 #             "new", "not", "null", "or", "out", "procedure", "record", "rem", "return", "reverse", "then", "true",
-#             "type", "use", "while", "with", "character", "integer"],
+#             "type", "use", "while", "with", "character", "integer", "adatext_io", "eof"],
 #         1: ["+", "-", "*", "/", "<", ">", "<=", ">=", "=", "/=", "=>", ".", ":=", ".."],
 #         2: ["!", chr(34), "#", "$", "%", "&", "'", "(", ")", ",", ":", ";", "?", "@", "[", chr(92), "]", "^", "_", "`",
 #             "{", "|", "}", "~"],
@@ -82,7 +82,8 @@ table_syntaxique = {
         # and
         (0,1): ['error'],
         # begin
-        (0,2): ['error'],
+        #Ici on renvoie la règle: F -> with adatext_io; use adatext_io; procedure IDENT is DECL_STAR begin INSTR_PLUS end INDENT_BIN ; eof.
+        (0,2): [(0,28),(0,31), (2,11,), .....],
         # else
         (0,3): ['error'],
         # elsif
