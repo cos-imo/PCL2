@@ -101,7 +101,7 @@ def parse(list_tokens,lexical_table, table_ll1) :
                     erreur = True                    
   
 #il faut traiter les erreurs correctement et construire les fonctions nécessaires.
-#Attention à verifier dans token_lu qu'on copare bien la valeur du token!!!!
+#Attention à verifier dans token_lu qu'on compare bien la valeur du token!!!!
     
    
 
