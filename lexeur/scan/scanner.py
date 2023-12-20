@@ -7,7 +7,7 @@ def scanner(source_code: str) -> tuple[list, dict]:
         0: ["access", "and", "begin", "else", "elsif", "end", "false", "for", "function", "if", "in", "is", 
             "loop", "new", "not", "null", "or", "out", "procedure", "record", "rem", "return", "reverse",
             "then", "true", "type", "use", "while", "with", "character", "integer","adatext_io","eof"],
-        1: ["+", "-", "*", "/", "<", ">", "<=", ">=", "=", "/=", "=>", ".", ":=", ".."],
+        1: ["+", "-", "*", "/", "<", ">", "<=", ">=", "=", "/=", "=>", ".", ":=", "..", "-"], # le second moins est le moins unaire
         2: ["!", chr(34), "#", "$", "%", "&", "'", "(", ")", ",", ":", ";", "?", "@", "[", chr(92), "]", "^", 
             "_", "`", "{", "|", "}", "~"],
         3: [], 4: [], 5: []}
@@ -55,6 +55,11 @@ def scanner(source_code: str) -> tuple[list, dict]:
             lexical_table[type_].append(value)
         if type_ == 5:
             lexical_table[type_].append((value, line))
+
+        # Différenciation moins et moins unaire
+        if type_ == 1 and lexical_table[type].index(value) == 1:
+            if token[-1][0] == 1 or (token[-1][0]==2 and token[-1][1] in ["(", ",", ":", ";", "[", "^", chr(92)]) :
+                value = 14
 
         # add the new token in the list
         token.append((type_, lexical_table[type_].index(value), line)) if (type_ != 4 and type_ != 5) else token.append(
