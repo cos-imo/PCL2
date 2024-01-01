@@ -1046,9 +1046,9 @@ table_syntaxique = {
     },
     'IDENT_VIRG_PLUS': {
         # Identifier
-        (3,0): ["IDENT", "IDENT_VIRG_PLUS'"],
+        (3,0): ["IDENT", "IDENT_VIRG_PLUS\'"],
     },
-    "IDENT_VIRG_PLUS'": {
+    "IDENT_VIRG_PLUS\'": {
         # Syntax operator
         # ,
         (2,9): [(2, 9), 'IDENT_VIRG_PLUS'],

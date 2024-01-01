@@ -31,14 +31,7 @@ def print_explicit_tokens(tokens, list_type_token, lexical_table):
             print(f"<{list_type_token[token_type]}, {lexical_table[token_type][token_value]}>", end=' ')
 
 
-
-def test_parseur(filename):
-    with open(filename, 'r') as file:
-        source_code = file.read()
-
-    tokens, lexical_table = lex.lexical_analysis(source_code)
-
-    list_type_token = {
+list_type_token = {
         0: "Keyword",
         1: "Operator",
         2: "Syntax Operator",
@@ -47,6 +40,28 @@ def test_parseur(filename):
         5: "Invalid Character"
     }
 
+
+def test_parseur(filename, output_filename):
+    with open(filename, 'r') as file:
+        source_code = file.read()
+
+    #On lance l'analyse lexicale
+    tokens, lexical_table = lex.lexical_analysis(source_code)
+    
+    
+    # Enregistrement de la liste de tokens et de la table lexicale dans un fichier
+    with open(output_filename, 'w') as output_file:
+        # Écriture de la liste de tokens
+        output_file.write("Liste des tokens :\n")
+        for token in tokens:
+            output_file.write(str(token) + '\n')
+
+        # Écriture de la table lexicale
+        output_file.write("\nTable Lexicale :\n")
+        for key, values in lexical_table.items():
+            output_file.write(f"{list_type_token[key]}: {values}\n")
+
+    
     print("\n \nTable Lexicale:")
     for key, values in lexical_table.items():
         print(f"    {list_type_token[key]}: {values}")
@@ -78,7 +93,7 @@ def test_parseur(filename):
 #test_lexeur('test_lexeur/test1.txt')
 
 #Test avec utilisation d'un caractère interdit:
-test_parseur('parseur/Test_parseur/test1.txt')
+test_parseur('tests/test_lexeur/test1.txt', 'tests/test_lexeur/output_test1.txt')
 
 #Test avec utilisation d'un rem sans espace:
 #test_lexeur('test_lexeur/test3.txt')

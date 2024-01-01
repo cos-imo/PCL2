@@ -77,6 +77,7 @@ def parse(list_tokens,lexical_table, table_ll1) :
                 
                 
                 pile.pop() #on dépile le sommet de la pile
+                print("Règle cherchée dans la table : table_ll1 []",sommet_pile,"] [ ",token_lu_table,"]")
                 regle = table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])] #on récupère la règle correspondante, qui sera une liste de token
                 print("Règle : ",regle)
                 regle.reverse()
