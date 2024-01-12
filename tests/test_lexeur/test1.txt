@@ -1,32 +1,25 @@
---Test qui fonctionne correctement
+-- Test de base qui doit fonctionner
 with Ada.Text_IO ; use Ada.Text_IO ;
-procedure unDebut is 
-function aireRectangle(larg , long) return integer is
-aire: integer;
+procedure unDebut is
+function aireRectangle(larg : Integer; long : Integer) return Integer is aire: Integer;
 begin
 aire := larg * long ;
-
---Test de l'insensibilité à la casse
-AiRe := larg * long ;
-
-return aire
+return aire;
 end aireRectangle ;
-function perimetreRectangle(larg : integer; long : integer) return integer is
-p : integer
+function perimetreRectangle(larg : Integer; long : Integer) return Integer is p : Integer;
 begin
 p := larg*2 + long*2 ;
-return p
+return p;
 end perimetreRectangle;
 -- VARIABLES
-choix : integer ;
+choix : Integer ;
 -- PROCEDURE PRINCIPALE
 begin
-
-remember := 2;
+choix := 2;
 if choix = 1
 then valeur := perimetreRectangle(2, 3) ;
 put(valeur) ;
 else valeur := aireRectangale(2, 3) ;
 put(valeur) ;
 end if;
-end unDebut ;
+end unDebut ; eof

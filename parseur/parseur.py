@@ -33,7 +33,7 @@ class Node:
 #Fonction qui permet de dire si une chaines de caractères est un terminal ou non
 def est_terminal(element) :
     #Si l'élément de la pile est un tuple alors c'est un terminal ou que c'est "eof" alors c'est un terminal sinon si c'est une string alors c'est un non terminal
-    if (type(element) == tuple) or (element == "eof"):
+    if (type(element) == tuple) :
         return True
     else :
         return False
@@ -56,51 +56,62 @@ def parse(list_tokens,lexical_table, table_ll1) :
     ind = 0 #indice de la liste de token
     pile_arbre = [] #pile qui va contenir les noeuds de l'arbre
 
-    while not(succes or erreur) :
+    while not (succes or erreur) :
+        print("Pile : ",pile)
         
         sommet_pile = pile[-1]
         token_lu = list_tokens[ind]
         
         if (not est_terminal(sommet_pile)) :
             print("Token lu : ",token_lu)
+            print("Token lu en clair: ",lexical_table[token_lu[0]][token_lu[1]])
             print("Sommet de la pile : ",sommet_pile)
             
-            
+            token_lu_table = token_lu
             if token_lu[0] == 3 : #On s'attend à avoir un identifiant
                 token_lu_table = (token_lu[0], 0, token_lu[2]) #On récupère le token lu sous la forme (type_token, valeur_token)
-            else :
-                token_lu_table = token_lu
+            elif token_lu[0] == 4 : #On s'attend à avoir un nombre
+                token_lu_table = (token_lu[0], 0, token_lu[2])
+            
+            print("Token lu apres modif: ",token_lu_table)
                 
-            if table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])]: #Si la table contient une règle pour le couple (sommet_pile,token_lu)
                 
-                #Oncstruire l'arbre avec les éléments de la règle
-                
+            if ((table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])]!= ["epsilon"]) and (table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])])) : #Si la table contient une règle pour le couple (sommet_pile,token_lu)
                 
                 pile.pop() #on dépile le sommet de la pile
                 print("Règle cherchée dans la table : table_ll1 []",sommet_pile,"] [ ",token_lu_table,"]")
                 regle = table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])] #on récupère la règle correspondante, qui sera une liste de token
-                print("Règle : ",regle)
-                regle.reverse()
-                print("Règle inversée : ",regle)
-                for i in regle:
-                    print("Ajout de ",i," dans la pile")
+                regleC = regle.copy()
+                print("Règle : ",regleC)
+                regleC.reverse()
+                print("Règle inversée : ",regleC)
+                for i in regleC:
+                    print("Ajout de ",i," dans la pile \n\n")
                     pile.append(i)
                 #for i in range(len(regle)-1,-1,-1) : #on empile les tokens de la règle dans l'ordre inverse
                     #pile.append(regle[i])
+            elif table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])] == ["epsilon"] :
+                    pile.pop()
+                    pass
+                    
             else :
                 erreur = True #si la table ne contient pas de règle pour le couple (sommet_pile,token_lu) alors on a une erreur
                 print("Erreur : la table ne contient pas de règle pour le couple (sommet_pile,token_lu). Sommet de la pile : ",sommet_pile," valeur Token lu : ",lexical_table[token_lu[0]][token_lu[1]], " Ligne : ",token_lu[2])
                 
-        else : #si x le sommet de la pile est un terminal, donc les éléments de la pile son des tokens de la forme <type_token, valeur_token> ou "eof"
-            if (sommet_pile == "eof") : #la pile n'est plus composé que de eof, c'est la fin
-                if (token_lu[1] == "eof") :
+        else : 
+            print("Token lu : ",token_lu)
+            print("Token lu en clair: ",lexical_table[token_lu[0]][token_lu[1]])
+            print("Sommet de la pile : ",sommet_pile)
+            #si x le sommet de la pile est un terminal, donc les éléments de la pile son des tokens de la forme <type_token, valeur_token> ou "eof"
+            if (sommet_pile == (0,32)) : #la pile n'est plus composé que de eof, c'est la fin
+                if (token_lu[1] == 32) and (token_lu[0] == 0) :
                     succes = True #si on est à la fin de la liste de token et que le sommet de la pile est eof alors on a réussi
                 else :
                     erreur = True
                     print("Erreur : la pile est vide mais la liste de token n'est pas finie. Sommet de la pile : ",sommet_pile," valeur Token lu : ",lexical_table[token_lu[0]][token_lu[1]], " Ligne : ",token_lu[2])
                 
             else: #la pile n'est pas vide, on a donc que des élément sommet_pile de la forme <type_token, valeur_token>
-                if sommet_pile == (3,0) and token_lu[0] == 3 :
+                if ((sommet_pile == (3,0) and token_lu[0] == 3) or (sommet_pile == (4,0) and token_lu[0] == 4)) :
                     pile.pop()
                     ind += 1
                 elif (sommet_pile[0] == token_lu[0]) and (sommet_pile[1] == token_lu[1]) :

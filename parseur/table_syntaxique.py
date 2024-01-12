@@ -7,7 +7,7 @@
 #         1: ["+", "-", "*", "/", "<", ">", "<=", ">=", "=", "/=", "=>", ".", ":=", ".."],
 #         2: ["!", chr(34), "#", "$", "%", "&", "'", "(", ")", ",", ":", ";", "?", "@", "[", chr(92), "]", "^", "_", "`",
 #             "{", "|", "}", "~"],
-#         3: [], 4: [], 5: []}
+#         3: ["epsilon"], 4: ["epsilon"], 5: ["epsilon"]}
 
 
 #############################################################
@@ -21,8 +21,8 @@
 # PARAM -> IDENT_VIRG_PLUS : MODE_BIN TYPE.
 # MODE -> in MODE'.
 # MODE' -> out | .
-# EXPR -> OPE ACCES .
-# ACCES -> pt IDENT ACCESS | .
+# EXPR -> OPE ACCESS .
+# ACCESS -> pt IDENT ACCESS | .
 # INSTR -> EXPR INSTR' | return EXPR_BIN ; | begin INSTR_PLUS end ; | while EXPR loop INSTR_PLUS end loop ; | if EXPR then INSTR_PLUS ELSIF_STAR ELSE_BIN end if ; | for IDENT in reverse ? EXPR _ EXPR loop INSTR_PLUS end loop ;.
 # INSTR' -> :egal EXPR ; | ; .
 # OPE -> OPE1 OPE'.
@@ -120,9 +120,6 @@ table_syntaxique = {
         # Identifier
         (3,0): ['IDENT'],
         
-        # Constant number
-        
-        (4,0): ['error']
     },
     'PARAMS': {
         # Syntax operator
@@ -141,65 +138,65 @@ table_syntaxique = {
     "MODE'": {
         # Keywords
         # access
-        (0,0): [],
+        (0,0): ["epsilon"],
         # out
         (0,16): [(0, 17)],
         
         # Identifier
-        (3,0): [],
+        (3,0): ["epsilon"],
     },
     "EXPR": {
         # Keywords
         # access
         # false
-        (0,6): ['OPE', 'ACCES'],
+        (0,6): ['OPE', 'ACCESS'],
         # new
-        (0,13): ['OPE', 'ACCES'],
+        (0,13): ['OPE', 'ACCESS'],
         # null
-        (0,15): ['OPE', 'ACCES'],
+        (0,15): ['OPE', 'ACCESS'],
         # true
-        (0,24): ['OPE', 'ACCES'],
+        (0,24): ['OPE', 'ACCESS'],
         # character'val
-        (0,29): ['OPE', 'ACCES'],
+        (0,29): ['OPE', 'ACCESS'],
 
         # Operator
         # -(unaire)
-        (1,14): ['OPE', 'ACCES'],
+        (1,14): ['OPE', 'ACCESS'],
 
         # Syntax operator
         # (
-        (2,7): ['OPE', 'ACCES'],
+        (2,7): ['OPE', 'ACCESS'],
         
         # Identifier
 
-        (3,0): ['OPE', 'ACCES'],
+        (3,0): ['OPE', 'ACCESS'],
         
         # Constant number
         
-        (4,0): ['OPE', 'ACCES']
+        (4,0): ['OPE', 'ACCESS']
     },
-    'ACCES': {
+    'ACCESS': {
         # Keywords
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # .
         (1,11): [[(1, 11), 'IDENT', 'ACCESS']],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): [],
+        (2,18): ["epsilon"],
     },
     'INSTR': {
         # Keywords
@@ -281,27 +278,27 @@ table_syntaxique = {
     "OPE'": {
         # Keywords
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # or
         (0,16): ['ORELS', 'OPE1', "OPE'"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # .
-        (1,11): [],
+        (1,11): ["epsilon"],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): []
+        (2,18): ["epsilon"]
     },
     'OPE1': {
         # Keywords
@@ -337,27 +334,27 @@ table_syntaxique = {
         # and
         (0,1): ['AND', 'OPE2', "OPE1'"],
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # or
-        (0,16): [],
+        (0,16): ["epsilon"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # .
-        (1,11): [],
+        (1,11): ["epsilon"],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): [],
+        (2,18): ["epsilon"],
     },
     "OPE2": {
         # Keywords
@@ -391,31 +388,31 @@ table_syntaxique = {
     "OPE2'": {
         # Keywords
         # and
-        (0,1): [],
+        (0,1): ["epsilon"],
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # not
         (0,14): [(0, 14), 'OPE3', "OPE2'"],
         # or
-        (0,16): [],
+        (0,16): ["epsilon"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # .
-        (1,11): [],
+        (1,11): ["epsilon"],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): []
+        (2,18): ["epsilon"]
     },
     "OPE3": {
         # Keywords
@@ -449,15 +446,15 @@ table_syntaxique = {
     "OPE3'": {
         # Keywords
         # and
-        (0,1): [],
+        (0,1): ["epsilon"],
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # not
-        (0,14): [],
+        (0,14): ["epsilon"],
         # or
-        (0,16): [],
+        (0,16): ["epsilon"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # !=
@@ -465,19 +462,19 @@ table_syntaxique = {
         # =
         (1,9): ['EGAL', 'OPE4', "OPE3'"],
         # .
-        (1,11): [],
+        (1,11): ["epsilon"],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): []
+        (2,18): ["epsilon"]
     },
     "OPE4": {
         # Keywords
@@ -511,15 +508,15 @@ table_syntaxique = {
     "OPE4'": {
         # Keywords
         # and
-        (0,1): [],
+        (0,1): ["epsilon"],
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # not
-        (0,14): [],
+        (0,14): ["epsilon"],
         # or
-        (0,16): [],
+        (0,16): ["epsilon"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # <
@@ -531,23 +528,23 @@ table_syntaxique = {
         # >=
         (1,7): ['ORDRE', 'OPE5', "OPE4'"],
         # /=
-        (1,8): [],
+        (1,8): ["epsilon"],
         # =
-        (1,9): [],
+        (1,9): ["epsilon"],
         # .
-        (1,11): [],
+        (1,11): ["epsilon"],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): []
+        (2,18): ["epsilon"]
     },
     "OPE5": {
         # Keywords
@@ -581,15 +578,15 @@ table_syntaxique = {
     "OPE5'": {
         # Keywords
         # and
-        (0,1): [],
+        (0,1): ["epsilon"],
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # not
-        (0,14): [],
+        (0,14): ["epsilon"],
         # or
-        (0,16): [],
+        (0,16): ["epsilon"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # +
@@ -597,31 +594,31 @@ table_syntaxique = {
         # -
         (1,1): ['ADD', 'OPE6', "OPE5'"],
         # <
-        (1,4): [],
+        (1,4): ["epsilon"],
         # >
-        (1,5): [],
+        (1,5): ["epsilon"],
         # <=
-        (1,6): [],
+        (1,6): ["epsilon"],
         # >=
-        (1,7): [],
+        (1,7): ["epsilon"],
         # /=
-        (1,8): [],
+        (1,8): ["epsilon"],
         # =
-        (1,9): [],
+        (1,9): ["epsilon"],
         # .
-        (1,11): [],
+        (1,11): ["epsilon"],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): []
+        (2,18): ["epsilon"]
     },
     "OPE6": {
         # Keywords
@@ -655,53 +652,53 @@ table_syntaxique = {
     "OPE6'": {
         # Keywords
         # and
-        (0,1): [],
+        (0,1): ["epsilon"],
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # not
-        (0,14): [],
+        (0,14): ["epsilon"],
         # or
-        (0,16): [],
+        (0,16): ["epsilon"],
         # rem
         (0,20): ['MULT', 'OPE7', "OPE6'"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # +
-        (1,0): [],
+        (1,0): ["epsilon"],
         # -
-        (1,1): [],
+        (1,1): ["epsilon"],
         # *
         (1,2): ['MULT', 'OPE7', "OPE6'"],
         # /
         (1,3): ['MULT', 'OPE7', "OPE6'"],
         # <
-        (1,4): [],
+        (1,4): ["epsilon"],
         # >
-        (1,5): [],
+        (1,5): ["epsilon"],
         # <=
-        (1,6): [],
+        (1,6): ["epsilon"],
         # >=
-        (1,7): [],
+        (1,7): ["epsilon"],
         # /=
-        (1,8): [],
+        (1,8): ["epsilon"],
         # =
-        (1,9): [],
+        (1,9): ["epsilon"],
         # .
-        (1,11): [],
+        (1,11): ["epsilon"],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): []
+        (2,18): ["epsilon"]
     },
     "OPE7": {
         # Keywords
@@ -789,55 +786,55 @@ table_syntaxique = {
     "EXPR''": {
         # Keywords
         # and
-        (0,1): [],
+        (0,1): ["epsilon"],
         # loop
-        (0,12): [],
+        (0,12): ["epsilon"],
         # not
-        (0,14): [],
+        (0,14): ["epsilon"],
         # or
-        (0,16): [],
+        (0,16): ["epsilon"],
         # rem
-        (0,20): [],
+        (0,20): ["epsilon"],
         # then
-        (0,23): [],
+        (0,23): ["epsilon"],
 
         # Operator
         # +
-        (1,0): [],
+        (1,0): ["epsilon"],
         # -
-        (1,1): [],
+        (1,1): ["epsilon"],
         # *
-        (1,2): [],
+        (1,2): ["epsilon"],
         # /
-        (1,3): [],
+        (1,3): ["epsilon"],
         # <
-        (1,4): [],
+        (1,4): ["epsilon"],
         # >
-        (1,5): [],
+        (1,5): ["epsilon"],
         # <=
-        (1,6): [],
+        (1,6): ["epsilon"],
         # >=
-        (1,7): [],
+        (1,7): ["epsilon"],
         # /=
-        (1,8): [],
+        (1,8): ["epsilon"],
         # =
-        (1,9): [],
+        (1,9): ["epsilon"],
         # .
-        (1,11): [],
+        (1,11): ["epsilon"],
         # :=
-        (1,12): [],
+        (1,12): ["epsilon"],
 
         # Syntax operator
         # (
         (2,7): [(2, 7), 'EXPR_VIRG_PLUS', (2, 8)],
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
-        (2,9): [],
+        (2,9): ["epsilon"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         # _
-        (2,18): []
+        (2,18): ["epsilon"]
     },
     'ORELS': {
         # Keywords
@@ -849,31 +846,31 @@ table_syntaxique = {
         # else
         (0,3): [(0, 3)],
         # false
-        (0,6): [],
+        (0,6): ["epsilon"],
         # new
-        (0,13): [],
+        (0,13): ["epsilon"],
         # null
-        (0,15): [],
+        (0,15): ["epsilon"],
         # true
-        (0,24): [],
+        (0,24): ["epsilon"],
         # character'val
-        (0,29): [],
+        (0,29): ["epsilon"],
 
         # Operator
         # -(unaire)
-        (1,14): [],
+        (1,14): ["epsilon"],
 
         # Syntax operator
         # (
-        (2,7): [],
+        (2,7): ["epsilon"],
         
         # Identifier
 
-        (3,0):[],
+        (3,0):["epsilon"],
         
         # Constant number
         
-        (4,0): []
+        (4,0): ["epsilon"]
     },
     'AND': {
         # Keywords
@@ -883,33 +880,33 @@ table_syntaxique = {
     "AND'": {
         # Keywords
         # false
-        (0,6): [],
+        (0,6): ["epsilon"],
         # new
-        (0,13): [],
+        (0,13): ["epsilon"],
         # null
-        (0,15): [],
+        (0,15): ["epsilon"],
         # then
         (0,23): [(0, 23)],
         # true
-        (0,24): [],
+        (0,24): ["epsilon"],
         # character'val
-        (0,29): [],
+        (0,29): ["epsilon"],
 
         # Operator
         # -(unaire)
-        (1,14): [],
+        (1,14): ["epsilon"],
 
         # Syntax operator
         # (
-        (2,7): [],
+        (2,7): ["epsilon"],
         
         # Identifier
 
-        (3,0):[],
+        (3,0):["epsilon"],
         
         # Constant number
         
-        (4,0): []
+        (4,0): ["epsilon"]
     },
     'EGAL': {
         # Operator
@@ -930,8 +927,7 @@ table_syntaxique = {
         (1,6): [(1,6)],
         # >=
         (1,7): [(1,7)],
-        # =
-        (1,8): ['error']
+    
     },
     'ADD': {
         # Operator
@@ -944,13 +940,13 @@ table_syntaxique = {
     'MULT': {
         # Keywords
         #rem
-        (0,20): ['error'],
+        (0,20): [(0,20)],
 
         # Operator
         # *
-        (1,2): ['error'],
+        (1,2): [(1,2)],
         # /
-        (1,3): ['error'],
+        (1,3): [(1,3)],
     },
     'CHAMPS_PLUS': {
         # Identifier
@@ -959,7 +955,7 @@ table_syntaxique = {
     "CHAMPS_PLUS'": {
         # Keywords
         # end
-        (0,5): [],
+        (0,5): ["epsilon"],
         
         # Identifier
         (3,0): ['CHAMPS_PLUS']
@@ -1006,11 +1002,11 @@ table_syntaxique = {
         # begin
         (0,2): ["INSTR_PLUS"],
         # elsif
-        (0,3): [],
+        (0,3): ["epsilon"],
         # else
-        (0,4): [],
+        (0,4): ["epsilon"],
         # end
-        (0,5): [],
+        (0,5): ["epsilon"],
         # false
         (0,6): ["INSTR_PLUS"],
         # for
@@ -1053,7 +1049,7 @@ table_syntaxique = {
         # ,
         (2,9): [(2, 9), 'IDENT_VIRG_PLUS'],
         # :
-        (2,10): []
+        (2,10): ["epsilon"],
     },
     'EXPR_VIRG_PLUS': {
         # Keywords
@@ -1085,7 +1081,7 @@ table_syntaxique = {
     "EXPR_VIRG_PLUS'": {
         # Syntax operator
         # )
-        (2,8): [],
+        (2,8): ["epsilon"],
         # ,
         (2,9): [(2, 9), 'EXPR_VIRG_PLUS'],
     },
@@ -1096,16 +1092,16 @@ table_syntaxique = {
     "PARAM_POINT_VIRG_PLUS'": {
         # Syntax operator
         # )
-        (2,8): [],
-        # ,
-        (2,9): [(2, 9), 'PARAM_POINT_VIRG_PLUS'],
+        (2,8): ["epsilon"],
+        # ;
+        (2,11): [(2, 11), 'PARAM_POINT_VIRG_PLUS'],
     },
     'PARAMS_BIN': {
         # Keywords
         # is
-        (0,11): [],
+        (0,11): ["epsilon"],
         # return
-        (0,21): [],
+        (0,21): ["epsilon"],
 
         # Syntax operator
         # (
@@ -1114,7 +1110,7 @@ table_syntaxique = {
     'IDENT_BIN': {
         # Syntax operator
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
         
         # Identifier
         (3,0): ['IDENT']
@@ -1122,12 +1118,12 @@ table_syntaxique = {
     'MODE_BIN': {
         # Keywords
         # access
-        (0,0): [],
+        (0,0): ["epsilon"],
         # in
         (0,10): ['MODE'],
 
         # Identifier
-        (3,0): []
+        (3,0): ["epsilon"]
     },
     'EXPR_BIN': {
         # Keywords
@@ -1150,7 +1146,7 @@ table_syntaxique = {
         # (
         (2,7): ["EXPR"],
         # ;
-        (2,11): [],
+        (2,11): ["epsilon"],
 
         # Identifier
         (3,0): ["EXPR"],
@@ -1163,12 +1159,12 @@ table_syntaxique = {
         # else
         (0,3): [(0, 3), 'INSTR_PLUS'],
         # end
-        (0,5): []
+        (0,5): ["epsilon"]
     },
     'DECL_STAR': {
         # Keywords
         # begin
-        (0,2): [],
+        (0,2): ["epsilon"],
         # function
         (0,8):['DECL', 'DECL_STAR'],
         # procedure
@@ -1182,11 +1178,11 @@ table_syntaxique = {
     'ELSIF_STAR': {
         # Keywords
         # else
-        (0,3): [],
+        (0,3): ["epsilon"],
         # elsif
         (0,4): [(0, 4), 'EXPR', (0, 23), 'INSTR_PLUS', 'ELSIF_STAR'],
         # end
-        (0,5): []
+        (0,5): ["epsilon"]
     },
     'EXPR_EG_BIN': {
         # Operator
@@ -1195,7 +1191,7 @@ table_syntaxique = {
 
         # Syntax operator
         # ;
-        (2,11): []
+        (2,11): ["epsilon"]
     },
     'IDENT': {        
         # Constant number
