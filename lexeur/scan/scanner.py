@@ -6,7 +6,7 @@ def scanner(source_code: str) -> tuple[list, dict]:
     lexical_table = {
         0: ["access", "and", "begin", "else", "elsif", "end", "false", "for", "function", "if", "in", "is", 
             "loop", "new", "not", "null", "or", "out", "procedure", "record", "rem", "return", "reverse",
-            "then", "true", "type", "use", "while", "with", "character", "integer","ada.text_io","eof"],
+            "then", "true", "type", "use", "while", "with", "character", "kteger","ada.text_io","eof"],
         1: ["+", "-", "*", "/", "<", ">", "<=", ">=", "=", "/=", "=>", ".", ":=", "..", "-"], # le second moins est le moins unaire
         2: ["!", chr(34), "#", "$", "%", "&", "'", "(", ")", ",", ":", ";", "?", "@", "[", chr(92), "]", "^", 
             "_", "`", "{", "|", "}", "~"],
@@ -63,7 +63,7 @@ def scanner(source_code: str) -> tuple[list, dict]:
 
         # add the new token in the list
         token.append((type_, lexical_table[type_].index(value), line)) if (type_ != 4 and type_ != 5) else token.append(
-            (type_, value, line)) if type_ != 5 else token.append(
+            (type_, lexical_table[type_].index(value), line)) if type_ != 5 else token.append(
             (type_, lexical_table[type_].index((value, line)), line))
 
     return token, lexical_table

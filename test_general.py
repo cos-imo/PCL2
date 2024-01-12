@@ -65,7 +65,6 @@ def test_parseur(filename, output_filename):
     print("\n \nTable Lexicale:")
     for key, values in lexical_table.items():
         print(f"    {list_type_token[key]}: {values}")
-        
     print(f"\n\nListe des tokens pour {filename} avec les tokens de la forme <type, valeur>: \n")
     
     
