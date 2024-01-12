@@ -39,16 +39,11 @@ def est_terminal(element) :
         return False
     
 
-#début du parseur:
-#L'analyseur prend en entrée la phrase (la liste de token) à identifier et la table d'analyse LL 
-#Pour réaliser l'analyse on crée une pile qui à l'initialisation contient l'axiome de la grammaire 
-#L'analyseur donne en sortie la liste des règles qui permettent de construire la phrase. Avec cette liste on va créer l'AST
 
-
+# Fonction qui permet de faire l'analyse syntaxique
 def parse(list_tokens,lexical_table, table_ll1) :
-    pile = [] #on crée la pile
+    pile = [] 
     pile.append("F") #on empile l'axiome de la grammaire
-    
     token_lu = list_tokens[0]
     sommet_pile = pile[-1] 
     succes = False 
@@ -57,66 +52,48 @@ def parse(list_tokens,lexical_table, table_ll1) :
     pile_arbre = [] #pile qui va contenir les noeuds de l'arbre
 
     while not (succes or erreur) :
-        print("Pile : ",pile)
-        
         sommet_pile = pile[-1]
         token_lu = list_tokens[ind]
         
+        #Cas 1 : si le sommet de la pile est un non terminal    
         if (not est_terminal(sommet_pile)) :
-            print("Token lu : ",token_lu)
-            print("Token lu en clair: ",lexical_table[token_lu[0]][token_lu[1]])
-            print("Sommet de la pile : ",sommet_pile)
-            
             token_lu_table = token_lu
-            if token_lu[0] == 3 : #On s'attend à avoir un identifiant
-                token_lu_table = (token_lu[0], 0, token_lu[2]) #On récupère le token lu sous la forme (type_token, valeur_token)
-            elif token_lu[0] == 4 : #On s'attend à avoir un nombre
-                token_lu_table = (token_lu[0], 0, token_lu[2])
             
-            print("Token lu apres modif: ",token_lu_table)
-                
-                
-            if ((table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])]!= ["epsilon"]) and (table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])])) : #Si la table contient une règle pour le couple (sommet_pile,token_lu)
-                
-                pile.pop() #on dépile le sommet de la pile
-                print("Règle cherchée dans la table : table_ll1 []",sommet_pile,"] [ ",token_lu_table,"]")
-                regle = table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])] #on récupère la règle correspondante, qui sera une liste de token
-                regleC = regle.copy()
-                print("Règle : ",regleC)
-                regleC.reverse()
-                print("Règle inversée : ",regleC)
-                for i in regleC:
-                    print("Ajout de ",i," dans la pile \n\n")
-                    pile.append(i)
-                #for i in range(len(regle)-1,-1,-1) : #on empile les tokens de la règle dans l'ordre inverse
-                    #pile.append(regle[i])
-            elif table_ll1[sommet_pile][(token_lu_table[0],token_lu_table[1])] == ["epsilon"] :
+            #Modification particulière pour les identifiants et les nombres où les règles sont de la forme <type_token, 0> et non <type_token, valeur_token>
+            if token_lu[0] == 3 or token_lu[0] == 4 : 
+                token_lu_table = (token_lu[0], 0, token_lu[2]) 
+            
+            # Si la table contient une règle pour le couple (sommet_pile,token_lu)
+            rule = table_ll1[sommet_pile].get((token_lu_table[0], token_lu_table[1]))
+            if rule is not None:
+                if rule != ["epsilon"]:
+                    pile.pop()  # on dépile le sommet de la pile
+                    regleC = rule.copy()
+                    regleC.reverse()  # on inverse la liste de token pour pouvoir empiler les tokens dans l'ordre
+                    for i in regleC:
+                        pile.append(i)
+                else:
                     pile.pop()
-                    pass
-                    
-            else :
-                erreur = True #si la table ne contient pas de règle pour le couple (sommet_pile,token_lu) alors on a une erreur
-                print("Erreur : la table ne contient pas de règle pour le couple (sommet_pile,token_lu). Sommet de la pile : ",sommet_pile," valeur Token lu : ",lexical_table[token_lu[0]][token_lu[1]], " Ligne : ",token_lu[2])
-                
+            else:
+                erreur = True  # si la table ne contient pas de règle pour le couple (sommet_pile,token_lu) alors on a une erreur
+                print("Erreur : la table ne contient pas de règle pour le couple (sommet_pile,token_lu). Sommet de la pile : ", sommet_pile, " valeur Token lu : ", lexical_table[token_lu[0]][token_lu[1]], " Ligne : ", token_lu[2])
+                                
+        #Cas 2 : si le sommet de la pile est un terminal (<type_token, valeur_token> donc forme ou "eof")    
         else : 
-            print("Token lu : ",token_lu)
-            print("Token lu en clair: ",lexical_table[token_lu[0]][token_lu[1]])
-            print("Sommet de la pile : ",sommet_pile)
-            #si x le sommet de la pile est un terminal, donc les éléments de la pile son des tokens de la forme <type_token, valeur_token> ou "eof"
-            if (sommet_pile == (0,32)) : #la pile n'est plus composé que de eof, c'est la fin
+            if (sommet_pile == (0,32)) : #si le sommet de la pile est eof
                 if (token_lu[1] == 32) and (token_lu[0] == 0) :
                     succes = True #si on est à la fin de la liste de token et que le sommet de la pile est eof alors on a réussi
                 else :
                     erreur = True
                     print("Erreur : la pile est vide mais la liste de token n'est pas finie. Sommet de la pile : ",sommet_pile," valeur Token lu : ",lexical_table[token_lu[0]][token_lu[1]], " Ligne : ",token_lu[2])
                 
-            else: #la pile n'est pas vide, on a donc que des élément sommet_pile de la forme <type_token, valeur_token>
+            else: #si le sommet de la pile est un terminal autre que eof
                 if ((sommet_pile == (3,0) and token_lu[0] == 3) or (sommet_pile == (4,0) and token_lu[0] == 4)) :
                     pile.pop()
                     ind += 1
                 elif (sommet_pile[0] == token_lu[0]) and (sommet_pile[1] == token_lu[1]) :
                     pile.pop()
-                    ind += 1 #On lit le token suivant
+                    ind += 1
                 else :
                     erreur = True    
                     print("Erreur : le sommet de la pile et le token lu ne sont pas les mêmes. Sommet de la pile : ",sommet_pile," Token Lu: ", token_lu) 
