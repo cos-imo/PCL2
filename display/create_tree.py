@@ -44,10 +44,10 @@ def create_tree(rules):
             current = rules[i][1]
         else:
             for j in range(len(rules[i][1])):
-                if current in ast:
-                    current.append(rules[i][1][j])
-                else:
-                    ast.update({current: [rules[i][1][j]]})
+                if current not in ast:
+                    ast.update({current: []})
+                ast[current].append(rules[i][1][j])
+
 
                 queue.append(rules[i][1][j])
 
