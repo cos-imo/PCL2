@@ -1,0 +1,66 @@
+F $\rightarrow{}$ with adatext$\_$io ; use adatext$\_$io ; procedure IDENT is DECL$\_$STAR begin INSTR$\_$PLUS end INDENT$\_$BIN ; eof \\
+DECL $\rightarrow{}$ type IDENT DECL' $|$ IDENT$\_$VIRG$\_$PLUS : TYPE EXPR$\_$EG$\_$BIN ; \\
+DECL $\rightarrow{}$ procedure IDENT PARAMS$\_$BIN is DECL$\_$STAR begin INSTR$\_$PLUS end INDENT$\_$BIN ; \\
+DECL $\rightarrow{}$ function IDENT PARAMS$\_$BIN return TYPE is DECL$\_$STAR begin INSTR$\_$PLUS end INDENT$\_$BIN ; \\
+DECL' $\rightarrow{}$ ; $|$ is DECL'' \\
+DECL'' $\rightarrow{}$ access IDENT ; $|$ record CHAMPS$\_$PLUS end record ; \\
+CHAMPS $\rightarrow{}$ IDENT$\_$VIRG$\_$PLUS : TYPE ; \\
+TYPE$\rightarrow{}$ IDENT $|$ access IDENT \\
+PARAMS $\rightarrow{}$ ( PARAM$\_$POINT$\_$VIRG$\_$PLUS ) \\
+PARAM $\rightarrow{}$ IDENT$\_$VIRG$\_$PLUS : MODE$\_$BIN TYPE \\
+MODE $\rightarrow{}$ in MODE'\\
+MODE' $\rightarrow{}$ out $|$ $\varepsilon$
+EXPR $\rightarrow{}$ OPE ACCES \\
+ACCES $\rightarrow{}$ . IDENT ACCESS $|$ $\varepsilon$ \\
+INSTR $\rightarrow{}$ EXPR INSTR' $|$ return EXPR$\_$BIN ; $|$ begin INSTR$\_$PLUS end ; \\
+INSTR $\rightarrow{}$ while EXPR loop INSTR$\_$PLUS end loop ; \\
+INSTR $\rightarrow{}$ if EXPR then INSTR$\_$PLUS ELSIFE ELSEB end if ; \\ 
+INSTR $\rightarrow{}$ for IDENT in reverse ? EXPR $\_$ EXPR loop INSTR$\_$PLUS end loop ; \\
+INSTR' $\rightarrow{}$ := EXPR ; $|$ ; \\
+OPE $\rightarrow{}$ OPE1 OPE'\\
+OPE' $\rightarrow{}$ ORELS OPE1 OPE' $|$ $\varepsilon$ \\
+OPE1 $\rightarrow{}$ OPE2 OPE1'\\
+OPE1' $\rightarrow{}$ AND OPE2 OPE1' $|$ $\varepsilon$ \\
+OPE2 $\rightarrow{}$ OPE3 OPE2'\\
+OPE2' $\rightarrow{}$ not OPE3 OPE2' $|$ $\varepsilon$ \\
+OPE3 $\rightarrow{}$ OPE4 OPE3'\\
+OPE3' $\rightarrow{}$ EGAL OPE4 OPE3' $|$ $\varepsilon$ \\
+OPE4 $\rightarrow{}$ OPE5 OPE4' \\
+OPE4' $\rightarrow{}$ ORDRE OPE5 OPE4' $|$ $\varepsilon$ \\
+OPE5 $\rightarrow{}$ OPE6 OPE5'\\
+OPE5' $\rightarrow{}$ ADD OPE6 OPE5' $|$ $\varepsilon$ \\
+OPE6 $\rightarrow{}$ OPE7 OPE6' \\
+OPE6' $\rightarrow{}$ MULT OPE7 OPE6' $|$ $\varepsilon$ \\
+OPE7 $\rightarrow{}$ moinsun OPE8 $|$ OPE8 \\
+OPE8 $\rightarrow{}$ EXPR' \\
+EXPR' $\rightarrow{}$ ENTIER $|$ true $|$ false $|$ null $|$ ( EXPR ) $|$ IDENT EXPR'' \\ 
+EXPR' $\rightarrow{}$ new IDENT $|$ character'val ( EXPR ) \\
+EXPR'' $\rightarrow{}$ ( EXPR$\_$VIRG$\_$PLUS ) $|$ $\varepsilon$ \\
+ORELS $\rightarrow{}$ or ORELS' \\
+ORELS' $\rightarrow{}$ else $|$ $\varepsilon$ \\
+AND $\rightarrow{}$ and AND'\\
+AND' $\rightarrow{}$ then $|$ $\varepsilon$ \\
+EGAL $\rightarrow{}$ = $|$ dif \\
+ORDRE $\rightarrow{}$ inf $|$ infeg $|$ sup $|$ supeg \\
+ADD $\rightarrow{}$ + $|$ - \\
+MULT $\rightarrow{}$ * $|$ / $|$ rem \\
+CHAMPS$\_$PLUS $\rightarrow{}$ CHAMPS CHAMPS$\_$PLUS' \\
+CHAMPS$\_$PLUS' $\rightarrow{}$ CHAMPS$\_$PLUS $|$ $\varepsilon$ \\
+INSTR$\_$PLUS $\rightarrow{}$ INSTR INSTR$\_$PLUS' \\
+INSTR$\_$PLUS'$\rightarrow{}$ INSTR$\_$PLUS $|$ $\varepsilon$ \\
+IDENT$\_$VIRG$\_$PLUS $\rightarrow{}$ IDENT IDENT$\_$VIRG$\_$PLUS' \\
+IDENT$\_$VIRG$\_$PLUS' $\rightarrow{}$ , IDENT$\_$VIRG$\_$PLUS $|$ $\varepsilon$ \\
+EXPR$\_$VIRG$\_$PLUS $\rightarrow{}$ EXPR EXPR$\_$VIRG$\_$PLUS'\\
+EXPR$\_$VIRG$\_$PLUS' $\rightarrow{}$ , EXPR$\_$VIRG$\_$PLUS $|$ $\varepsilon$ \\
+PARAM$\_$POINT$\_$VIRG$\_$PLUS $\rightarrow{}$ PARAM PARAM$\_$POINT$\_$VIRG$\_$PLUS'  \\
+PARAM$\_$POINT$\_$VIRG$\_$PLUS' $\rightarrow{}$ , PARAM$\_$POINT$\_$VIRG$\_$PLUS $|$ $\varepsilon$ \\
+PARAMS$\_$BIN $\rightarrow{}$ PARAMS $|$ $\varepsilon$ \\
+INDENT$\_$BIN $\rightarrow{}$ IDENT $|$ $\varepsilon$ \\
+MODE$\_$BIN $\rightarrow{}$ MODE $|$ $\varepsilon$ \\
+EXPR$\_$BIN $\rightarrow{}$ EXPR $|$ $\varepsilon$ \\
+ELSEB $\rightarrow{}$ else INSTR$\_$PLUS $|$ $\varepsilon$ \\
+DECL$\_$STAR $\rightarrow{}$ DECL DECL$\_$STAR $|$ $\varepsilon$ \\
+ELSIFE $\rightarrow{}$ elsif EXPR then INSTR$\_$PLUS ELSIFE $|$ $\varepsilon$ \\
+EXPR$\_$EG$\_$BIN $\rightarrow{}$ := EXPR $|$ $\varepsilon$ \\
+IDENT $\rightarrow{}$ id \\
+ENTIER $\rightarrow{}$ en \\

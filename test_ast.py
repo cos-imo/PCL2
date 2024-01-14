@@ -1,6 +1,7 @@
 import lexeur.lexeur as lex
 import parseur.parseur as parse
 import parseur.ast_pars as ast
+import parseur.show as show
 
 from parseur.table_syntaxique import table_syntaxique as table_ll1
 from display.create_tree import create_tree
@@ -89,4 +90,4 @@ def print_ast(ast):
     plt.pyplot.show()
 
 arbre = test_parseur("tests/test_lexeur/test1.txt")
-print_ast(arbre)
+show.visualize_tree(arbre).render(filename='syntax_tree', directory='./output', cleanup=True, format='png', engine='dot')

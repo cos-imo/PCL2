@@ -165,3 +165,11 @@ def construire_arbre(liste_regles):
 # Fonction qui permet de construire l'AST à partir de la liste des règles
 def AST(liste_regles):
     ast = construire_arbre(liste_regles)
+
+def afficher(arbre) :
+    for i in arbre.children :
+        print(i)
+        afficher(i)
+
+
+
