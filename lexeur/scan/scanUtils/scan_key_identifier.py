@@ -1,4 +1,4 @@
-def scan_key_identifier(source_code: str, position: int, mc: list) -> tuple[int, str, int]:
+def scan_key_identifier(source_code: str, position: int, mc: list) -> "tuple[int, str, int]":
     string = source_code[position]
     position += 1
     

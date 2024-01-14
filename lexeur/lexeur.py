@@ -2,7 +2,7 @@ from .scan import scanner
 from .error import RemWithoutSpace, IdenfierBeginWithNumber, ForbiddenAscii
 
 
-def lexical_analysis(code_source: str) -> (tuple[list, dict] or bool):
+def lexical_analysis(code_source: str) -> ("tuple[list, dict]" or bool):
     token, lexical_table = scanner(code_source)
 
     if lexical_table[5]:

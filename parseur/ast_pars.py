@@ -61,10 +61,10 @@ def parse(list_tokens,lexical_table, table_ll1) :
         sommet_pile = pile[-1]
         token_lu = list_tokens[ind]
 
-        print("sommet_pile : ",sommet_pile)
-        print("token_lu : ",token_lu)
-        print("pile : ",pile)
-        print("pile_arbre : ",pile_arbre)
+        #print("sommet_pile : ",sommet_pile)
+        #print("token_lu : ",token_lu)
+        #print("pile : ",pile)
+        #print("pile_arbre : ",pile_arbre)
         
         #Cas 1 : si le sommet de la pile est un non terminal    
         if (not est_terminal(sommet_pile)) :

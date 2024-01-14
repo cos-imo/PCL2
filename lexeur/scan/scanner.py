@@ -1,7 +1,7 @@
 from .scanUtils import scan_operator, scan_int, scan_key_identifier
 
 
-def scanner(source_code: str) -> tuple[list, dict]:
+def scanner(source_code: str) -> "tuple[list, dict]":
     # init the lexical table with 0 as keywords, 1 as operator, 2 as syntax operator, 3 as identifier, 4 as constant number, 5 invalid char
     lexical_table = {
         0: ["access", "and", "begin", "else", "elsif", "end", "false", "for", "function", "if", "in", "is", 

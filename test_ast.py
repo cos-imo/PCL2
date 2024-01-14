@@ -64,7 +64,10 @@ def test_parseur(filename):
     #On fait à présent l'analyse syntaxique
     print("\n\n\n\nAnalyse syntaxique: \n")
     resultat_ast_parseur = ast.parse(tokens, lexical_table, table_ll1)
-    if (resultat_ast_parseur != []) :
-        arbre = ast.construire_arbre
+    if resultat_ast_parseur != []:
+        arbre = ast.construire_arbre(resultat_ast_parseur)
         ast.afficher_arbre(arbre)
+
+
+test_parseur("tests/test_lexeur/test1.txt")
     
