@@ -44,10 +44,11 @@ def est_terminal(element) :
 #Pour réaliser l'analyse on crée une pile qui à l'initialisation contient l'axiome de la grammaire 
 #L'analyseur donne en sortie la liste des règles qui permettent de construire la phrase. Avec cette liste on va créer l'AST
 
-def parse(list_tokens,lexical_table) :
-    pile = [] #on crée la pile
+
+# Fonction qui permet de faire l'analyse syntaxique
+def parse(list_tokens,lexical_table, table_ll1) :
+    pile = [] 
     pile.append("F") #on empile l'axiome de la grammaire
-    
     token_lu = list_tokens[0]
     sommet_pile = pile[-1] 
     succes = False 
@@ -55,8 +56,8 @@ def parse(list_tokens,lexical_table) :
     ind = 0 #indice de la liste de token
     pile_arbre = [] #pile qui va contenir les noeuds de l'arbre
 
-    while not(succes or erreur) :
-        
+    while not (succes or erreur) :
+
         sommet_pile = pile[-1]
         token_lu = list_tokens[ind]
 
@@ -64,63 +65,67 @@ def parse(list_tokens,lexical_table) :
         print("token_lu : ",token_lu)
         print("pile : ",pile)
         print("pile_arbre : ",pile_arbre)
-
-
-        if token_lu[0] == 3 : 
-            token_lu = (3,0) 
-
         
+        #Cas 1 : si le sommet de la pile est un non terminal    
         if (not est_terminal(sommet_pile)) :
+            token_lu_table = token_lu
             
-            if lexical_table[sommet_pile][token_lu]: #Si la table contient une règle pour le couple (sommet_pile,token_lu)
-                
-                #Construire l'arbre avec les éléments de la règle
-                
-                
-                pile.pop() #on dépile le sommet de la pile
-                regle = lexical_table[sommet_pile][token_lu] #on récupère la règle correspondante, qui sera une liste de token
-                pile_arbre.append([sommet_pile,regle]) #on empile le sommet de la pile et la règle correspondante
-                regle.reverse()
-                for i in regle:
-                    pile.append(i)
-                #for i in range(len(regle)-1,-1,-1) : #on empile les tokens de la règle dans l'ordre inverse
-                    #pile.append(regle[i])
-            else :
-                erreur = True #si la table ne contient pas de règle pour le couple (sommet_pile,token_lu) alors on a une erreur
-                
-        else : #si x le sommet de la pile est un terminal, donc les éléments de la pile son des tokens de la forme <type_token, valeur_token> ou "eof"
-            if (sommet_pile == "eof") : #la pile n'est plus composé que de eof, c'est la fin
-                if (token_lu[1] == "eof") :
+            #Modification particulière pour les identifiants et les nombres où les règles sont de la forme <type_token, 0> et non <type_token, valeur_token>
+            if token_lu[0] == 3 or token_lu[0] == 4 : 
+                token_lu_table = (token_lu[0], 0, token_lu[2]) 
+            
+            # Si la table contient une règle pour le couple (sommet_pile,token_lu)
+            rule = table_ll1[sommet_pile].get((token_lu_table[0], token_lu_table[1]))
+            if rule is not None:
+                if rule != ["epsilon"]:
+                    pile.pop()  # on dépile le sommet de la pile
+                    regleC = rule.copy()
+                    pile_arbre.append([sommet_pile,regleC]) #on empile le sommet de la pile et la règle correspondante
+
+                    regleC.reverse()  # on inverse la liste de token pour pouvoir empiler les tokens dans l'ordre
+                    for i in regleC:
+                        pile.append(i)
+                else:
+                    pile.pop()
+            else:
+                erreur = True  # si la table ne contient pas de règle pour le couple (sommet_pile,token_lu) alors on a une erreur
+                print("Erreur : la table ne contient pas de règle pour le couple (sommet_pile,token_lu). Sommet de la pile : ", sommet_pile, " valeur Token lu : ", lexical_table[token_lu[0]][token_lu[1]], " Ligne : ", token_lu[2])
+                                
+        #Cas 2 : si le sommet de la pile est un terminal (<type_token, valeur_token> donc forme ou "eof")    
+        else : 
+            if (sommet_pile == (0,32)) : #si le sommet de la pile est eof
+                if (token_lu[1] == 32) and (token_lu[0] == 0) :
                     succes = True #si on est à la fin de la liste de token et que le sommet de la pile est eof alors on a réussi
                 else :
                     erreur = True
+                    print("Erreur : la pile est vide mais la liste de token n'est pas finie. Sommet de la pile : ",sommet_pile," valeur Token lu : ",lexical_table[token_lu[0]][token_lu[1]], " Ligne : ",token_lu[2])
                 
-            else: #la pile n'est pas vide, on a donc que des élément sommet_pile de la forme <type_token, valeur_token>
-                if (sommet_pile[0] == 3) and (token_lu[0] == 3) : #On s'attend à avoir un identifiant
-                    
-                    #Il faut récupérer la valeur de l'identifiant pour construire l'arbre
-                    pile_arbre.append([sommet_pile,token_lu[1]])
-                    
-                    
+            else: #si le sommet de la pile est un terminal autre que eof
+                if ((sommet_pile == (3,0) and token_lu[0] == 3) or (sommet_pile == (4,0) and token_lu[0] == 4)) :
                     pile.pop()
                     ind += 1
-                  
-                elif (sommet_pile[0] == token_lu[0]) and (sommet_pile[1] == token_lu[1]) :
-
-                    #Il faut récupérer la valeur du token pour construire l'arbre
                     pile_arbre.append([sommet_pile,token_lu[1]])
-
+                elif (sommet_pile[0] == token_lu[0]) and (sommet_pile[1] == token_lu[1]) :
                     pile.pop()
-                    ind += 1 #On lit le token suivant
+                    ind += 1
+                    pile_arbre.append([sommet_pile,token_lu[1]])
                 else :
-                    erreur = True
+                    erreur = True    
+                    print("Erreur : le sommet de la pile et le token lu ne sont pas les mêmes. Sommet de la pile : ",sommet_pile," Token Lu: ", token_lu) 
     if succes :
-        return pile_arbre 
+        print("L'anlayse syntaxique a réussi sans erreur")
+        return pile_arbre
+    else :
+        print("L'analyse syntaxique a échoué") 
+        return []    
 
-    return pile_arbre                   
+        
   
 #il faut traiter les erreurs correctement et construire les fonctions nécessaires.
 #Attention à verifier dans token_lu qu'on compare bien la valeur du token!!!!
+
+   
+
     
 #Fonction qui permet de construire l'AST à partir de la liste des règles
     
