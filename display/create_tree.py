@@ -43,11 +43,11 @@ def create_tree(rules):
         if est_terminal(current):
             current = rules[i][1]
         else:
-            for j in range(len(rules[i][1])):
-                if current not in ast:
-                    ast.update({current: []})
-                ast[current].append(rules[i][1][j])
+            if current not in ast:
+                ast.update({current: []})
 
+            for j in range(len(rules[i][1])):
+                ast[current].append(rules[i][1][j])
 
                 queue.append(rules[i][1][j])
 
