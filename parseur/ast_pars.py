@@ -148,8 +148,9 @@ def construire_arbre(liste_regles):
             current_node.value = liste_regles[i][1]  # On donne la valeur de la feuille
             print("nouvelle feuille : ", current_node.value)
 
-        
-
+        elif liste_regles[i][1] == "epsilon":  # Si on a epsilon alors on a une feuille vide
+            current_node.value = None
+            print("feuille vide")
 
         else:  # Sinon on a un non terminal
             print("non terminal" ,i, liste_regles[i])

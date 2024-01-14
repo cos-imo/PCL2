@@ -68,9 +68,25 @@ def test_parseur(filename):
         print(i)
     if resultat_ast_parseur:
         arbre = ast.construire_arbre(resultat_ast_parseur)
-        graph = nx.from_dict_of_lists(arbre)
-        nx.draw_networkx(graph)
-        plt.show()
+    return arbre
 
+def print_ast(ast):
+    print("Arbre : \n")
+    for i in ast:
+        print(i)
+    print("\n\n")
+    print("Arbre sous forme de dictionnaire: \n")
+    print(ast)
+    print("\n\n")
+    print("Arbre sous forme de graphe: \n")
+    G = nx.Graph()
+    for i in ast:
+        G.add_node(i)
+        for j in ast[i]:
+            G.add_node(j)
+            G.add_edge(i, j)
+    nx.draw(G, with_labels=True)
+    plt.pyplot.show()
 
-test_parseur("tests/test_lexeur/test1.txt")
+arbre = test_parseur("tests/test_lexeur/test1.txt")
+print_ast(arbre)
