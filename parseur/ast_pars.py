@@ -61,10 +61,10 @@ def parse(list_tokens,lexical_table, table_ll1) :
         sommet_pile = pile[-1]
         token_lu = list_tokens[ind]
 
-        print("sommet_pile : ",sommet_pile)
-        print("token_lu : ",token_lu)
-        print("pile : ",pile)
-        print("pile_arbre : ",pile_arbre)
+        #print("sommet_pile : ",sommet_pile)
+        #print("token_lu : ",token_lu)
+        #print("pile : ",pile)
+        #print("pile_arbre : ",pile_arbre)
         
         #Cas 1 : si le sommet de la pile est un non terminal    
         if (not est_terminal(sommet_pile)) :
@@ -130,6 +130,7 @@ def parse(list_tokens,lexical_table, table_ll1) :
 #Fonction qui permet de construire l'AST à partir de la liste des règles
     
 def construire_arbre(liste_regles) :
+    print("liste_regles : \n",liste_regles)
     arbre = Node(liste_regles[0][0]) #On crée la racine de l'arbre
     pile_arbre = [] #On crée une pile qui va contenir les noeuds de l'arbre
     pile_arbre.append(arbre) #On empile la racine de l'arbre
@@ -142,11 +143,12 @@ def construire_arbre(liste_regles) :
             current_node.value = liste_regles[i][1] #On donne la valeur de la feuille
 
         else : #Sinon on a un non terminal 
+            print("liste_regles[i] : ",liste_regles[i])
 
             for j in range(len(liste_regles[i][1])) : #On parcourt la règle
-
                 current_node.add_child(Node(liste_regles[i][1][j])) #On ajoute ses enfants au noeud courant
                 pile_arbre.append(current_node.children[j]) #On empile les enfants du noeud courant
+            print("arbre : ",arbre)
     
     return arbre #On retourne l'arbre
 

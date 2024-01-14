@@ -1,4 +1,4 @@
-def scan_operator(source_code: str, position: int, op: list) -> tuple[int, str, int]:
+def scan_operator(source_code: str, position: int, op: list) -> "tuple[int, str, int]":
     temp = source_code[position: position + 2]
 
     if (temp[0] in op and temp in op) or temp == ":=":
