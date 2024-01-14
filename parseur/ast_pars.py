@@ -86,6 +86,7 @@ def parse(list_tokens, lexical_table, table_ll1):
                         pile.append(i)
                 else:
                     pile.pop()
+                    pile_arbre.append([sommet_pile, "epsilon"])
             else:
                 erreur = True  # si la table ne contient pas de règle pour le couple (sommet_pile,token_lu) alors on a une erreur
                 print(
@@ -146,6 +147,8 @@ def construire_arbre(liste_regles):
         if est_terminal(current_node.fct):  # Si le sommet de la pile est un terminal alors on a une feuille
             current_node.value = liste_regles[i][1]  # On donne la valeur de la feuille
             print("nouvelle feuille : ", current_node.value)
+
+        
 
 
         else:  # Sinon on a un non terminal
