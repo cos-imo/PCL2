@@ -3,9 +3,9 @@ import parseur.parseur as parse
 import parseur.ast_pars as ast
 
 from parseur.table_syntaxique import table_syntaxique as table_ll1
-
-
-
+from display.create_tree import create_tree
+import networkx as nx
+import matplotlib as plt
 
 def print_tokens(tokens):
     current_line = tokens[0][2]
@@ -64,10 +64,11 @@ def test_parseur(filename):
     #On fait à présent l'analyse syntaxique
     print("\n\n\n\nAnalyse syntaxique: \n")
     resultat_ast_parseur = ast.parse(tokens, lexical_table, table_ll1)
-    if resultat_ast_parseur != []:
+    if resultat_ast_parseur:
         arbre = ast.construire_arbre(resultat_ast_parseur)
-        ast.afficher_arbre(arbre)
+        graph = nx.from_dict_of_lists(arbre)
+        nx.draw_networkx(graph)
+        plt.show()
 
 
 test_parseur("tests/test_lexeur/test1.txt")
-    

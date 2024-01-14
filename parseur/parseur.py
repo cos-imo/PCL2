@@ -1,35 +1,3 @@
-#Définition de la structure de l'arbre
-class Node:
-    def __init__(self, type, children=None, value=None):
-        """
-        Initialise un nouveau nœud de l'arbre.
-
-        :param type: Type de nœud (par exemple, 'Add', 'Subtract', 'Number', 'Identifier', etc.)
-        :param children: Liste des nœuds enfants (sous-arbres).
-        :param value: Valeur du nœud (utile pour les feuilles comme les nombres ou les identifiants).
-        """
-        self.type = type
-        self.children = children if children is not None else []
-        self.value = value
-
-    def add_child(self, child):
-        """
-        Ajoute un enfant à ce nœud.
-
-        :param child: Nœud enfant à ajouter.
-        """
-        self.children.append(child)
-
-    def __repr__(self):
-        """
-        Représentation textuelle pour le débogage.
-        print(node) permet d'afficher l'arbre sous forme de texte.
-        """
-        return f"Node({self.type}, children={self.children}, value={self.value})"
-
-
-
-
 #Fonction qui permet de dire si une chaines de caractères est un terminal ou non
 def est_terminal(element) :
     #Si l'élément de la pile est un tuple alors c'est un terminal ou que c'est "eof" alors c'est un terminal sinon si c'est une string alors c'est un non terminal
@@ -103,15 +71,3 @@ def parse(list_tokens,lexical_table, table_ll1) :
     else :
         print("L'analyse syntaxique a échoué")
         return False              
-  
-#il faut traiter les erreurs correctement et construire les fonctions nécessaires.
-#Attention à verifier dans token_lu qu'on compare bien la valeur du token!!!!
-    
-   
-
-            
-
-
-
-
-
