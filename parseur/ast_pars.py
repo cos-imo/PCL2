@@ -140,7 +140,8 @@ def construire_arbre(liste_regles):
 
     for i in range(len(liste_regles)):  # On parcourt la liste des règles
 
-        current_node = pile_arbre.pop(0)  # On dépile le sommet de la pile des noeuds de l'arbre
+        current_node = pile_arbre.pop()  # On dépile le sommet de la pile des noeuds de l'arbre
+        print ("current_node : ", current_node)
 
         if est_terminal(current_node.fct):  # Si le sommet de la pile est un terminal alors on a une feuille
             current_node.value = liste_regles[i][1]  # On donne la valeur de la feuille
@@ -148,7 +149,7 @@ def construire_arbre(liste_regles):
 
 
         else:  # Sinon on a un non terminal
-            print(i, liste_regles[i])
+            print("non terminal" ,i, liste_regles[i])
 
             for j in range(len(liste_regles[i][1])):  # On parcourt la règle
                 current_node.add_child(Node(liste_regles[i][1][j]))  # On ajoute ses enfants au noeud courant

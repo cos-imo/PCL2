@@ -64,6 +64,8 @@ def test_parseur(filename):
     #On fait à présent l'analyse syntaxique
     print("\n\n\n\nAnalyse syntaxique: \n")
     resultat_ast_parseur = ast.parse(tokens, lexical_table, table_ll1)
+    for i in resultat_ast_parseur:
+        print(i)
     if resultat_ast_parseur:
         arbre = ast.construire_arbre(resultat_ast_parseur)
         graph = nx.from_dict_of_lists(arbre)
