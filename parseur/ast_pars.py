@@ -1,6 +1,6 @@
 #Définition de la structure de l'arbre
 class Node:
-    def __init__(self, type, children=None, value=None):
+    def __init__(self, fct, children=None, value=None):
         """
         Initialise un nouveau nœud de l'arbre.
 
@@ -8,7 +8,7 @@ class Node:
         :param children: Liste des nœuds enfants (sous-arbres).
         :param value: Valeur du nœud (utile pour les feuilles comme les nombres ou les identifiants).
         """
-        self.type = type
+        self.fct = fct
         self.children = children if children is not None else []
         self.value = value
 
@@ -25,7 +25,7 @@ class Node:
         Représentation textuelle pour le débogage.
         print(node) permet d'afficher l'arbre sous forme de texte.
         """
-        return f"Node({self.type}, children={self.children}, value={self.value})"
+        return f"Node({self.fct}, children={self.children}, value={self.value})"
 
 
 
@@ -139,8 +139,10 @@ def construire_arbre(liste_regles) :
 
         current_node = pile_arbre.pop(0) #On dépile le sommet de la pile des noeuds de l'arbre
 
-        if est_terminal(current_node.type) : #Si le sommet de la pile est un terminal alors on a une feuille
+        if est_terminal(current_node.fct) : #Si le sommet de la pile est un terminal alors on a une feuille
             current_node.value = liste_regles[i][1] #On donne la valeur de la feuille
+            print("nouvelle feuille : ",current_node.value )
+
 
         else : #Sinon on a un non terminal 
             print("liste_regles[i] : ",liste_regles[i])
@@ -148,7 +150,6 @@ def construire_arbre(liste_regles) :
             for j in range(len(liste_regles[i][1])) : #On parcourt la règle
                 current_node.add_child(Node(liste_regles[i][1][j])) #On ajoute ses enfants au noeud courant
                 pile_arbre.append(current_node.children[j]) #On empile les enfants du noeud courant
-            print("arbre : ",arbre)
     
     return arbre #On retourne l'arbre
 
