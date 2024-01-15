@@ -60,3 +60,10 @@ def remonter_feuilles(node):
     node.children = new_children
 
     return node
+
+
+def inverser_enfants_arbre(node):
+    if node.children:
+        node.children.reverse()  # Inverser l'ordre des enfants du nœud courant
+        for enfant in node.children:
+            inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
