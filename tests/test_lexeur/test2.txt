@@ -10,6 +10,6 @@ end aireRectangle ;
 choix : integer ;
 -- PROCEDURE PRINCIPALE
 begin
-choix := 2 + 3 + 4 ;
+choix := 3 / 4 * 2 ;
 aireRectangle(2,3) ;
 end unDebut ; eof

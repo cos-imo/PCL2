@@ -20,6 +20,14 @@ class Node:
         """
         self.children.append(child)
 
+    def remove_child(self, child):
+        """
+        Supprime un enfant de ce nœud.
+
+        :param child: Nœud enfant à supprimer.
+        """
+        self.children.remove(child)
+
     def __repr__(self):
         """
         Représentation textuelle pour le débogage.
@@ -144,7 +152,15 @@ def construire_arbre(liste_regles):
         
 
         if est_terminal(current_node.fct):  # Si le sommet de la pile est un terminal alors on a une feuille
-            current_node.value = liste_regles[i][1]  # On donne la valeur de la feuille
+            if current_node.fct == (3,0):
+                current_node.value = liste_regles[i][1]  # On donne la valeur de la feuille
+                current_node.fct = "Ident"
+            elif current_node.fct == (4,0):
+                current_node.value = liste_regles[i][1]
+                current_node.fct = "Number"
+            else:
+                current_node.value = liste_regles[i][1]
+                current_node.fct = "Keyword"
 
         elif liste_regles[i][1] == "epsilon":  # Si on a epsilon alors on a une feuille vide
             current_node.value = None

@@ -18,6 +18,14 @@ class Node:
         :param child: Nœud enfant à ajouter.
         """
         self.children.append(child)
+    
+    def remove_child(self, child):
+        """
+        Supprime un enfant de ce nœud.
+
+        :param child: Nœud enfant à supprimer.
+        """
+        self.children.remove(child)
 
     def __repr__(self):
         """
@@ -62,8 +70,26 @@ def remonter_feuilles(node):
     return node
 
 
+
 def inverser_enfants_arbre(node):
     if node.children:
         node.children.reverse()  # Inverser l'ordre des enfants du nœud courant
         for enfant in node.children:
             inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
+
+
+#supprimer les feuilles avec les parenthèses et les ; 
+
+def supprimer_feuilles(node):
+    for child in node.children:
+        if child.value == "(" or child.value == ")" or child.value == ";":
+            node.remove_child(child)
+        else:
+            supprimer_feuilles(child)
+
+
+
+
+        
+        
+    
