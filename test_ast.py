@@ -71,10 +71,25 @@ def test_parseur(filename):
     return arbre
 
 
+
+def inverser_enfants_arbre(node):
+    if node.children:
+        node.children.reverse()  # Inverser l'ordre des enfants du nœud courant
+        for enfant in node.children:
+            inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
+
+
+
 arbre = test_parseur("tests/test_lexeur/test2.txt")
 show.visualize_tree(arbre).render(filename='syntax_tree', directory='./output', cleanup=True, format='png', engine='dot')
 
-#arbre_elague = prune.remove_empty_nodes(arbre)
+inverser_enfants_arbre(arbre)  # Inverser l'ordre des enfants dans l'arbre
 
-#show.visualize_tree(arbre_elague).render(filename='prun_syntax_tree', directory='./output', cleanup=True, format='png', engine='dot')
+#arbre_elague = prune.remove_empty_nodes(arbre)
+arbre_elague = prune.elaguer_arbre(arbre)
+arbre_final = prune.remonter_feuilles(arbre_elague)
+
+
+
+show.visualize_tree(arbre_final).render(filename='prun_syntax_tree_final', directory='./output', cleanup=True, format='png', engine='dot')
 

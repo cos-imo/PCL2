@@ -106,14 +106,10 @@ def parse(list_tokens, lexical_table, table_ll1):
                           token_lu[2])
 
             else:  # si le sommet de la pile est un terminal autre que eof
-                if (sommet_pile == (3, 0) and token_lu[0] == 3) :
+                if (sommet_pile == (3, 0) and token_lu[0] == 3 or sommet_pile == (4, 0) and token_lu[0] == 4):
                     pile.pop()
                     ind += 1
                     pile_arbre.append([sommet_pile, lexical_table[token_lu[0]][token_lu[1]]])
-                elif(sommet_pile == (4, 0) and token_lu[0] == 4) :
-                    pile.pop()
-                    ind += 1
-                    pile_arbre.append([sommet_pile, token_lu[1]])
                 elif (sommet_pile[0] == token_lu[0]) and (sommet_pile[1] == token_lu[1]):
                     pile.pop()
                     ind += 1
@@ -145,6 +141,7 @@ def construire_arbre(liste_regles):
     for i in range(len(liste_regles)):  # On parcourt la liste des règles
 
         current_node = pile_arbre.pop()  # On dépile le sommet de la pile des noeuds de l'arbre
+        
 
         if est_terminal(current_node.fct):  # Si le sommet de la pile est un terminal alors on a une feuille
             current_node.value = liste_regles[i][1]  # On donne la valeur de la feuille
