@@ -106,14 +106,18 @@ def parse(list_tokens, lexical_table, table_ll1):
                           token_lu[2])
 
             else:  # si le sommet de la pile est un terminal autre que eof
-                if ((sommet_pile == (3, 0) and token_lu[0] == 3) or (sommet_pile == (4, 0) and token_lu[0] == 4)):
+                if (sommet_pile == (3, 0) and token_lu[0] == 3) :
+                    pile.pop()
+                    ind += 1
+                    pile_arbre.append([sommet_pile, lexical_table[token_lu[0]][token_lu[1]]])
+                elif(sommet_pile == (4, 0) and token_lu[0] == 4) :
                     pile.pop()
                     ind += 1
                     pile_arbre.append([sommet_pile, token_lu[1]])
                 elif (sommet_pile[0] == token_lu[0]) and (sommet_pile[1] == token_lu[1]):
                     pile.pop()
                     ind += 1
-                    pile_arbre.append([sommet_pile, token_lu[1]])
+                    pile_arbre.append([sommet_pile, lexical_table[token_lu[0]][token_lu[1]]])
                 else:
                     erreur = True
                     print("Erreur : le sommet de la pile et le token lu ne sont pas les mêmes. Sommet de la pile : ",
@@ -134,7 +138,6 @@ def parse(list_tokens, lexical_table, table_ll1):
 # Fonction qui permet de construire l'AST à partir de la liste des règles
 
 def construire_arbre(liste_regles):
-    print("liste_regles : \n", liste_regles)
     arbre = Node(liste_regles[0][0])  # On crée la racine de l'arbre
     pile_arbre = []  # On crée une pile qui va contenir les noeuds de l'arbre
     pile_arbre.append(arbre)  # On empile la racine de l'arbre
@@ -142,18 +145,14 @@ def construire_arbre(liste_regles):
     for i in range(len(liste_regles)):  # On parcourt la liste des règles
 
         current_node = pile_arbre.pop()  # On dépile le sommet de la pile des noeuds de l'arbre
-        print ("current_node : ", current_node)
 
         if est_terminal(current_node.fct):  # Si le sommet de la pile est un terminal alors on a une feuille
             current_node.value = liste_regles[i][1]  # On donne la valeur de la feuille
-            print("nouvelle feuille : ", current_node.value)
 
         elif liste_regles[i][1] == "epsilon":  # Si on a epsilon alors on a une feuille vide
             current_node.value = None
-            print("feuille vide")
 
         else:  # Sinon on a un non terminal
-            print("non terminal" ,i, liste_regles[i])
 
             for j in range(len(liste_regles[i][1])):  # On parcourt la règle
                 current_node.add_child(Node(liste_regles[i][1][j]))  # On ajoute ses enfants au noeud courant

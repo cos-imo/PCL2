@@ -2,6 +2,7 @@ import lexeur.lexeur as lex
 import parseur.parseur as parse
 import parseur.ast_pars as ast
 import parseur.show as show
+import parseur.prune_ast as prune
 
 from parseur.table_syntaxique import table_syntaxique as table_ll1
 from display.create_tree import create_tree
@@ -65,29 +66,15 @@ def test_parseur(filename):
     #On fait à présent l'analyse syntaxique
     print("\n\n\n\nAnalyse syntaxique: \n")
     resultat_ast_parseur = ast.parse(tokens, lexical_table, table_ll1)
-    for i in resultat_ast_parseur:
-        print(i)
     if resultat_ast_parseur:
         arbre = ast.construire_arbre(resultat_ast_parseur)
     return arbre
 
-def print_ast(ast):
-    print("Arbre : \n")
-    for i in ast:
-        print(i)
-    print("\n\n")
-    print("Arbre sous forme de dictionnaire: \n")
-    print(ast)
-    print("\n\n")
-    print("Arbre sous forme de graphe: \n")
-    G = nx.Graph()
-    for i in ast:
-        G.add_node(i)
-        for j in ast[i]:
-            G.add_node(j)
-            G.add_edge(i, j)
-    nx.draw(G, with_labels=True)
-    plt.pyplot.show()
 
-arbre = test_parseur("tests/test_lexeur/test1.txt")
+arbre = test_parseur("tests/test_lexeur/test2.txt")
 show.visualize_tree(arbre).render(filename='syntax_tree', directory='./output', cleanup=True, format='png', engine='dot')
+
+#arbre_elague = prune.remove_empty_nodes(arbre)
+
+#show.visualize_tree(arbre_elague).render(filename='prun_syntax_tree', directory='./output', cleanup=True, format='png', engine='dot')
+
