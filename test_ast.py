@@ -86,11 +86,16 @@ inverser_enfants_arbre(arbre)  # Inverser l'ordre des enfants dans l'arbre
 
 #afficher l'arbre initial
 show.visualize_tree(arbre).render(filename='syntax_tree', directory='./output', cleanup=True, format='png', engine='dot')
+show.visualize_tree_hor(arbre,orientation='LR').render(filename='syntax_tree_hor', directory='./output', cleanup=True, format='png', engine='dot')
 
 #afficher l'arbre après élagage
 arbre_elague = prune.elaguer_arbre(arbre)
 arbre_fi = prune.remonter_feuilles(arbre_elague)
 show.visualize_tree(arbre_fi).render(filename='prun_syntax_tree_final', directory='./output', cleanup=True, format='png', engine='dot')
 
-arbre_supp = prune.supprimer_feuilles(arbre_fi)
-show.visualize_tree(arbre_supp).render(filename='prun_syntax_tree_final', directory='./output', cleanup=True, format='png', engine='dot')
+arbre_sup = prune.remove_unless_node(arbre_fi)
+show.visualize_tree(arbre_sup).render(filename='syntax_tree_final', directory='./output', cleanup=True, format='png', engine='dot')
+
+
+show.visualize_tree_hor(arbre_fi,orientation='LR').render(filename='prun_syntax_tree_final_hor', directory='./output', cleanup=True, format='png', engine='dot')
+show.visualize_tree_hor(arbre_sup,orientation='LR').render(filename='syntax_tree_final_hor', directory='./output', cleanup=True, format='png', engine='dot')

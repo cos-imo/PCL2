@@ -29,7 +29,7 @@ class Node:
         return f"Node({self.fct}, children={self.children}, value={self.value})"
 
 
-def visualize_tree(node, graph=None):
+def visualize_tree(node, graph=None, orentation='TB'):
     if graph is None:
         graph = Digraph(format='png')  # Vous pouvez choisir un format différent si vous le souhaitez
 
@@ -37,6 +37,18 @@ def visualize_tree(node, graph=None):
 
     for child in node.children:
         visualize_tree(child, graph)
+        graph.edge(str(id(node)), str(id(child)))
+
+    return graph
+
+def visualize_tree_hor(node, graph=None, orientation='TB'):
+    if graph is None:
+        graph = Digraph(format='png', graph_attr={'rankdir': orientation})
+
+    graph.node(str(id(node)), label=f"{node.fct}\n{node.value}")
+
+    for child in node.children:
+        visualize_tree(child, graph, orientation)
         graph.edge(str(id(node)), str(id(child)))
 
     return graph

@@ -78,18 +78,43 @@ def inverser_enfants_arbre(node):
             inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
 
 
-#supprimer les feuilles avec les parenthèses et les ; 
-
-def supprimer_feuilles(node):
+# remove unles node like ";" "(" ")"
+def remove_unless_node(node):
+    # Élaguer récursivement les enfants d'abord
+    children_to_keep = []
     for child in node.children:
-        if child.value == "(" or child.value == ")" or child.value == ";":
-            node.remove_child(child)
-        else:
-            supprimer_feuilles(child)
-
-
-
-
-        
-        
+        pruned_child = remove_unless_node(child)
+        if pruned_child or (child.value is None and any(isinstance(grandchild.value, tuple) for grandchild in child.children)):
+            children_to_keep.append(child)
     
+    # Mettre à jour les enfants après l'élagage
+    node.children = children_to_keep
+    
+    # Si après l'élagage il ne reste aucun enfant et que la valeur du nœud est élagable, élaguer le nœud
+    if not node.children and node.value in (";", "(", ")"):
+        return None  # Le nœud est élagable
+
+    return node  # Garder le nœud
+
+def remonter_operateur(node):
+    if node.fct[:3]=="OPE":
+        node=node.children[0]
+        
+
+
+    # Si le nœud a exactement un enfant et que la valeur du nœud est None, remonter cet enfant
+    if len(node.children) == 1 and node.value is None:
+        return remonter_operateur(node.children[0])
+
+    # Sinon, appliquer la fonction récursivement à tous les enfants
+    new_children = []
+    for child in node.children:
+        new_child = remonter_operateur(child)
+        if new_child:
+            new_children.append(new_child)
+    
+    node.children = new_children
+
+    return node
+
+
