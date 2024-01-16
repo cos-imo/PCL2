@@ -2,7 +2,7 @@
 ##### Creation of a compiler for the langage canAda which is a simplified verison of the Ada langage, as part of the PCL project.
 
 ## Tech :
-The compiler will be done in Python and C. 
+The compiler will be done in Python. 
 
 ## Installation : 
 To be completed
