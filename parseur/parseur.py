@@ -54,9 +54,10 @@ def parse(list_tokens, lexical_table, table_ll1):
                     pile.pop()
             else:
                 erreur = True
+                #Affichage de l'erreur
                 token_precedent = list_tokens[ind - 1] if ind > 0 else None
                 token_suivant = list_tokens[ind + 1] if ind + 1 < len(list_tokens) else None
-                print(f"Erreur de syntaxe détectée à la ligne {token_lu[2]}:")
+                print(f"    Erreur de syntaxe détectée à la ligne {token_lu[2]}:")
                 if token_precedent and token_suivant:
                     print(f"        {token_to_str(token_precedent, lexical_table)} {highlight_error(token_to_str(token_lu, lexical_table))} {token_to_str(token_suivant, lexical_table)}\n")
                 elif token_precedent:
@@ -69,7 +70,7 @@ def parse(list_tokens, lexical_table, table_ll1):
                     succes = True
                 else:
                     erreur = True
-                    print(f"Erreur de fin de fichier inattendue: fin du fichier atteinte mais il reste des éléments dans la pile, Ligne {token_lu[2]}")
+                    print(f"    Erreur de fin de fichier inattendue: fin du fichier atteinte mais il reste des éléments dans la pile, Ligne {token_lu[2]}")
             else:
                 if (sommet_pile == (3, 0) and token_lu[0] == 3) or (sommet_pile == (4, 0) and token_lu[0] == 4):
                     pile.pop()
@@ -79,7 +80,7 @@ def parse(list_tokens, lexical_table, table_ll1):
                     ind += 1
                 else:
                     erreur = True
-                    print(f"Erreur de non-correspondance de token: attendu {sommet_pile}, trouvé {lexical_table[token_lu[0]][token_lu[1]]}, Ligne {token_lu[2]}")
+                    print(f"    Erreur de non-correspondance de token: attendu {sommet_pile}, trouvé {lexical_table[token_lu[0]][token_lu[1]]}, Ligne {token_lu[2]}")
 
     if succes:
         print("L'analyse syntaxique a réussi sans erreur")
