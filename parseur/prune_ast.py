@@ -119,9 +119,9 @@ def remonter_param(node):
         else :
             remonter_param(node.children[i])
 
-def replace_param_point_virg_plus(root_node):
+def remove_intermediary_node(root_node):
     def replace_recursive(node, parent, index):
-        if node.fct == "PARAM_POINT_VIRG_PLUS" or node.fct == "DECL_STAR":
+        if node.fct == "PARAM_POINT_VIRG_PLUS" or node.fct == "DECL_STAR" or node.fct == "INSTR_PLUS" or node.fct == "INSTR'":
             # Supprimer le nœud "PARAM_POINT_VIRG_PLUS" du parent
             parent.children.pop(index)
 
@@ -143,4 +143,5 @@ def replace_param_point_virg_plus(root_node):
     # Mettre à jour le nœud racine réel en utilisant le seul enfant du faux nœud racine
     root_node = fake_root.children[0]
             
+
 
