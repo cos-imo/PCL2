@@ -47,7 +47,7 @@ def elaguer_arbre(node):
     node.children = children_to_keep
     
     # Si après l'élagage il ne reste aucun enfant et que la valeur du nœud est élagable, élaguer le nœud
-    if not node.children and node.value in (None, "epsilon"):
+    if not node.children and node.value in (None, "epsilon",";", "(", ")"):
         return None  # Le nœud est élagable
 
     return node  # Garder le nœud

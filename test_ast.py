@@ -80,7 +80,7 @@ def inverser_enfants_arbre(node):
 
 
 
-arbre = test_parseur("tests/test_lexeur/test1.txt")
+arbre = test_parseur("tests/test_lexeur/test2.txt")
 
 inverser_enfants_arbre(arbre)  # Inverser l'ordre des enfants dans l'arbre
 
@@ -92,10 +92,3 @@ show.visualize_tree_hor(arbre,orientation='LR').render(filename='syntax_tree_hor
 arbre_elague = prune.elaguer_arbre(arbre)
 arbre_fi = prune.remonter_feuilles(arbre_elague)
 show.visualize_tree(arbre_fi).render(filename='prun_syntax_tree_final', directory='./output', cleanup=True, format='png', engine='dot')
-
-arbre_sup = prune.remove_unless_node(arbre_fi)
-show.visualize_tree(arbre_sup).render(filename='syntax_tree_final', directory='./output', cleanup=True, format='png', engine='dot')
-
-
-show.visualize_tree_hor(arbre_fi,orientation='LR').render(filename='prun_syntax_tree_final_hor', directory='./output', cleanup=True, format='png', engine='dot')
-show.visualize_tree_hor(arbre_sup,orientation='LR').render(filename='syntax_tree_final_hor', directory='./output', cleanup=True, format='png', engine='dot')
