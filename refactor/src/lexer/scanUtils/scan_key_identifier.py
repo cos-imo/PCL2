@@ -1,6 +1,6 @@
 import sys
 
-from errorHandling.lexical_error import RemWithoutSpaceException
+from errorHandling.lexical_error import RemWithoutSpaceException, ForbiddenAsciiException
 
 
 def scan_key_identifier(source_code: str, position: int, line: int, kw: list) -> "tuple[int, str, int]":
@@ -18,6 +18,14 @@ def scan_key_identifier(source_code: str, position: int, line: int, kw: list) ->
     # Faut voir si on a Ada.Text_IO
 
     while position < len(source_code) and (source_code[position].isalnum() or source_code[position] == "_"):
+        # try if we have a non-printable character in the code
+        try:
+            if ord(source_code[position]) not in range(32, 127) and source_code[position] != "\n":
+                raise ForbiddenAsciiException()
+        except ForbiddenAsciiException as e:
+            print(e, line)
+            sys.exit(1)
+
         # we need to check that rem is followed by ' ', if not we will to retrieve a syntax error in the analysis
         try:
             if string == "rem" and (source_code[position].isnumeric()):
