@@ -1,9 +1,12 @@
 import unittest
 
+from lexeur.lexeur import lexical_analysis
+
 
 class MyTestCase(unittest.TestCase):
     def test_lexeur_error(self):
-        self.assertEqual(True, False)  # add assertion here
+        with open("tests/test_lexeur/forbiddenAscii") as f:
+            source_code = f.read()
 
 
 
