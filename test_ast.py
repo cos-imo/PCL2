@@ -95,6 +95,6 @@ show.visualize_tree(arbre_fi).render(filename='prun_syntax_tree_final', director
 
 #afficher l'arbre après avoir remonter param
 
-prune.replace_param_point_virg_plus(arbre_fi)
+prune.remove_intermediary_node(arbre_fi)
 show.visualize_tree(arbre_fi).render(filename='prun_param_syntax_tree_param', directory='./output', cleanup=True, format='png', engine='dot')
 show.visualize_tree_hor(arbre_fi,orientation='LR').render(filename='prun_param_syntax_tree_param_hor', directory='./output', cleanup=True, format='png', engine='dot')
