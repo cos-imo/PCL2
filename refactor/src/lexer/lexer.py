@@ -5,7 +5,6 @@ from scanUtils.scan_key_identifier import scan_key_identifier
 from scanUtils.scan_operator import scan_operator
 from errorHandling.lexical_error import ForbiddenAsciiException
 
-
 def lexer(source_code: str) -> "tuple[list, dict]":
     """
     Do the lexing phase of the compiling
