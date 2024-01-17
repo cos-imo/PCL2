@@ -65,7 +65,7 @@ def test_parseur(filename):
     
     #On fait à présent l'analyse syntaxique
     print("\n\n\n\nAnalyse syntaxique: \n")
-    resultat_ast_parseur = ast.parse(tokens, lexical_table, table_ll1)
+    resultat_ast_parseur = parse.parse(tokens, lexical_table, table_ll1)
     if resultat_ast_parseur:
         arbre = ast.construire_arbre(resultat_ast_parseur)
     return arbre
@@ -80,7 +80,7 @@ def inverser_enfants_arbre(node):
 
 
 
-arbre = test_parseur("tests/test_lexeur/test2.txt")
+arbre = test_parseur("tests/test_lexeur/syntax_error.txt")
 
 inverser_enfants_arbre(arbre)  # Inverser l'ordre des enfants dans l'arbre
 

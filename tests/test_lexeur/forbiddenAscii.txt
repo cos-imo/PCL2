@@ -1,4 +1,4 @@
--- Test de base qui doit fonctionner
+-- Test de base avec un caractere interdit 
 with Ada.Text_IO ; use Ada.Text_IO ;
 procedure unDebut is
 function aireRectangle(larg : integer; long : integer) return integer is aire: integer;
