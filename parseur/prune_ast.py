@@ -47,7 +47,7 @@ def elaguer_arbre(node):
     node.children = children_to_keep
     
     # Si après l'élagage il ne reste aucun enfant et que la valeur du nœud est élagable, élaguer le nœud
-    if not node.children and node.value in (None, "epsilon",";", "(", ")"):
+    if not node.children and node.value in (None, "epsilon",";", "(", ")",",",":"):
         return None  # Le nœud est élagable
 
     return node  # Garder le nœud
@@ -96,25 +96,51 @@ def remove_unless_node(node):
 
     return node  # Garder le nœud
 
-def remonter_operateur(node):
-    if node.fct[:3]=="OPE":
-        node=node.children[0]
-        
 
-
-    # Si le nœud a exactement un enfant et que la valeur du nœud est None, remonter cet enfant
-    if len(node.children) == 1 and node.value is None:
-        return remonter_operateur(node.children[0])
-
-    # Sinon, appliquer la fonction récursivement à tous les enfants
-    new_children = []
-    for child in node.children:
-        new_child = remonter_operateur(child)
-        if new_child:
-            new_children.append(new_child)
+def remonter_param(node):
+    # Si le noeud est une feuille (il n'a pas d'enfant) ne rien faire 
+    if not node.children:
+        return node
     
-    node.children = new_children
+    # Si les enfants du noeud sont des feuilles (ils n'ont pas d'enfant) ne rien faire
+    if not any(child.children for child in node.children):
+        return node
+    
+    # Si un enfant du noeud est "PARAM_POINT_VIRG_PLUS" 
+    # On remplace ce noeud par les enfants de "PARAM_POINT_VIRG_PLUS"
+    # On ajoute les noeuds dans l'ordre
 
-    return node
+    new_children = [] 
+    for i in range(len(node.children)):
+        if node.children[i].fct == "PARAM_POINT_VIRG_PLUS":
+            new_children = node.children[:i] + node.children[i].children +  node.children[i+1:]
+            node.children = new_children
+            return node
+        else :
+            remonter_param(node.children[i])
 
+def replace_param_point_virg_plus(root_node):
+    def replace_recursive(node, parent, index):
+        if node.fct == "PARAM_POINT_VIRG_PLUS" or node.fct == "DECL_STAR":
+            # Supprimer le nœud "PARAM_POINT_VIRG_PLUS" du parent
+            parent.children.pop(index)
+
+            # Ajouter les nœuds "PARAM" à la place de "PARAM_POINT_VIRG_PLUS"
+            for param_node in node.children:
+                parent.children.insert(index, param_node)
+                index += 1
+
+        # Parcourir récursivement les enfants du nœud actuel
+        for i, child in enumerate(node.children):
+            replace_recursive(child, node, i)
+
+    # Créer un nœud factice pour représenter la racine parente du nœud racine réel
+    fake_root = Node("FAKE_ROOT", children=[root_node])
+
+    # Appeler la fonction récursive avec le faux nœud racine
+    replace_recursive(fake_root, None, None)
+
+    # Mettre à jour le nœud racine réel en utilisant le seul enfant du faux nœud racine
+    root_node = fake_root.children[0]
+            
 
