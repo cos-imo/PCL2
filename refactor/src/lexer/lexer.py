@@ -53,7 +53,6 @@ def lexer(source_code: str) -> "tuple[list, dict]":
             print(e, line)
             sys.exit(1)
 
-
         # check if we have a key word, operator, constant number or ...
         if current.isalpha():
             type_, value, position = scan_key_identifier(source_code, position, line, lexical_table[0])
