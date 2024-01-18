@@ -1,7 +1,7 @@
 import unittest
 
 from lexeur.lexeur import lexical_analysis
-from parseur.ast_pars import parse
+from parseur.ast_pars import parseur
 from parseur.table_syntaxique import table_syntaxique
 
 
@@ -30,7 +30,7 @@ class MyTestCase(unittest.TestCase):
 
         tok, lex = lexical_analysis(source_code)
 
-        print(parse(tok, lex, table_syntaxique))
+        print(parseur(tok, lex, table_syntaxique))
 
 
 if __name__ == '__main__':

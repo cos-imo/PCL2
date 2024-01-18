@@ -1,8 +1,8 @@
 import unittest
 from lexeur.lexeur import lexical_analysis
-from parseur.ast_pars import parse, construire_arbre
+from parseur.ast_pars import parseur, construire_arbre
 from parseur.table_syntaxique import table_syntaxique
-from parseur.ast_pars import elaguer_arbre, remonter_feuilles, remove_unless_node, remonter_param, \
+from parseur.ast_pars import elaguer_arbre, remonter_feuilles, remove_unless_node, \
     remove_intermediary_node
 import parseur.show as show
 
@@ -305,7 +305,7 @@ class MyTestCase(unittest.TestCase):
                      ["INSTR_PLUS'", 'epsilon'], [(0, 5), 'end'], ['IDENT_BIN', ['IDENT']], ['IDENT', [(3, 0)]],
                      [(3, 0), 'undebut'], [(2, 11), ';']]
 
-        self.assertEqual(parse_res, parse(token, lexical_table, table_syntaxique))
+        self.assertEqual(parse_res, parseur(token, lexical_table, table_syntaxique))
 
     def test_ast(self):
         parse_res = [['F', [(0, 32), (2, 11), 'IDENT_BIN', (0, 5), 'INSTR_PLUS', (0, 2), 'DECL_STAR', (0, 11), 'IDENT',
