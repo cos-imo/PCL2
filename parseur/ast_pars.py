@@ -226,6 +226,11 @@ def parse(list_tokens, lexical_table, table_ll1):
 
 
 # Fonction qui permet de construire l'AST à partir de la liste des règles
+def inverser_enfants_arbre(node):
+    if node.children:
+        node.children.reverse()  # Inverser l'ordre des enfants du nœud courant
+        for enfant in node.children:
+            inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
 
 def construire_arbre(liste_regles):
     arbre = Node(liste_regles[0][0])  # On crée la racine de l'arbre
@@ -255,16 +260,16 @@ def construire_arbre(liste_regles):
             for j in range(len(liste_regles[i][1])):  # On parcourt la règle
                 current_node.add_child(Node(liste_regles[i][1][j]))  # On ajoute ses enfants au noeud courant
                 pile_arbre.append(current_node.children[j])  # On empile les enfants du noeud courant
-
+    inverser_enfants_arbre(arbre)
     return arbre  # On retourne l'arbre
 
 
 # def prune(tree) :
-def elaguer_arbre(node):
+def remove_unless_character(node):
     # Élaguer récursivement les enfants d'abord
     children_to_keep = []
     for child in node.children:
-        pruned_child = elaguer_arbre(child)
+        pruned_child = remove_unless_character(child)
         if pruned_child or (
                 child.value is None and any(isinstance(grandchild.value, tuple) for grandchild in child.children)):
             children_to_keep.append(child)
@@ -339,3 +344,11 @@ def remove_intermediary_node(root_node):
 
     # Mettre à jour le nœud racine réel en utilisant le seul enfant du faux nœud racine
     root_node = fake_root.children[0]
+
+
+def elaguer(arbre):
+    arbre = remove_unless_character(arbre)
+    arbre = remonter_feuilles(arbre)
+    arbre = remove_unless_node(arbre)
+    remove_intermediary_node(arbre)
+    return arbre

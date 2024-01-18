@@ -56,26 +56,8 @@ def visualize_tree_hor(node, graph=None, orientation='TB'):
     return graph
 
 
-def inverser_enfants_arbre(node):
-    if node.children:
-        node.children.reverse()  # Inverser l'ordre des enfants du nœud courant
-        for enfant in node.children:
-            inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
-
-# # Exemple d'utilisation :
-# root = Node('Root', [
-#     Node('Add', [
-#         Node('Number', value='2'),
-#         Node('Multiply', [
-#             Node('Number', value='3'),
-#             Node('Identifier', value='x')
-#         ])
-#     ]),
-#     Node('Assign', [
-#         Node('Identifier', value='y'),
-#         Node('Subtract', [
-#             Node('Number', value='5'),
-#             Node('Number', value='2')
-#         ])
-#     ])
-# ])
+def afficher(arbre, orientation, name, directory):
+    visualize_tree_hor(arbre, orientation=orientation).render(filename=name,
+                                                                directory=directory, cleanup=True,
+                                                                format='png',
+                                                                engine='dot')

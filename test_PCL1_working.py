@@ -2,8 +2,7 @@ import unittest
 from lexeur.lexeur import lexical_analysis
 from parseur.ast_pars import parseur, construire_arbre
 from parseur.table_syntaxique import table_syntaxique
-from parseur.ast_pars import elaguer_arbre, remonter_feuilles, remove_unless_node, \
-    remove_intermediary_node
+from parseur.ast_pars import elaguer
 import parseur.show as show
 
 
@@ -541,13 +540,12 @@ class MyTestCase(unittest.TestCase):
                      ["INSTR_PLUS'", 'epsilon'], [(0, 5), 'end'], ['IDENT_BIN', ['IDENT']], ['IDENT', [(3, 0)]],
                      [(3, 0), 'undebut'], [(2, 11), ';']]
 
-        arbre = construire_arbre(parse_res)
+        #arbre = construire_arbre(parse_res)
 
-        show.visualize_tree(arbre).render(filename='syntax_tree', directory='./output/basic', cleanup=True,
-                                          format='png',
-                                          engine='dot')
-        show.visualize_tree_hor(arbre, orientation='LR').render(filename='syntax_tree_hor', directory='./output/basic',
-                                                                cleanup=True, format='png', engine='dot')
+        #show.visualize_tree(arbre).render(filename='syntax_tree', directory='./output/basic', cleanup=True,
+                                          #format='png',
+                                          #engine='dot')
+        #show.visualize_tree_hor(arbre, orientation='LR').render(filename='syntax_tree_hor', directory='./output/basic',cleanup=True, format='png', engine='dot')
 
     def test_ast_reduce(self):
         parse_res = [['F', [(0, 32), (2, 11), 'IDENT_BIN', (0, 5), 'INSTR_PLUS', (0, 2), 'DECL_STAR', (0, 11), 'IDENT',
@@ -783,16 +781,15 @@ class MyTestCase(unittest.TestCase):
                      ["INSTR_PLUS'", 'epsilon'], [(0, 5), 'end'], ['IDENT_BIN', ['IDENT']], ['IDENT', [(3, 0)]],
                      [(3, 0), 'undebut'], [(2, 11), ';']]
 
-        arbre = remonter_feuilles(elaguer_arbre(construire_arbre(parse_res)))
-        remove_intermediary_node(arbre)
-        remove_unless_node(arbre)
+        arbre = construire_arbre(parse_res)
 
-        show.visualize_tree(arbre).render(filename='prun_param_syntax_tree_param', directory='./output/reduced',
-                                          cleanup=True, format='png', engine='dot')
-        show.visualize_tree_hor(arbre, orientation='LR').render(filename='prun_param_syntax_tree_param_hor',
-                                                                directory='./output/reduced', cleanup=True,
-                                                                format='png',
-                                                                engine='dot')
+        show.afficher(arbre, "", "working_syntax_tree", "output/basic")
+        show.afficher(arbre, "LR", "working_syntax_tree_LR", "output/basic")
+
+        arbre_elaguer = elaguer(arbre)
+        
+        show.afficher(arbre_elaguer, "", "working_syntax_tree_pruned", "output/reduced")
+        show.afficher(arbre_elaguer, "LR", "working_syntax_tree_pruned_LR", "output/reduced")
 
 
 if __name__ == '__main__':
