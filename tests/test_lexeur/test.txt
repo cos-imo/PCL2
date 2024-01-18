@@ -1,1 +1,0 @@
-then valeur := perimetreRectangle(2, 3) ;

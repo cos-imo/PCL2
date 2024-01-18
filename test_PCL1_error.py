@@ -1,6 +1,8 @@
 import unittest
 
 from lexeur.lexeur import lexical_analysis
+from parseur.ast_pars import parse
+from parseur.table_syntaxique import table_syntaxique
 
 
 class MyTestCase(unittest.TestCase):
@@ -21,6 +23,14 @@ class MyTestCase(unittest.TestCase):
             source_code = f.read()
 
         print(lexical_analysis(source_code))
+
+    def test_parse_syntax_error(self):
+        with open("tests/test_parseur/syntax_error.txt") as f:
+            source_code = f.read()
+
+        tok, lex = lexical_analysis(source_code)
+
+        print(parse(tok, lex, table_syntaxique))
 
 
 if __name__ == '__main__':

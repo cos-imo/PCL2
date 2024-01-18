@@ -1,5 +1,6 @@
 from graphviz import Digraph
 
+
 class Node:
     def __init__(self, fct, children=None, value=None):
         """
@@ -41,6 +42,7 @@ def visualize_tree(node, graph=None, orentation='TB'):
 
     return graph
 
+
 def visualize_tree_hor(node, graph=None, orientation='TB'):
     if graph is None:
         graph = Digraph(format='png', graph_attr={'rankdir': orientation})
@@ -53,23 +55,27 @@ def visualize_tree_hor(node, graph=None, orientation='TB'):
 
     return graph
 
-# Exemple d'utilisation :
-root = Node('Root', [
-    Node('Add', [
-        Node('Number', value='2'),
-        Node('Multiply', [
-            Node('Number', value='3'),
-            Node('Identifier', value='x')
-        ])
-    ]),
-    Node('Assign', [
-        Node('Identifier', value='y'),
-        Node('Subtract', [
-            Node('Number', value='5'),
-            Node('Number', value='2')
-        ])
-    ])
-])
 
-graph = visualize_tree(root)
-graph.render(filename='syntax_tree', directory='./output', cleanup=True, format='png', engine='dot')
+def inverser_enfants_arbre(node):
+    if node.children:
+        node.children.reverse()  # Inverser l'ordre des enfants du nœud courant
+        for enfant in node.children:
+            inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
+
+# # Exemple d'utilisation :
+# root = Node('Root', [
+#     Node('Add', [
+#         Node('Number', value='2'),
+#         Node('Multiply', [
+#             Node('Number', value='3'),
+#             Node('Identifier', value='x')
+#         ])
+#     ]),
+#     Node('Assign', [
+#         Node('Identifier', value='y'),
+#         Node('Subtract', [
+#             Node('Number', value='5'),
+#             Node('Number', value='2')
+#         ])
+#     ])
+# ])

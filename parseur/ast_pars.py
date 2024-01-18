@@ -36,6 +36,13 @@ class Node:
         return f"Node({self.fct}, children={self.children}, value={self.value})"
 
 
+def inverser_enfants_arbre(node):
+    if node.children:
+        node.children.reverse()  # Inverser l'ordre des enfants du nœud courant
+        for enfant in node.children:
+            inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
+
+
 # Fonction qui permet de dire si une chaines de caractères est un terminal ou non
 def est_terminal(element):
     # Si l'élément de la pile est un tuple alors c'est un terminal ou que c'est "eof" alors c'est un terminal sinon si c'est une string alors c'est un non terminal
@@ -149,13 +156,12 @@ def construire_arbre(liste_regles):
     for i in range(len(liste_regles)):  # On parcourt la liste des règles
 
         current_node = pile_arbre.pop()  # On dépile le sommet de la pile des noeuds de l'arbre
-        
 
         if est_terminal(current_node.fct):  # Si le sommet de la pile est un terminal alors on a une feuille
-            if current_node.fct == (3,0):
+            if current_node.fct == (3, 0):
                 current_node.value = liste_regles[i][1]  # On donne la valeur de la feuille
                 current_node.fct = "Ident"
-            elif current_node.fct == (4,0):
+            elif current_node.fct == (4, 0):
                 current_node.value = liste_regles[i][1]
                 current_node.fct = "Number"
             else:
@@ -174,14 +180,107 @@ def construire_arbre(liste_regles):
     return arbre  # On retourne l'arbre
 
 
-# Fonction qui permet de construire l'AST à partir de la liste des règles
-def AST(liste_regles):
-    ast = construire_arbre(liste_regles)
+# def prune(tree) :
+def elaguer_arbre(node):
+    # Élaguer récursivement les enfants d'abord
+    children_to_keep = []
+    for child in node.children:
+        pruned_child = elaguer_arbre(child)
+        if pruned_child or (
+                child.value is None and any(isinstance(grandchild.value, tuple) for grandchild in child.children)):
+            children_to_keep.append(child)
 
-def afficher(arbre) :
-    for i in arbre.children :
-        print(i)
-        afficher(i)
+    # Mettre à jour les enfants après l'élagage
+    node.children = children_to_keep
+
+    # Si après l'élagage il ne reste aucun enfant et que la valeur du nœud est élagable, élaguer le nœud
+    if not node.children and node.value in (None, "epsilon", ";", "(", ")", ",", ":"):
+        return None  # Le nœud est élagable
+
+    return node  # Garder le nœud
+
+
+def remonter_feuilles(node):
+    # Si le nœud a exactement un enfant et que la valeur du nœud est None, remonter cet enfant
+    if len(node.children) == 1 and node.value is None:
+        return remonter_feuilles(node.children[0])
+
+    # Sinon, appliquer la fonction récursivement à tous les enfants
+    new_children = []
+    for child in node.children:
+        new_child = remonter_feuilles(child)
+        if new_child:
+            new_children.append(new_child)
+
+    node.children = new_children
+
+    return node
 
 
 
+# remove unles node like ";" "(" ")"
+def remove_unless_node(node):
+    # Élaguer récursivement les enfants d'abord
+    children_to_keep = []
+    for child in node.children:
+        pruned_child = remove_unless_node(child)
+        if pruned_child or (
+                child.value is None and any(isinstance(grandchild.value, tuple) for grandchild in child.children)):
+            children_to_keep.append(child)
+
+    # Mettre à jour les enfants après l'élagage
+    node.children = children_to_keep
+
+    # Si après l'élagage il ne reste aucun enfant et que la valeur du nœud est élagable, élaguer le nœud
+    if not node.children and node.value in (";", "(", ")"):
+        return None  # Le nœud est élagable
+
+    return node  # Garder le nœud
+
+
+def remonter_param(node):
+    # Si le noeud est une feuille (il n'a pas d'enfant) ne rien faire
+    if not node.children:
+        return node
+
+    # Si les enfants du noeud sont des feuilles (ils n'ont pas d'enfant) ne rien faire
+    if not any(child.children for child in node.children):
+        return node
+
+    # Si un enfant du noeud est "PARAM_POINT_VIRG_PLUS"
+    # On remplace ce noeud par les enfants de "PARAM_POINT_VIRG_PLUS"
+    # On ajoute les noeuds dans l'ordre
+
+    new_children = []
+    for i in range(len(node.children)):
+        if node.children[i].fct == "PARAM_POINT_VIRG_PLUS":
+            new_children = node.children[:i] + node.children[i].children + node.children[i + 1:]
+            node.children = new_children
+            return node
+        else:
+            remonter_param(node.children[i])
+
+
+def remove_intermediary_node(root_node):
+    def replace_recursive(node, parent, index):
+        if node.fct == "PARAM_POINT_VIRG_PLUS" or node.fct == "DECL_STAR" or node.fct == "INSTR_PLUS" or node.fct == "INSTR'":
+            # Supprimer le nœud "PARAM_POINT_VIRG_PLUS" du parent
+            parent.children.pop(index)
+
+            # Ajouter les nœuds "PARAM" à la place de "PARAM_POINT_VIRG_PLUS"
+            for param_node in node.children:
+                parent.children.insert(index, param_node)
+                index += 1
+
+        # Parcourir récursivement les enfants du nœud actuel
+        for i, child in enumerate(node.children):
+            replace_recursive(child, node, i)
+
+    # Créer un nœud factice pour représenter la racine parente du nœud racine réel
+    fake_root = Node("FAKE_ROOT", children=[root_node])
+
+    # Appeler la fonction récursive avec le faux nœud racine
+    replace_recursive(fake_root, None, None)
+
+    # Mettre à jour le nœud racine réel en utilisant le seul enfant du faux nœud racine
+    root_node = fake_root.children[0]
