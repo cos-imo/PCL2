@@ -24,7 +24,6 @@ class MyTestCase(unittest.TestCase):
                                                                 cleanup=True, format='png', engine='dot')
 
         arbre = remonter_feuilles(elaguer_arbre(arbre))
-        remonter_param(arbre)
         remove_intermediary_node(arbre)
         remove_unless_node(arbre)
 

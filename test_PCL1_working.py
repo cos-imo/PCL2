@@ -784,7 +784,6 @@ class MyTestCase(unittest.TestCase):
                      [(3, 0), 'undebut'], [(2, 11), ';']]
 
         arbre = remonter_feuilles(elaguer_arbre(construire_arbre(parse_res)))
-        remonter_param(arbre)
         remove_intermediary_node(arbre)
         remove_unless_node(arbre)
 

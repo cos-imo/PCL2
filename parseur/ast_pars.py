@@ -237,30 +237,6 @@ def remove_unless_node(node):
 
     return node  # Garder le nœud
 
-
-def remonter_param(node):
-    # Si le noeud est une feuille (il n'a pas d'enfant) ne rien faire
-    if not node.children:
-        return node
-
-    # Si les enfants du noeud sont des feuilles (ils n'ont pas d'enfant) ne rien faire
-    if not any(child.children for child in node.children):
-        return node
-
-    # Si un enfant du noeud est "PARAM_POINT_VIRG_PLUS"
-    # On remplace ce noeud par les enfants de "PARAM_POINT_VIRG_PLUS"
-    # On ajoute les noeuds dans l'ordre
-
-    new_children = []
-    for i in range(len(node.children)):
-        if node.children[i].fct == "PARAM_POINT_VIRG_PLUS":
-            new_children = node.children[:i] + node.children[i].children + node.children[i + 1:]
-            node.children = new_children
-            return node
-        else:
-            remonter_param(node.children[i])
-
-
 def remove_intermediary_node(root_node):
     def replace_recursive(node, parent, index):
         if node.fct == "PARAM_POINT_VIRG_PLUS" or node.fct == "DECL_STAR" or node.fct == "INSTR_PLUS" or node.fct == "INSTR'":
