@@ -1,4 +1,4 @@
-def scan_int(source_code: str, position: int) -> tuple[int, int, int]:
+def scan_int(source_code: str, position: int) -> "tuple[int, int, int]":
     temp = 0
 
     while position < len(source_code) and source_code[position].isdigit():
