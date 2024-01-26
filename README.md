@@ -9,10 +9,23 @@
 Just go in test files and run its.
 
 ## Installation : 
-To be completed
-
+### Download
+#### Using SSH
 ```sh
-cd...
+git clone git@gitlab.telecomnancy.univ-lorraine.fr:Amandine.Lapique--Favre/pcl.git
+```
+
+
+#### Using HTTPS
+```sh
+git clone https://gitlab.telecomnancy.univ-lorraine.fr/Amandine.Lapique--Favre/pcl.git
+```
+
+### Running
+
+Assuming Python3 is installed on your computer, you can then run the project using (from the root folder `pcl`):
+```sh
+python3 pcl1/script.py
 ```
 
 ## Usage : 
