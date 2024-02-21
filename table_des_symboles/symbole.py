@@ -8,7 +8,7 @@ class symbole:
         self.size = size
         self.Dimension = Dimension
         self.ligne_declaration = ligne_declaration
-        self.ligne_utilisation  = ligne_declaration
+        self.ligne_utilisation  = ligne_utilisation
         self.address = address
 
     def __repr__(self):
