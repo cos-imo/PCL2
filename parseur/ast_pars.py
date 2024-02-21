@@ -128,10 +128,10 @@ def parseur(list_tokens, lexical_table, table_ll1):
                     print(f"    Erreur de non-correspondance de token: attendu {sommet_pile}, trouvé {lexical_table[token_lu[0]][token_lu[1]]}, Ligne {token_lu[2]}")
 
     if succes:
-        print("L'analyse syntaxique a réussi sans erreur")
+        print("L'analyse syntaxique a réussi sans erreur.")
         return pile_arbre
     else:
-        print("L'analyse syntaxique a échoué en raison d'une erreur de syntaxe")
+        print("L'analyse syntaxique a échoué en raison d'une erreur de syntaxe.")
         return []
 
 
@@ -213,10 +213,10 @@ def parse(list_tokens, lexical_table, table_ll1):
                     print("Erreur : le sommet de la pile et le token lu ne sont pas les mêmes. Sommet de la pile : ",
                           sommet_pile, " Token Lu: ", token_lu)
     if succes:
-        print("L'anlayse syntaxique a réussi sans erreur")
+        print("L'anlayse syntaxique a réussi sans erreur.")
         return pile_arbre
     else:
-        print("L'analyse syntaxique a échoué")
+        print("L'analyse syntaxique a échoué.")
         return []
 
     # il faut traiter les erreurs correctement et construire les fonctions nécessaires.
