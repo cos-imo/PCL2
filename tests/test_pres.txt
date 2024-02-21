@@ -10,6 +10,6 @@ end aireRectangle ;
 choix : integer ;
 -- PROCEDURE PRINCIPALE
 begin
-choix = 1 ;
+choix = -1 ;
 aireRectangle(2,3) ;
 end unDebut ; eof

@@ -70,7 +70,10 @@ def scanner(source_code: str) -> "tuple[list, dict]":
                 value = 14
 
         # add the new token in the list
-        token.append((type_, lexical_table[type_].index(value), line)) if (type_ != 4 and type_ != 5) else token.append(
+        if type_ == 1 and value == 14:
+            token.append((1, 14, line))        
+
+        else: token.append((type_, lexical_table[type_].index(value), line)) if (type_ != 4 and type_ != 5) else token.append(
             (type_, lexical_table[type_].index(value), line)) if type_ != 5 else token.append(
             (type_, lexical_table[type_].index((value, line)), line))
 
