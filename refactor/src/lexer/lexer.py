@@ -1,9 +1,10 @@
 import sys
 
-from scanUtils.scan_int import scan_int
-from scanUtils.scan_key_identifier import scan_key_identifier
-from scanUtils.scan_operator import scan_operator
+from lexer.scanUtils.scan_int import scan_int
+from lexer.scanUtils.scan_key_identifier import scan_key_identifier
+from lexer.scanUtils.scan_operator import scan_operator
 from errorHandling.lexical_error import ForbiddenAsciiException
+
 
 def lexer(source_code: str) -> "tuple[list, dict]":
     """
