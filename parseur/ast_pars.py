@@ -213,7 +213,7 @@ def parse(list_tokens, lexical_table, table_ll1):
                     print("Erreur : le sommet de la pile et le token lu ne sont pas les mêmes. Sommet de la pile : ",
                           sommet_pile, " Token Lu: ", token_lu)
     if succes:
-        print("L'anlayse syntaxique a réussi sans erreur.")
+        print("L'analyse syntaxique a réussi sans erreur.")
         return pile_arbre
     else:
         print("L'analyse syntaxique a échoué.")
