@@ -79,4 +79,6 @@ def scanner(source_code: str) -> "tuple[list, dict]":
 
     token.append((-1, "EOF", -1))
 
+    print(lexical_table[5])
+
     return token, lexical_table
