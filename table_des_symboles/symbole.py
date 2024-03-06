@@ -2,9 +2,10 @@ import sys
 
 class symbole:
 
-    def __init__(self, name, type_entree="None", size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
+    def __init__(self, name, type_entree="None", value = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
         self.name = name
         self.type = type_entree
+        self.value = value
         self.size = size
         self.Dimension = Dimension
         self.ligne_declaration = ligne_declaration
