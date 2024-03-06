@@ -17,7 +17,7 @@ class symbole:
         sys.stdout.write("\t\tType: " + str(self.type_entree))
         sys.stdout.write("\t\tTaille: " + str(self.Dimension))
         sys.stdout.write("\t\tDimension: " + str(self.ligne_declaration))
-        sys.stdout.write("\t\tLigne de déclaration: " + name)
+        sys.stdout.write("\t\tLigne de déclaration: " + self.name)
         utilisation_str = ""
         if len(ligne_utilisation)>1:
             for ligne in ligne_utilisation:
