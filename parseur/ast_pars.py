@@ -1,3 +1,6 @@
+import table_des_symboles
+
+
 # Définition de la structure de l'arbre
 class Node:
     def __init__(self, fct, children=None, value=None):
@@ -77,6 +80,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
     erreur = False
     ind = 0  # indice de la liste de token
     pile_arbre = []  # pile qui va contenir les noeuds de l'arbre
+    tds = table_des_symboles.table()
 
     while not (succes or erreur):
         sommet_pile = pile[-1]  
@@ -90,12 +94,9 @@ def parseur(list_tokens, lexical_table, table_ll1):
             print(block_tokens[(token_lu[0],token_lu[1])])
             print((token_lu[0],token_lu[1]))
 
-        # Cas 1 : si le sommet de la pile est un non terminal
         if not est_terminal(sommet_pile):
             token_lu_table = (token_lu[0], 0, token_lu[2]) if token_lu[0] in [3, 4] else token_lu
             rule = table_ll1[sommet_pile].get((token_lu_table[0], token_lu_table[1]))
-            
-            
 
             if rule is not None:
                 if rule != ["epsilon"]:

@@ -30,3 +30,6 @@ class table:
             else:
                 # Ouais bon là je sais pas mais faut explorer récursivement
                 pass
+
+    def __str__(self):
+        return "Salut, je suis une TDS"
