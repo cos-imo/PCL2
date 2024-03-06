@@ -37,5 +37,3 @@ class table:
             else:
                 # Ouais bon là je sais pas mais faut explorer récursivement
                 pass
-    
-    
