@@ -38,6 +38,7 @@ class Node:
         """
         return f"Node({self.fct}, children={self.children}, value={self.value})"
 
+list_types = {"integer", "character", "string", "boolean", "access"}
 
 def inverser_enfants_arbre(node):
     if node.children:
@@ -53,7 +54,6 @@ def est_terminal(element):
         return True
     else:
         return False
-
 
 # début du parseur:
 # L'analyseur prend en entrée la phrase (la liste de token) à identifier et la table d'analyse LL
@@ -87,13 +87,61 @@ def parseur(list_tokens, lexical_table, table_ll1):
         token_lu = list_tokens[ind]
 
         #print("Si la rule nous intéresse on créé une entrée ou une nouvelle TDS")
-        block_tokens = {(0,8) : "function", (0,18): "procedure", (0,5): "end", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
-        if((token_lu[0], token_lu[1]) in block_tokens):
-            
+        catch_tokens = {(0,8) : "function", (0,18): "procedure", (0,5): "end", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
+        if((token_lu[0], token_lu[1]) in catch_tokens):
+
             #print(rule)
             #print(pile)
-            tds.add_token((token_lu[0], token_lu[1]))
-            print(block_tokens[(token_lu[0],token_lu[1])])
+            if token_lu [0]==0 and token_lu[1] == 18: # ")" pour les procédures
+                index = ind
+
+                list_name_params = []
+                list_type_params = []
+                params = {}
+
+                while list_tokens[index][0]!=3:
+                    index += 1
+                    procedure_name = lexical_table(list_tokens[index])
+                
+                while list_tokens[index]!= (2,8): 
+                    if lexical_table(list_tokens[index]) in list_types:
+                        list_type_params.append(list_tokens[index])
+                    elif list_tokens[index][0] == 3:
+                        list_name_params.append(list_tokens[index])
+                    index += 1
+                for n in range(len(list_name_params)):
+                    params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])]
+                function = table_des_symboles.fonction(name = procedure_name, parametre = params)
+                tds.import_function(function)
+            
+            if token_lu [0]==0 and token_lu[1] == 8: # "return" pour les fonctions
+                index = ind
+
+                list_name_params = []
+                list_type_params = []
+                params = {}
+
+                while list_tokens[index][0]!=3:
+                    index += 1
+                    procedure_name = lexical_table(list_tokens[index])
+                
+                while list_tokens[index]!= (0,21): # ")" pour les procédures
+                    if lexical_table(list_tokens[index]) in list_types:
+                        list_type_params.append(list_tokens[index])
+                    elif list_tokens[index][0] == 3:
+                        list_name_params.append(list_tokens[index])
+                    index += 1
+                index += 1
+                return_type = lexical_table(list_tokens[index])
+                for n in range(len(list_name_params)):
+                    params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])]
+                function = table_des_symboles.fonction(name = procedure_name, parametres = params, type_de_retour=return_type)
+                tds.import_function(function)
+            
+            
+            else :
+                tds.import_token((token_lu[0], token_lu[1]))
+            print(catch_tokens[(token_lu[0],token_lu[1])])
             print((token_lu[0],token_lu[1]))
 
         if not est_terminal(sommet_pile):

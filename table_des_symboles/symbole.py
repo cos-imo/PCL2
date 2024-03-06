@@ -1,8 +1,9 @@
 import sys
 
-class symbole:
 
-    def __init__(self, name, type_entree="None", value = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
+class variable:
+
+    def __init__(self, name, type_entree="None", mode="in", value = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
         self.name = name
         self.type = type_entree
         self.value = value
@@ -11,6 +12,7 @@ class symbole:
         self.ligne_declaration = ligne_declaration
         self.ligne_utilisation  = ligne_utilisation
         self.address = address
+        self.mode = mode
 
     def __repr__(self):
         sys.stdout.write("\t => SYMBOLE\n")
@@ -20,9 +22,71 @@ class symbole:
         sys.stdout.write("\t\tDimension: " + str(self.ligne_declaration))
         sys.stdout.write("\t\tLigne de déclaration: " + self.name)
         utilisation_str = ""
-        if len(ligne_utilisation)>1:
-            for ligne in ligne_utilisation:
+        if len(self.ligne_utilisation)>1:
+            for ligne in self.ligne_utilisation:
                 utilisation_str += ligne
             sys.stdout.write("\t\tLignes d'utilisation: " + str(utilisation_str))
-        sys.stdout.write("\t\tLigne d'utilisation: " + str(ligne_utilisation[0]))
-        sys.stdout.write("Adresse mémoire: " + str(address))
+        sys.stdout.write("\t\tLigne d'utilisation: " + str(self.ligne_utilisation[0]))
+        sys.stdout.write("Adresse mémoire: " + str(self.address))
+
+class fonction:
+
+    def __init__(self, name, parametres = {}, type_de_retour = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
+        self.name = name
+        self.parametres = parametres
+        self.type_de_retour = type_de_retour
+        self.size = size
+        self.Dimension = Dimension
+        self.ligne_declaration = ligne_declaration
+        self.ligne_utilisation  = ligne_utilisation
+        self.address = address
+
+    def __repr__(self):
+        sys.stdout.write("\t => SYMBOLE\n")
+        sys.stdout.write("\t\tNom: " + str(self.name))
+        if len(self.parametres)>1:
+            parametres_str = ""
+            for element in self.parametres:
+                parametres_str+= (self.parametres + ", ")
+        sys.stdout.write("\t\tParamètres: " + parametres_str)
+        sys.stdout.write('Retour: ' + self.retour)
+        sys.stdout.write("\t\tTaille: " + str(self.Dimension))
+        sys.stdout.write("\t\tDimension: " + str(self.ligne_declaration))
+        sys.stdout.write("\t\tLigne de déclaration: " + self.name)
+        utilisation_str = ""
+        if len(self.ligne_utilisation)>1:
+            for ligne in self.ligne_utilisation:
+                utilisation_str += ligne
+            sys.stdout.write("\t\tLignes d'utilisation: " + str(utilisation_str))
+        sys.stdout.write("\t\tLigne d'utilisation: " + str(self.ligne_utilisation[0]))
+        sys.stdout.write("Adresse mémoire: " + str(self.address))
+
+class procedure:
+
+    def __init__(self, name, parametres = {}, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
+        self.name = name
+        self.parametres = parametres
+        self.size = size
+        self.Dimension = Dimension
+        self.ligne_declaration = ligne_declaration
+        self.ligne_utilisation  = ligne_utilisation
+        self.address = address
+
+    def __repr__(self):
+        sys.stdout.write("\t => SYMBOLE\n")
+        sys.stdout.write("\t\tNom: " + str(self.name))
+        if len(self.parametres)>1:
+            parametres_str = ""
+            for element in self.parametres:
+                parametres_str+= (self.parametres + ", ")
+        sys.stdout.write("\t\tParamètres: " + parametres_str)
+        sys.stdout.write("\t\tTaille: " + str(self.Dimension))
+        sys.stdout.write("\t\tDimension: " + str(self.ligne_declaration))
+        sys.stdout.write("\t\tLigne de déclaration: " + self.name)
+        utilisation_str = ""
+        if len(self.ligne_utilisation)>1:
+            for ligne in self.ligne_utilisation:
+                utilisation_str += ligne
+            sys.stdout.write("\t\tLignes d'utilisation: " + str(utilisation_str))
+        sys.stdout.write("\t\tLigne d'utilisation: " + str(self.ligne_utilisation[0]))
+        sys.stdout.write("Adresse mémoire: " + str(self.address))

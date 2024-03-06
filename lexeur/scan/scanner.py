@@ -1,4 +1,4 @@
-from .scanUtils import scan_operator, scan_int, scan_key_identifier
+from .scanUtils import scan_int, scan_key_identifier, scan_operator
 
 
 def scanner(source_code: str) -> "tuple[list, dict]":
