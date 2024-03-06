@@ -85,6 +85,16 @@ def parseur(list_tokens, lexical_table, table_ll1):
         if not est_terminal(sommet_pile):
             token_lu_table = (token_lu[0], 0, token_lu[2]) if token_lu[0] in [3, 4] else token_lu
             rule = table_ll1[sommet_pile].get((token_lu_table[0], token_lu_table[1]))
+
+            #print("Si la rule nous intéresse on créé une entrée ou une nouvelle TDS")
+            block_tokens = {(0,8) : "function", (0,18): "procedure", (0,5): "end", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
+            if((token_lu_table[0], token_lu_table[1]) in block_tokens):
+                #print(rule)
+                #print(pile)
+                print(block_tokens[(token_lu_table[0],token_lu_table[1])])
+                print((token_lu_table[0],token_lu_table[1]))
+
+
             if rule is not None:
                 if rule != ["epsilon"]:
                     pile.pop()
@@ -96,7 +106,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
                     pile.pop()
                     pile_arbre.append([sommet_pile, "epsilon"])
             else:
-                erreur = True()
+                erreur = True
                 #Affichage de l'erreur
                 token_precedent = list_tokens[ind - 1] if ind > 0 else None
                 token_suivant = list_tokens[ind + 1] if ind + 1 < len(list_tokens) else None
@@ -166,13 +176,8 @@ def parse(list_tokens, lexical_table, table_ll1):
             if token_lu[0] == 3 or token_lu[0] == 4:
                 token_lu_table = (token_lu[0], 0, token_lu[2])
 
-                # Si la table contient une règle pour le couple (sommet_pile,token_lu)
+            # Si la table contient une règle pour le couple (sommet_pile,token_lu)
             rule = table_ll1[sommet_pile].get((token_lu_table[0], token_lu_table[1]))
-            #print("Si la rule nous intéresse on créé une entrée ou une nouvelle TDS")
-            #print(rule)
-            block_tokens = {(0,8) : "function", (0,18): "procedure", (0,5): "end", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
-            if((token_lu_table[0], token_lu_table[1]) in block_tokens):
-                print(block_tokens[(token_lu_table[0],token_lu_table[1])])
             if rule is not None:
                 if rule != ["epsilon"]:
                     pile.pop()  # on dépile le sommet de la pile

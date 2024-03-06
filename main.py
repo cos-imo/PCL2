@@ -1,7 +1,7 @@
 import argparse
 
 from lexeur.lexeur import lexical_analysis
-from parseur.ast_pars import Node, construire_arbre, elaguer, parse
+from parseur.ast_pars import Node, construire_arbre, elaguer, parseur
 from parseur.table_syntaxique import table_syntaxique
 
 
@@ -28,7 +28,7 @@ def pcl1(source_code: str) -> Node:
     """
 
     token, lexical_table = lexical_analysis(source_code)
-    tree = construire_arbre(parse(token, lexical_table, table_syntaxique))
+    tree = construire_arbre(parseur(token, lexical_table, table_syntaxique))
     tree = elaguer(tree)
 
     if parser.args.tree:

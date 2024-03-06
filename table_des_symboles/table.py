@@ -14,9 +14,9 @@ class table:
         if table_name in current_node:
             current_node[table_name+str((current_node.count(table_name)+1))] = {}
         else:
-            current_node[table_name] = {}
+            current_node[table_name + "0"] = {}
 
-    def add(selfself, entry_key, entry_value):
+    def add(self, entry_key, entry_value):
         current_node = self.table
         for element in path:
             current_node = current_node[element]
