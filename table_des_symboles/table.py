@@ -16,11 +16,13 @@ class table:
         else:
             current_node[table_name + "0"] = {}
 
-    def add(self, entry_key, entry_value):
-        current_node = self.table
-        for element in path:
-            current_node = current_node[element]
-        current_node[entry_key] = entry_value
+    def add_token(self, entry):
+        print(entry[0])
+        print(entry[1])
+        #current_node = self.table
+        #for element in path:
+        #    current_node = current_node[element]
+        #current_node[entry_key] = entry_value
 
     def get(self, entry_key):
         if self.table:

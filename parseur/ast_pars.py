@@ -91,6 +91,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
         if((token_lu[0], token_lu[1]) in block_tokens):
             #print(rule)
             #print(pile)
+            tds.add_token((token_lu[0], token_lu[1]))
             print(block_tokens[(token_lu[0],token_lu[1])])
             print((token_lu[0],token_lu[1]))
 
