@@ -15,8 +15,11 @@ class variable:
         self.mode = mode
 
     def __repr__(self):
-        sys.stdout.write("\t => SYMBOLE\n")
-        sys.stdout.write("\t\tNom: " + str(self.name))
+        repr = ""
+        repr += "\n\t => VARIABLE\n"
+        repr += "\t\tNom: " + str(self.name)
+        return repr
+        """
         sys.stdout.write("\t\tType: " + str(self.type_entree))
         sys.stdout.write("\t\tTaille: " + str(self.Dimension))
         sys.stdout.write("\t\tDimension: " + str(self.ligne_declaration))
@@ -28,6 +31,7 @@ class variable:
             sys.stdout.write("\t\tLignes d'utilisation: " + str(utilisation_str))
         sys.stdout.write("\t\tLigne d'utilisation: " + str(self.ligne_utilisation[0]))
         sys.stdout.write("Adresse mémoire: " + str(self.address))
+        """
 
 class fonction:
 
@@ -40,10 +44,17 @@ class fonction:
         self.ligne_declaration = ligne_declaration
         self.ligne_utilisation  = ligne_utilisation
         self.address = address
+        self.sous_bloc = None
 
     def __repr__(self):
-        sys.stdout.write("\t => SYMBOLE\n")
-        sys.stdout.write("\t\tNom: " + str(self.name))
+        return "function name:  " + self.name
+
+    def __str__(self):
+        repr=""
+        repr += "\n\t => FONCTION\n"
+        repr += "\t\tNom: " + str(self.name) + "\n\n"
+        return repr
+        """
         if len(self.parametres)>1:
             parametres_str = ""
             for element in self.parametres:
@@ -60,6 +71,7 @@ class fonction:
             sys.stdout.write("\t\tLignes d'utilisation: " + str(utilisation_str))
         sys.stdout.write("\t\tLigne d'utilisation: " + str(self.ligne_utilisation[0]))
         sys.stdout.write("Adresse mémoire: " + str(self.address))
+        """
 
 class procedure:
 
@@ -73,7 +85,7 @@ class procedure:
         self.address = address
 
     def __repr__(self):
-        sys.stdout.write("\t => SYMBOLE\n")
+        sys.stdout.write("\n\t => PROCEDURE\n")
         sys.stdout.write("\t\tNom: " + str(self.name))
         if len(self.parametres)>1:
             parametres_str = ""
