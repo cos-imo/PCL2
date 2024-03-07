@@ -16,8 +16,7 @@ class variable:
 
     def __repr__(self):
         repr = ""
-        repr += "\n\t => VARIABLE\n"
-        repr += "\t\tNom: " + str(self.name)
+        repr += f"variable(self.name)"
         return repr
         """
         sys.stdout.write("\t\tType: " + str(self.type_entree))
@@ -51,8 +50,7 @@ class fonction:
 
     def __str__(self):
         repr=""
-        repr += "\n\t => FONCTION\n"
-        repr += "\t\tNom: " + str(self.name) + "\n\n"
+        repr+=f"fonction({self.name}): {self.sous_bloc.__repr__()}"
         return repr
         """
         if len(self.parametres)>1:
@@ -79,12 +77,15 @@ class procedure:
         self.name = name
         self.parametres = parametres
         self.size = size
-        self.Dimension = Dimension
+        self.Dimension = Dimension                                     
         self.ligne_declaration = ligne_declaration
         self.ligne_utilisation  = ligne_utilisation
         self.address = address
+        self.sous_bloc = None
 
     def __repr__(self):
+        repr="" 
+        repr+=f"procedure({self.name}) : self.{sous_bloc}"
         sys.stdout.write("\n\t => PROCEDURE\n")
         sys.stdout.write("\t\tNom: " + str(self.name))
         if len(self.parametres)>1:

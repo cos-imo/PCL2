@@ -128,8 +128,6 @@ def parseur(list_tokens, lexical_table, table_ll1):
                     index += 1
                     procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
 
-                print(list_tokens)
-                print(index)
                 while list_tokens[index]!= (0,21): # ")" pour les procédures
                     if list_tokens[index]==(-1, 'EOF', -1):
                         break
@@ -150,7 +148,6 @@ def parseur(list_tokens, lexical_table, table_ll1):
             
             #else :
             tds.import_token((token_lu[0], token_lu[1]))
-            print((token_lu[0],token_lu[1]))
 
         if not est_terminal(sommet_pile):
             token_lu_table = (token_lu[0], 0, token_lu[2]) if token_lu[0] in [3, 4] else token_lu
@@ -171,13 +168,13 @@ def parseur(list_tokens, lexical_table, table_ll1):
                 #Affichage de l'erreur
                 token_precedent = list_tokens[ind - 1] if ind > 0 else None
                 token_suivant = list_tokens[ind + 1] if ind + 1 < len(list_tokens) else None
-                print(f"    Erreur de syntaxe détectée à la ligne {token_lu[2]}:")
+                print(f"\tErreur de syntaxe détectée à la ligne {token_lu[2]}:")
                 if token_precedent and token_suivant:
-                    print(f"        {token_to_str(token_precedent, lexical_table)} {highlight_error(token_to_str(token_lu, lexical_table))} {token_to_str(token_suivant, lexical_table)}\n")
+                    print(f"\t{token_to_str(token_precedent, lexical_table)} {highlight_error(token_to_str(token_lu, lexical_table))} {token_to_str(token_suivant, lexical_table)}\n")
                 elif token_precedent:
-                    print(f"        {token_to_str(token_precedent, lexical_table)} {highlight_error(token_to_str(token_lu, lexical_table))}\n")
+                    print(f"\t\t{token_to_str(token_precedent, lexical_table)} {highlight_error(token_to_str(token_lu, lexical_table))}\n")
                 elif token_suivant:
-                    print(f"        {highlight_error(token_to_str(token_lu, lexical_table))} {token_to_str(token_suivant, lexical_table)}\n")
+                    print(f"\t\t{highlight_error(token_to_str(token_lu, lexical_table))} {token_to_str(token_suivant, lexical_table)}\n")
         
         # Cas 2 : si le sommet de la pile est un terminal (<type_token, valeur_token> donc forme ou "eof")
         else:
@@ -198,10 +195,11 @@ def parseur(list_tokens, lexical_table, table_ll1):
                     pile_arbre.append([sommet_pile, lexical_table[token_lu[0]][token_lu[1]]])
                 else:
                     erreur = True
-                    print(f"    Erreur de non-correspondance de token: attendu {sommet_pile}, trouvé {lexical_table[token_lu[0]][token_lu[1]]}, Ligne {token_lu[2]}")
+                    print(f"\tErreur de non-correspondance de token: attendu {sommet_pile}, trouvé {lexical_table[token_lu[0]][token_lu[1]]}, Ligne {token_lu[2]}")
 
     if succes:
         print("L'analyse syntaxique a réussi sans erreur.")
+        print(tds)
         return pile_arbre
     else:
         print("L'analyse syntaxique a échoué en raison d'une erreur de syntaxe.")

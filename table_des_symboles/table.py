@@ -27,17 +27,15 @@ class table:
     def import_token(self, entry):
         if entry in self.block_tokens:
             # Ajouter une entrée "bloc" dans la TDS
-            print(self.block_tokens[entry])
             block = self.get_current_bloc()
-            print(f"block : {block}")
-            print(self.enum_bloc(block))
             if self.enum_bloc(block):
                 for element in self.enum_bloc(block):
-                    print(f"element name: {element}")
+                    #print(f"element name: {element}")
+                    pass
                 name = self.block_tokens[entry] + str(self.countRegEx(block, self.block_tokens[entry]))
             else:
-                print("bloc vide")
-            print(f"entry:{self.block_tokens[entry]}")
+                #print("bloc vide")
+                pass
         elif entry in self.end_tokens:
             self.import_end_tokens()
         elif entry in self.variables_tokens:
@@ -45,8 +43,9 @@ class table:
 
     def enum_bloc(self, bloc):
         if type(bloc) == fonction:
-            print("fonction")
-        print(type(bloc))
+            pass
+        #print("fonction")
+        #print(type(bloc))
         
     def import_function(self, function):
         block = self.get_current_bloc()
@@ -103,5 +102,19 @@ class table:
     def countRegEx(self, lst, expr):
         return len([element for element in lst if re.search(expr, element)])
 
+    def extract_repr(self, node):
+        repr_str = "{"
+        for element in node:
+            if type(element)==variable:
+                repr_str += element.__repr__()
+            else:
+                repr_str += element.__repr__()
+                repr_str += (":{" + self.extract_repr(element) + "}")
+        repr_str += "}"
+        return repr_str
+
     def __repr__(self):
-        return "TABLE"
+        print(self.tds)
+        return "ok"
+        repr = self.extract_repr(self.tds)
+        return repr_str
