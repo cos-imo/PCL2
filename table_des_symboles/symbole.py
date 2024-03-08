@@ -44,7 +44,7 @@ class fonction:
         self.ligne_declaration = ligne_declaration
         self.ligne_utilisation  = ligne_utilisation
         self.address = address
-        self.sous_bloc = None
+        self.sous_bloc ={} 
 
     def __repr__(self):
         return "function name:  " + self.name

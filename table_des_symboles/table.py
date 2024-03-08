@@ -53,7 +53,7 @@ class table:
         if type(block)==dict:
             block[function.name] = function
         elif type(block)==fonction:
-            block.sous_bloc = function
+            block.sous_bloc[function.name] = function
         pass
         #block = self.getBloc()
 
@@ -108,7 +108,7 @@ class table:
 
     def extract_repr(self, node):
         repr_str = "{"
-        if type(element)==dict:
+        if type(node)==dict:
             for element in node:
                 if element == None:
                     return ""
@@ -122,8 +122,20 @@ class table:
                 else:
                     print(f"type de bloc non reconnu: {type(element)}")
                     print(element)
-        elif type(element == function):
-            for element in 
+        elif type(node) == fonction:
+            for element in node.sous_bloc: 
+                if element == None:
+                    return ""
+                elif type(element)==variable:
+                    repr_str += element.__repr__()
+                elif type(element)==fonction or type(element)==procedure:
+                    repr_str += element.__repr__()
+                    repr_str += (":{" + self.extract_repr(element) + "}")
+                elif type(element)==str:
+                    repr_str += element + ":{" + self.extract_repr(node.sous_bloc) + "}"
+                else:
+                    print(f"type de bloc non reconnu: {type(element)}")
+                    print(element)
         repr_str += "}"
         return repr_str
 
