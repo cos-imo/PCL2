@@ -61,7 +61,7 @@ class table:
         #self.path.pop()
         pass
 
-    def import_variables_tokens(self, variable):
+    def import_variables(self, variable):
         block = self.get_current_bloc()
         if type(block)==dict:
             block[variable.name] = variable
@@ -108,18 +108,28 @@ class table:
 
     def extract_repr(self, node):
         repr_str = "{"
-        for element in node:
-            if type(element)==variable:
-                repr_str += element.__repr__()
-            else:
-                repr_str += element.__repr__()
-                repr_str += (":{" + self.extract_repr(element) + "}")
+        if type(element)==dict:
+            for element in node:
+                if element == None:
+                    return ""
+                elif type(element)==variable:
+                    repr_str += element.__repr__()
+                elif type(element)==fonction or type(element)==procedure:
+                    repr_str += element.__repr__()
+                    repr_str += (":{" + self.extract_repr(element) + "}")
+                elif type(element)==str:
+                    repr_str += element + ":{" + self.extract_repr(node[element]) + "}"
+                else:
+                    print(f"type de bloc non reconnu: {type(element)}")
+                    print(element)
+        elif type(element == function):
+            for element in 
         repr_str += "}"
         return repr_str
 
     def __repr__(self):
+        repr_str = self.extract_repr(self.tds)
+        return repr_str
         print(self.tds)
         print(self.tds["F"]["undebut"].sous_bloc)
         return "ok"
-        repr_str = self.extract_repr(self.tds)
-        return repr_str
