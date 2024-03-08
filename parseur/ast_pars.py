@@ -89,22 +89,24 @@ def parseur(list_tokens, lexical_table, table_ll1):
         #print("Si la rule nous intéresse on créé une entrée ou une nouvelle TDS")
         catch_tokens = {(0,8) : "function", (0,18): "procedure", (0,5): "end", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
         
-        if((token_lu[0], token_lu[1]) in catch_tokens):
-            if (token_lu == (0, 8) or token_lu == (0, 18)) and (lexical_table(list_tokens[ind+1]) == tds.pile[-1]):
+        if((token_lu[0], token_lu[1]) in catch_tokens or token_lu[0] == 3):
+            print('table lexicale : ' + lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]])
+            print('TDS : ' + tds.path[-1])
+            if (token_lu == (0, 8) or token_lu == (0, 18)) or (lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] == tds.path[-1]): ########################## OR ou AND ?????????????
                 pass
             elif (token_lu[0] == 3):
                 # name : type := valeur
-                if lexical_table(token_lu) in list_types:
+                if lexical_table[token_lu[0]][token_lu[1]] in list_types:
                     pass
-                if lexical_table(list_tokens[ind+1])==":":
-                    name_var = lexical_table(token_lu)
-                    type_var = lexical_table(list_tokens[ind+2])
-                    if lexical_table(list_tokens[ind+3])=="=":
-                        var = table_des_symboles.variable(name = name_var, type_entree = type_var, value = lexical_table(list_tokens[ind+4]))
-                        table_des_symboles.import_variable(var)
+                if lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==":":
+                    name_var = lexical_table[token_lu[0]][token_lu[1]]
+                    type_var = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+                    if lexical_table[list_tokens[ind+3][0]][list_tokens[ind+3][1]]=="=":
+                        var = table_des_symboles.variable(name = name_var, type_entree = type_var, value = lexical_table[list_tokens[ind+4][0]][list_tokens[ind+4][1]])
+                        tds.import_variable(var)
                     else :
                         var = table_des_symboles.variable(name = name_var, type_entree = type_var)
-                        table_des_symboles.import_variable(var)
+                        tds.import_variable(var)
 
 
 
@@ -121,7 +123,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
                 
                 procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
 
-                while list_tokens[index]!= (2,8) or not lexical_table(list_tokens[index]) == "is": 
+                while list_tokens[index]!= (2,8) or not lexical_table[list_tokens[index][0]][list_tokens[index][1]] == "is": 
                     if list_tokens[index][0] == -1:
                         pass
                     elif lexical_table[list_tokens[index][0]][list_tokens[index][1]] in list_types:
