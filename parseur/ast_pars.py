@@ -90,7 +90,24 @@ def parseur(list_tokens, lexical_table, table_ll1):
         catch_tokens = {(0,8) : "function", (0,18): "procedure", (0,5): "end", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
         if((token_lu[0], token_lu[1]) in catch_tokens):
 
-            if (token_lu[0],token_lu[1])==(0,18): # ")" pour les procédures
+            if (token_lu[0] == 3):
+                # name : type := valeur
+                if lexical_table(token_lu) in list_types:
+                    pass
+                if lexical_table(list_tokens[ind+1])==":":
+                    name_var = lexical_table(token_lu)
+                    type_var = lexical_table(list_tokens[ind+2])
+                    if lexical_table(list_tokens[ind+3])=="=":
+                        var = table_des_symboles.variable(name = name_var, type_entree = type_var, value = lexical_table(list_tokens[ind+4]))
+                        table_des_symboles.import_variable(var)
+                    else :
+                        var = table_des_symboles.variable(name = name_var, type_entree = type_var)
+                        table_des_symboles.import_variable(var)
+
+
+
+
+            elif (token_lu[0],token_lu[1])==(0,18): # ")" pour les procédures
                 index = ind
 
                 list_name_params = []
@@ -119,7 +136,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
                 function = table_des_symboles.fonction(name = procedure_name, parametres = params)
                 tds.import_function(function)
             
-            if (token_lu[0],token_lu[1])==(0,8): # "return" pour les fonctions
+            elif (token_lu[0],token_lu[1])==(0,8): # "return" pour les fonctions
                 index = ind
 
                 list_name_params = []
@@ -147,10 +164,6 @@ def parseur(list_tokens, lexical_table, table_ll1):
                     params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])] = None
                 function = table_des_symboles.fonction(name = function_name, parametres = params, type_de_retour=None)
                 tds.import_function(function)
-            
-            
-            #else :
-            tds.import_token((token_lu[0], token_lu[1]))
 
         if not est_terminal(sommet_pile):
             token_lu_table = (token_lu[0], 0, token_lu[2]) if token_lu[0] in [3, 4] else token_lu
