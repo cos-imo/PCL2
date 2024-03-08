@@ -97,11 +97,12 @@ def parseur(list_tokens, lexical_table, table_ll1):
                 list_type_params = []
                 params = {}
 
-                while list_tokens[index][0]!=3:
+                while list_tokens[index][0]!=3 :
                     index += 1
-                    procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
+                
+                procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
 
-                while list_tokens[index]!= (2,8): 
+                while list_tokens[index]!= (2,8) or not lexical_table(list_tokens[index]) == "is": 
                     if list_tokens[index][0] == -1:
                         pass
                     elif lexical_table[list_tokens[index][0]][list_tokens[index][1]] in list_types:
@@ -112,6 +113,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
                         index += 1
                     else:
                         break
+                
                 for n in range(min(len(list_name_params), len(list_type_params))):
                     params["var" + str(n)] = table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])
                 function = table_des_symboles.fonction(name = procedure_name, parametres = params)
@@ -126,9 +128,10 @@ def parseur(list_tokens, lexical_table, table_ll1):
 
                 while list_tokens[index][0]!=3:
                     index += 1
-                    procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
+                
+                function_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
 
-                while list_tokens[index]!= (0,21): # ")" pour les procédures
+                while list_tokens[index]!= (0,21) or not lexical_table(list_tokens[index]) == "is": # ")" pour les procédures
                     if list_tokens[index]==(-1, 'EOF', -1):
                         break
                     elif lexical_table[list_tokens[index][0]][list_tokens[index][1]] in list_types:
@@ -142,7 +145,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
                 #return_type = lexical_table(list_tokens[index])
                 for n in range(min(len(list_name_params), len(list_type_params))):
                     params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])] = None
-                function = table_des_symboles.fonction(name = procedure_name, parametres = params, type_de_retour=None)
+                function = table_des_symboles.fonction(name = function_name, parametres = params, type_de_retour=None)
                 tds.import_function(function)
             
             
