@@ -61,7 +61,7 @@ class table:
         #self.path.pop()
         pass
 
-    def import_variables(self, variable):
+    def import_variable(self, variable):
         block = self.get_current_bloc()
         if type(block)==dict:
             block[variable.name] = variable
