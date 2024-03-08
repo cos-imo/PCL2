@@ -13,6 +13,7 @@ class variable:
         self.ligne_utilisation  = ligne_utilisation
         self.address = address
         self.mode = mode
+        #Ajouter l'offset
 
     def __repr__(self):
         repr = ""

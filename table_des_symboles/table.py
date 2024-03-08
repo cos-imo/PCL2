@@ -61,8 +61,12 @@ class table:
         #self.path.pop()
         pass
 
-    def import_variables_tokens(self):
-        self.add_value()
+    def import_variables_tokens(self, variable):
+        block = self.get_current_bloc()
+        if type(block)==dict:
+            block[variable.name] = variable
+        elif type(block)==fonction:
+            block.sous_bloc[variable.name]=variable
 
 
     def add_value(self, entry):
