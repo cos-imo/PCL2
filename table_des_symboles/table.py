@@ -140,6 +140,7 @@ class table:
         return repr_str
 
     def __repr__(self):
+        print(self.tds)
         repr_str = self.extract_repr(self.tds)
         return repr_str
         print(self.tds)
