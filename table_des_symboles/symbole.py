@@ -16,9 +16,7 @@ class variable:
         #Ajouter l'offset
 
     def __repr__(self):
-        repr = ""
-        repr += f"variable(self.name)"
-        return repr
+        return f"variable(self.name)"
         """
         sys.stdout.write("\t\tType: " + str(self.type_entree))
         sys.stdout.write("\t\tTaille: " + str(self.Dimension))
@@ -31,6 +29,7 @@ class variable:
             sys.stdout.write("\t\tLignes d'utilisation: " + str(utilisation_str))
         sys.stdout.write("\t\tLigne d'utilisation: " + str(self.ligne_utilisation[0]))
         sys.stdout.write("Adresse mémoire: " + str(self.address))
+        return repr
         """
 
 class fonction:
@@ -50,9 +49,7 @@ class fonction:
         return "function name:  " + self.name
 
     def __str__(self):
-        repr=""
-        repr+=f"fonction({self.name}): {self.sous_bloc.__repr__()}"
-        return repr
+        return f"fonction({self.name}): {self.sous_bloc.__repr__()}"
         """
         if len(self.parametres)>1:
             parametres_str = ""
@@ -70,6 +67,7 @@ class fonction:
             sys.stdout.write("\t\tLignes d'utilisation: " + str(utilisation_str))
         sys.stdout.write("\t\tLigne d'utilisation: " + str(self.ligne_utilisation[0]))
         sys.stdout.write("Adresse mémoire: " + str(self.address))
+        return repr
         """
 
 class procedure:
@@ -85,8 +83,7 @@ class procedure:
         self.sous_bloc = None
 
     def __repr__(self):
-        repr="" 
-        repr+=f"procedure({self.name}) : self.{sous_bloc}"
+        return f"procedure({self.name}) : self.{sous_bloc}"
         sys.stdout.write("\n\t => PROCEDURE\n")
         sys.stdout.write("\t\tNom: " + str(self.name))
         if len(self.parametres)>1:
