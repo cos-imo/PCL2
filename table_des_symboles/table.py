@@ -107,7 +107,7 @@ class table:
         return len([element for element in lst if re.search(expr, element)])
 
     def extract_repr(self, node):
-        repr_str = "{"
+        repr_str=""
         if type(node)==dict:
             for element in node:
                 if element == None:
@@ -136,11 +136,11 @@ class table:
                 else:
                     print(f"type de bloc non reconnu: {type(element)}")
                     print(element)
-        repr_str += "}"
         return repr_str
 
     def __repr__(self):
         print(self.tds)
+        print(self.tds['F']['undebut'].sous_bloc['airerectangle'])
         repr_str = self.extract_repr(self.tds)
         return repr_str
         print(self.tds)
