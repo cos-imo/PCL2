@@ -42,81 +42,6 @@ list_types = {"integer", "character", "string", "boolean", "access"}
 catch_tokens = {(0,8) : "function", (0,18): "procedure", (0,5): "end", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
 
 
-def import_tds(token_lu, lexical_table, list_tokens, ind, tds):        
-    if((token_lu[0], token_lu[1]) in catch_tokens or token_lu[0] == 3):
-        #print('table lexicale : ' + lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]])
-        #print('TDS : ' + tds.path[-1])
-        if (token_lu == (0, 8) or token_lu == (0, 18)) or (lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] == tds.path[-1]): ########################## OR ou AND ?????????????
-            pass
-        elif (token_lu[0] == 3):
-            # name : type := valeur
-            if lexical_table[token_lu[0]][token_lu[1]] in list_types:
-                pass
-            if lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==":":
-                name_var = lexical_table[token_lu[0]][token_lu[1]]
-                type_var = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
-                if lexical_table[list_tokens[ind+3][0]][list_tokens[ind+3][1]]=="=":
-                    var = table_des_symboles.variable(name = name_var, type_entree = type_var, value = lexical_table[list_tokens[ind+4][0]][list_tokens[ind+4][1]])
-                    tds.import_variable(var)
-                else :
-                    var = table_des_symboles.variable(name = name_var, type_entree = type_var)
-                    tds.import_variable(var)
-
-        elif (token_lu[0],token_lu[1])==(0,18): # ")" pour les procédures
-            index = ind
-            list_name_params = []
-            list_type_params = []
-            params = {}
-
-            while list_tokens[index][0]!=3 :
-                index += 1
-              
-            procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
-            while list_tokens[index]!= (2,8) or not lexical_table[list_tokens[index][0]][list_tokens[index][1]] == "is": 
-                if list_tokens[index][0] == -1:
-                    pass
-                elif lexical_table[list_tokens[index][0]][list_tokens[index][1]] in list_types:
-                    list_type_params.append(list_tokens[index])
-                elif list_tokens[index][0] == 3:
-                    list_name_params.append(list_tokens[index])
-                if index<len(list_tokens)-1:
-                    index += 1
-                else:
-                    break
-                
-            for n in range(min(len(list_name_params), len(list_type_params))):
-                params["var" + str(n)] = table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])
-            function = table_des_symboles.fonction(name = procedure_name, parametres = params)
-            tds.import_function(function)
-            
-        elif (token_lu[0],token_lu[1])==(0,8): # "return" pour les fonctions
-            index = ind
-            list_name_params = []
-            list_type_params = []
-            params = {}
-
-            while list_tokens[index][0]!=3:
-                index += 1
-                
-            function_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
-
-            while list_tokens[index]!= (0,21) or not lexical_table(list_tokens[index]) == "is": # ")" pour les procédures
-                if list_tokens[index]==(-1, 'EOF', -1):
-                    break
-                elif lexical_table[list_tokens[index][0]][list_tokens[index][1]] in list_types:
-                    list_type_params.append(list_tokens[index])
-                elif list_tokens[index][0] == 3:
-                    list_name_params.append(list_tokens[index])
-                if index<len(list_tokens)-1:
-                    index += 1
-                else:
-                    break
-            #return_type = lexical_table(list_tokens[index])
-            for n in range(min(len(list_name_params), len(list_type_params))):
-                params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])] = None
-            function = table_des_symboles.fonction(name = function_name, parametres = params, type_de_retour=None)
-            tds.import_function(function)
-
 def inverser_enfants_arbre(node):
     if node.children:
         node.children.reverse()  # Inverser l'ordre des enfants du nœud courant
@@ -147,6 +72,128 @@ def highlight_error(token_str):
     END = '\033[0m'
     return f"{RED}{token_str}{END}"
 
+
+
+def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
+    # On regarde si le token lu est dans la liste de token à repérer ou si c'est une variable
+    if((token_lu[0], token_lu[1]) in catch_tokens or token_lu[0] == 3):
+        
+        # Lorsque l'on arrive à la fin d'un block ("end") on m'est à jour le PATH
+        if (token_lu[0], token_lu[1]) == (0, 5):
+            tds.path.pop()
+        
+        # Ici on gère les "procedure" et les "function" que l'on regarde plusieurs fois
+        elif (token_lu == (0, 8) or token_lu == (0, 18)) and (lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] == tds.path[-1]):
+            pass
+
+        # Ici on gère les variables
+        elif (token_lu[0] == 3):
+            # Si c'est un type c'est que l'on définit une variable. Donc on ne s'en occupe pas. On les récupère lorsque initialise la varible
+            if lexical_table[token_lu[0]][token_lu[1]] in list_types:
+                pass
+            # la définition d'une variable : 'name : type := valeur'. On vérifie si l'on est sur name
+            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==":":
+                name_var = lexical_table[token_lu[0]][token_lu[1]]
+                type_var = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+                # S'il y a une valeur on la récupère
+                if lexical_table[list_tokens[ind+3][0]][list_tokens[ind+3][1]]=="=":
+                    var = table_des_symboles.variable(name = name_var, type_entree = type_var, value = lexical_table[list_tokens[ind+4][0]][list_tokens[ind+4][1]])
+                    tds.import_variable(var)
+                # Sinon on laisse sans valeur
+                else :
+                    var = table_des_symboles.variable(name = name_var, type_entree = type_var)
+                    tds.import_variable(var)
+
+        # Ici on gère les procédures
+        elif (token_lu[0],token_lu[1])==(0,18):
+            # J'initialise mes variables
+            index = ind
+            list_name_params = []
+            list_type_params = []
+            params = {}
+
+            # On se place au niveau du nom de la procedure
+            index += 1
+            # On récupère le nom de la variable
+            procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]     
+            # On étudie cette fois les params
+            index += 1
+
+            # tant que l'on est pas sur le token is
+            while lexical_table[list_tokens[index][0]][list_tokens[index][1]] != "is": 
+                if list_tokens[index]==(-1, 'EOF', -1):
+                    break
+                
+                # On vérifie si le token est un type et on l'ajoute dans la liste des types des params
+                if lexical_table[list_tokens[index][0]][list_tokens[index][1]] in list_types:
+                    list_type_params.append(list_tokens[index])
+                # Si c'est un autre id c'est un nom et on l'ajoute à la liste des noms des params
+                elif list_tokens[index][0] == 3:
+                    list_name_params.append(list_tokens[index])
+                # On incrémente notre index
+                if index<len(list_tokens)-1:
+                    index += 1
+                # Condition au cas où, on break (Si on n'incrémente plus et que l'on n'est pas sortie de la boucle)
+                else:
+                    break
+            
+            # Vérification que les params sont bien initialisé
+            if len(list_name_params)!=len(list_type_params):
+                print(f"\tErreur de sémantique: un (ou plusieurs) paramètre(s) de la procédure n'a (ont) pas de type.")
+                pass
+            
+            # Ici on créée l'instance de la procedure
+            else:
+                for n in range(len(list_name_params)):
+                    params["var" + str(n)] = table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])
+                function = table_des_symboles.fonction(name = procedure_name, parametres = params)
+                tds.import_function(function)
+
+        # Ici on gère les function    
+        elif (token_lu[0],token_lu[1])==(0,8):
+            # J'initialise mes variables
+            index = ind
+            list_name_params = []
+            list_type_params = []
+            params = {}
+
+            # On se place au niveau du nom de la procedure
+            index += 1
+            # On récupère le nom de la variable
+            function_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
+            # On étudie cette fois les params
+            index += 1
+
+            # tant que l'on est pas sur un token 'return' ou tant que l'on n'est pas sur le token is
+            while (list_tokens[index][0],list_tokens[index][1])!= (0,21): #or not lexical_table[list_tokens[index][0]][list_tokens[index][1]] == "is":
+                if list_tokens[index]==(-1, 'EOF', -1):
+                    break
+
+                # On vérifie si le token est un type et on l'ajoute dans la liste des types des params
+                elif lexical_table[list_tokens[index][0]][list_tokens[index][1]] in list_types:
+                    list_type_params.append(list_tokens[index])
+                # Si c'est un autre id c'est un nom et on l'ajoute à la liste des noms des params
+                elif list_tokens[index][0] == 3:
+                    list_name_params.append(list_tokens[index])
+                # On incrémente notre index
+                if index<len(list_tokens)-1:
+                    index += 1
+                # Condition au cas où, on break (Si on n'incrémente plus et que l'on n'est pas sortie de la boucle)
+                else :
+                    break
+            # Vérification que les params sont bien initialisé
+            if len(list_name_params)!=len(list_type_params):
+                print(f"\tErreur de sémantique: un (ou plusieurs) paramètre(s) de la fonction n'a (ont) pas de type.")
+                pass
+
+            #return_type = lexical_table(list_tokens[index])
+            else :
+                for n in range(len(list_type_params)):
+                    params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])] = None
+                function = table_des_symboles.fonction(name = function_name, parametres = params, type_de_retour=lexical_table[list_tokens[index][0]][list_tokens[index][1]])
+                tds.import_function(function)
+
+
 # Fonction qui permet de faire l'analyse syntaxique
 def parseur(list_tokens, lexical_table, table_ll1):
     pile = []
@@ -169,16 +216,17 @@ def parseur(list_tokens, lexical_table, table_ll1):
 
             if rule is not None:
                 if rule != ["epsilon"]:
-                    import_tds(token_lu, lexical_table, list_tokens, ind, tds)
+                    
                     pile.pop()
                     regleC = rule.copy()
                     regleC.reverse()
                     pile.extend(regleC)
                     pile_arbre.append([sommet_pile, regleC])
                 else:
-                    import_tds(token_lu, lexical_table, list_tokens, ind, tds)
+                    
                     pile.pop()
                     pile_arbre.append([sommet_pile, "epsilon"])
+                    
             else:
                 erreur = True
                 #Affichage de l'erreur
@@ -191,7 +239,8 @@ def parseur(list_tokens, lexical_table, table_ll1):
                     print(f"\t\t{token_to_str(token_precedent, lexical_table)} {highlight_error(token_to_str(token_lu, lexical_table))}\n")
                 elif token_suivant:
                     print(f"\t\t{highlight_error(token_to_str(token_lu, lexical_table))} {token_to_str(token_suivant, lexical_table)}\n")
-        
+                
+
         # Cas 2 : si le sommet de la pile est un terminal (<type_token, valeur_token> donc forme ou "eof")
         else:
             if sommet_pile == (0, 32):
@@ -202,18 +251,25 @@ def parseur(list_tokens, lexical_table, table_ll1):
                     print(f"    Erreur de fin de fichier inattendue: fin du fichier atteinte mais il reste des éléments dans la pile, Ligne {token_lu[2]}")
             else:
                 if (sommet_pile == (3, 0) and token_lu[0] == 3) or (sommet_pile == (4, 0) and token_lu[0] == 4):
+                    
+                    # On envoie le token pour savoir s'il est nécessaire de le prendre en compte dans la TDS
                     import_tds(token_lu, lexical_table, list_tokens, ind, tds)
+                    
                     pile.pop()
                     ind += 1
                     pile_arbre.append([sommet_pile, lexical_table[token_lu[0]][token_lu[1]]])
                 elif sommet_pile[0] == token_lu[0] and sommet_pile[1] == token_lu[1]:
+                    
+                    # On envoie le token pour savoir s'il est nécessaire de le prendre en compte dans la TDS
                     import_tds(token_lu, lexical_table, list_tokens, ind, tds)
+                    
                     pile.pop()
                     ind += 1
                     pile_arbre.append([sommet_pile, lexical_table[token_lu[0]][token_lu[1]]])
                 else:
                     erreur = True
                     print(f"\tErreur de non-correspondance de token: attendu {sommet_pile}, trouvé {lexical_table[token_lu[0]][token_lu[1]]}, Ligne {token_lu[2]}")
+            
 
     if succes:
         print("L'analyse syntaxique a réussi sans erreur.")
