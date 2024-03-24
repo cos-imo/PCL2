@@ -12,17 +12,50 @@ class table:
         self.block_tokens = {(0,8) : "function", (0,18): "procedure", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
         self.end_tokens = {(0,5): "end"}
         self.variables_tokens = {}
-
-    def create_block(self, block_name):
+    
+    def get_current_bloc(self):
         current_node = self.tds
         for element in self.path:
-            if element not in current_node :
-                return ("Problème dans le path de la table des symboles.")
-            current_node = current_node[element]
+            if type(current_node)==dict:
+                current_node = current_node[element]
+            elif type(current_node)==fonction:
+                current_node = current_node.sous_bloc
+            else:
+                print("Problème dans le path de la table des symboles.")
+                #print(current_bloc)
+        return current_node
+
+    def create_block(self, block_name):
+        current_node = self.get_current_bloc()
         if block_name in current_node:
             current_node[block_name+str((current_node.count(block_name)+1))] = {}
         else:
             current_node[block_name + "0"] = {}
+
+    def import_function(self, function):
+        block = self.get_current_bloc()
+        self.path.append(function.name) 
+        if type(block)==dict:
+            block[function.name] = function
+        elif type(block)==fonction:
+            block.sous_bloc[function.name] = function
+        pass
+        #block = self.getBloc()
+
+    def import_variable(self, variable):
+        block = self.get_current_bloc()
+        if type(block)==dict and variable.name not in block:
+            block[variable.name] = variable
+        elif type(block)==fonction and variable.name not in block.sous_bloc:
+            block.sous_bloc[variable.name]=variable
+
+#################################################### Pas compris après MDRRR ################################################################
+
+    def enum_bloc(self, bloc):
+        if type(bloc) == fonction:
+            pass
+        #print("fonction")
+        #print(type(bloc))
 
     def import_token(self, entry):
         if entry in self.block_tokens:
@@ -41,33 +74,9 @@ class table:
         elif entry in self.variables_tokens:
             self.import_variables_tokens(entry)
 
-    def enum_bloc(self, bloc):
-        if type(bloc) == fonction:
-            pass
-        #print("fonction")
-        #print(type(bloc))
-        
-    def import_function(self, function):
-        block = self.get_current_bloc()
-        self.path.append(function.name) 
-        if type(block)==dict:
-            block[function.name] = function
-        elif type(block)==fonction:
-            block.sous_bloc[function.name] = function
-        pass
-        #block = self.getBloc()
-
     def import_end_tokens(self):
         #self.path.pop()
         pass
-
-    def import_variable(self, variable):
-        block = self.get_current_bloc()
-        if type(block)==dict:
-            block[variable.name] = variable
-        elif type(block)==fonction:
-            block.sous_bloc[variable.name]=variable
-
 
     def add_value(self, entry):
         current_node = self.tds
@@ -76,23 +85,10 @@ class table:
         if (sc.variableImbricationControle(current_node, entry[1], self.path)): ############################### A modifier, pour faire fonctionner
             print(f"Erreur: la variable {entry[1]} existe déjà.")
         else :
-            current_node[entry[0]] = entry[1] 
+            current_node[entry[0]] = entry[1]
     
     def add_function(function_name, params_type, return_type):
         return
-
-    
-    def get_current_bloc(self):
-        current_node = self.tds
-        for element in self.path:
-            if type(current_node)==dict:
-                current_node = current_node[element]
-            elif type(current_node)==fonction:
-                current_node = current_node.sous_bloc
-            else:
-                print("bloc non reconnu (get_current_bloc):")
-                print(current_bloc)
-        return current_node
 
     def get(self, entry_key):
         if self.tds:
