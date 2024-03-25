@@ -22,7 +22,6 @@ class table:
                 current_node = current_node.sous_bloc
             else:
                 print("Problème dans le path de la table des symboles.")
-                #print(current_bloc)
         return current_node
 
     def create_block(self, block_name):
@@ -40,7 +39,6 @@ class table:
         elif type(block)==fonction:
             block.sous_bloc[function.name] = function
         pass
-        #block = self.getBloc()
 
     def import_variable(self, variable):
         block = self.get_current_bloc()
@@ -50,12 +48,6 @@ class table:
             block.sous_bloc[variable.name]=variable
 
 #################################################### Pas compris après MDRRR ################################################################
-
-    def enum_bloc(self, bloc):
-        if type(bloc) == fonction:
-            pass
-        #print("fonction")
-        #print(type(bloc))
 
     def import_token(self, entry):
         if entry in self.block_tokens:
@@ -74,10 +66,6 @@ class table:
         elif entry in self.variables_tokens:
             self.import_variables_tokens(entry)
 
-    def import_end_tokens(self):
-        #self.path.pop()
-        pass
-
     def add_value(self, entry):
         current_node = self.tds
         for element in self.path:
@@ -86,18 +74,6 @@ class table:
             print(f"Erreur: la variable {entry[1]} existe déjà.")
         else :
             current_node[entry[0]] = entry[1]
-    
-    def add_function(function_name, params_type, return_type):
-        return
-
-    def get(self, entry_key):
-        if self.tds:
-            current_node = self.tds
-            if entry_key in current_node:
-                return current_node[entry_key]
-            else:
-                # Ouais bon là je sais pas mais faut explorer récursivement
-                pass
     
     def countRegEx(self, lst, expr):
         return len([element for element in lst if re.search(expr, element)])
