@@ -1,6 +1,5 @@
 import sys
 
-
 class variable:
 
     def __init__(self, name, type_entree="None", mode="in", value = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
@@ -43,7 +42,6 @@ class fonction:
         self.ligne_declaration = ligne_declaration
         self.ligne_utilisation  = ligne_utilisation
         self.address = address
-        self.sous_bloc ={} 
 
     def __repr__(self):
         return "function name:  " + self.name
@@ -80,7 +78,6 @@ class procedure:
         self.ligne_declaration = ligne_declaration
         self.ligne_utilisation  = ligne_utilisation
         self.address = address
-        self.sous_bloc = None
 
     def __repr__(self):
         return f"procedure({self.name}) : self.{sous_bloc}"

@@ -9,6 +9,8 @@ class table:
     def __init__(self):
         self.path = ["F"]
         self.tds= {"F":{}}
+        self.tds_data = {} 
+        self.functions = []
         self.block_tokens = {(0,8) : "function", (0,18): "procedure", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
         self.end_tokens = {(0,5): "end"}
         self.variables_tokens = {}
@@ -16,12 +18,7 @@ class table:
     def get_current_bloc(self):
         current_node = self.tds
         for element in self.path:
-            if type(current_node)==dict:
-                current_node = current_node[element]
-            elif type(current_node)==fonction:
-                current_node = current_node.sous_bloc
-            else:
-                print("Problème dans le path de la table des symboles.")
+            current_node = current_node[element]
         return current_node
 
     def create_block(self, block_name):
@@ -34,10 +31,8 @@ class table:
     def import_function(self, function):
         block = self.get_current_bloc()
         self.path.append(function.name) 
-        if type(block)==dict:
-            block[function.name] = function
-        elif type(block)==fonction:
-            block.sous_bloc[function.name] = function
+        block[function.name] = {}
+        self.tds_data[function.name] = function
         pass
 
     def import_variable(self, variable):
