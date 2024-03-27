@@ -1,0 +1,13 @@
+-- Test avec une erreur d'imbrication : une variable est initialisée sans avoir était déclarée
+
+with Ada.Text_IO ; use Ada.Text_IO ;
+
+procedure Main is 
+
+A : Integer;
+
+begin
+a = 5 ;
+
+end Main ; eof
+

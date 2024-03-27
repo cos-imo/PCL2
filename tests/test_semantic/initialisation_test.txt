@@ -1,0 +1,15 @@
+-- Test avec une erreur d'imbrication : une variable est utilisée sans avoir était initialisée
+
+with Ada.Text_IO ; use Ada.Text_IO ;
+
+procedure Main is 
+
+A : Integer ;
+B : Integer;
+
+begin
+
+B = A + 5;
+--On utilise A dans un calcul alors qu'elle n'a pas de valeur.
+
+end Main ; eof

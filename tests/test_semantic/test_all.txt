@@ -1,0 +1,64 @@
+-- Test avec des erreurs sémantiques
+with Ada.Text_IO ; use Ada.Text_IO ;
+
+procedure Main is 
+
+procedure erreursVariables is
+
+A : Integer ;
+B : Integer ;
+C : Char ; 
+
+begin
+-- On initialise une variable non déclarée
+z = 5 ;
+
+-- On utilise une varible non initialisée
+y = A + 5 ;
+
+-- On initialise une variable avec un élément qui n'est pas de son type
+C = 1 ; 
+
+end erreursVariables ; 
+
+function fonct(a: Integer, b: Integer) return Integer is c : Integer ;
+begin
+c := a*b ;
+return c ;
+end fonct ;
+
+-- La fonction ne se termine pas avec le bon identifiant à la suite du end 
+function error(e: Integer) return Integer is d : Integer ;
+begin
+d := e ;
+retrun e ;
+end noerror ;
+
+-- La fonction n'a pas de return
+function noReturn(e:Integer) return Integer is d : Integer ;
+begin
+d := e ;
+end noReturn ;
+
+-- On crée une fonction avec un nom déjà utiliser 
+function fonct(a: Integer, b: Integer) return Integer is c : Integer ;
+begin
+c := a-b ;
+return c ;
+end fonct ;
+
+
+
+begin 
+
+-- On appelle une fonction qui n'existe pas 
+fonction(2,3) ;
+
+-- On appelle la fonction avec plus de paramètres 
+fonct(1,2,3) ;
+
+-- On appelle la fonction avec un paramètre du mauvais type
+fonct(1,'a') ;
+
+
+end Main ; eof
