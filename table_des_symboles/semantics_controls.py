@@ -1,4 +1,5 @@
 from copy import deepcopy
+import table_des_symboles as table_des_symboles
 
 #Fichier contenant les controles sémantiques à faire lors de la fabrication de la TDS
 
@@ -10,24 +11,28 @@ def getBloc(tds, pile):
         current_node = current_node[element]
     return current_node
 
-def getVar(tds, pile, variable):
+# Retourne l'occurence de la variable (la déclaration la plus récente, si il y a en a plusieurs), None si la variable n'existe pas
+def getVar(tds, pile, variable_name):
     current_node = getBloc(tds, pile)
-    if variable in current_node:
-        return True
-    else:
-        return False
-    
-def getValue(tds, pile, variable):
-    current_node = getBloc(tds, pile)
-    return current_node[variable].value
+    for element in current_node:
+        if element == variable_name:
+            return current_node[element]
+    return None
 
-def getParams(tds, pile, fonction):
-    current_node = getBloc(tds, pile)
-    return current_node[fonction].params
+# Retourne la valeur correspondant au nom de la variable indiquée, si la variable n'est pas déclaré retourne None
+def getValue(tds, pile, variable_name):
+    variable = getVar(tds, pile, variable_name)
+    if variable != None:
+        return variable.value
+    return None
 
-def getName(tds, pile):
-    current_node = getBloc(tds, pile)
-    return 1 #current_node.name je ne sais pas faire
+# Retourne les paramètres correspondant au nom de la fonction donnée en entrée, none si la fonction n'héxiste pas
+def getParams(tds, pile, fonction_name):
+    fonction = getVar(tds, pile, fonction_name)
+    if fonction != None:
+        return fonction.parametres
+    return None
+
 
 #Controls sémantiques pour les variables
 
@@ -35,8 +40,11 @@ def getName(tds, pile):
 #(si la variable a été déclarée dans le bloc courant ou dans un bloc parent avant d'être initialisée)
 def variableImbricationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
-    while (pile and not(getVar(tds, pile, variable))) :
-        pile.pop()
+    while (pile) :
+        if getVar(tds, pile, variable):
+            return True
+        else :
+            pile.pop()
     return (pile!=[])
 
 #Controle de l'affectation des variables 
@@ -44,7 +52,7 @@ def variableImbricationControl(pile_originale, tds, variable):
 def variableAffectationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if getVar(tds, pile, variable) and getValue(tds, pile, variable) != None:
+        if (getValue(tds, pile, variable) != None):
             return True
         else :
             pile.pop()
@@ -61,7 +69,7 @@ def variableAffectationControl(pile_originale, tds, variable):
 #(si la fonction a été déclarée dans le bloc courant ou dans un bloc parent avant d'être utilisée)
 def fonctionImbricationControl(pile_originale, tds, fonction):
     pile = deepcopy(pile_originale)
-    while (pile and not(getVar(tds, pile, fonction))) :
+    while (pile and not(getVar(tds, pile, fonction)!=None)) :
         pile.pop()
     return (pile!=[])
 
@@ -70,7 +78,7 @@ def fonctionImbricationControl(pile_originale, tds, fonction):
 def fonctionAffectationControl(pile_originale, tds, fonction):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if getVar(tds, pile, fonction) and getValue(tds, pile, fonction) != None:
+        if ((getVar(tds, pile, fonction)!=None) and (getValue(tds, pile, fonction) != None)):
             return True
         else :
             pile.pop()
@@ -80,13 +88,13 @@ def fonctionAffectationControl(pile_originale, tds, fonction):
 def fonctionParamControl(pile_originale, tds, fonction, params):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if getVar(tds, pile, fonction) and len(getParams(tds, pile, fonction)) == len(params):
-            #on vérifie que le nombre de paramètres est le même
-            #on pourra ajouter ici le controle des types des paramètres
-            return True
+        if (getVar(tds, pile, fonction)!=None):
+            if (len(params) == len(getParams(tds, pile, fonction))):
+                return True
+            else:
+                return False
         else :
             pile.pop()
-    return False
 
 
 #Vérification supplémentaire pour la grammaire
@@ -102,8 +110,8 @@ def accessControl(access):
 #Vérification de la déclaration de procédure ou de fonction
 #dans une déclaration de procédure ou de fonction, si un identificateur suit le mot clé end, alors celui-ci doit être
 #identique au nom de la procédure ou de la fonction déclarée.
-def funtionDeclarationControl(pile_originale, tds, ident):
-    return(ident == getName(tds, pile_originale) )
+
+   
     
 
 #Vérification des déclarations
@@ -160,15 +168,3 @@ def paramInControl(pile_originale, tds, param):
 #on regarde si le paramètre est déclaré en in
 #si c'est le cas on ne peut pas le modifier avec une affectation 
 #donc si on a une affectation on renvoie False
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,5 @@
 import table_des_symboles
-
+import table_des_symboles.semantics_controls as sc
 
 # Définition de la structure de l'arbre
 class Node:
@@ -103,7 +103,23 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else :
                     var = table_des_symboles.variable(name = name_var, type_entree = type_var)
                     tds.import_variable(var)
+            
+            # l'affectation d'une varible : 'name = valeur'. On vérifie si la variable a été déclarée avant affectation et on affecte la variable
+            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="=":
+                if sc.variableImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
+                    tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+                    pass
+                else:
+                    print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant affectation.")
+                    pass
 
+            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]] in lexical_table[1] :
+                if sc.variableAffectationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
+                    pass
+                else:
+                    print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été initialisée avant utilisation.")
+                    pass
+        
         # Ici on gère les procédures
         elif (token_lu[0],token_lu[1])==(0,18):
             # J'initialise mes variables

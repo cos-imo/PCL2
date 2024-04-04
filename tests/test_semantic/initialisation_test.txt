@@ -4,12 +4,13 @@ with Ada.Text_IO ; use Ada.Text_IO ;
 
 procedure Main is 
 
-A : Integer ;
-B : Integer;
+a : Integer;
+b : Integer;
 
 begin
 
-B = A + 5;
+a = 3 ;
+b = a + 5 ;
 --On utilise A dans un calcul alors qu'elle n'a pas de valeur.
 
 end Main ; eof

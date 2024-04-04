@@ -15,7 +15,7 @@ class variable:
         #Ajouter l'offset
 
     def __repr__(self):
-        return f"variable(self.name)"
+        return f"variable({self.name},{self.type},{self.mode},{self.value},{self.size},{self.Dimension},{self.ligne_declaration},{self.ligne_utilisation},{self.address})"
         """
         sys.stdout.write("\t\tType: " + str(self.type_entree))
         sys.stdout.write("\t\tTaille: " + str(self.Dimension))
