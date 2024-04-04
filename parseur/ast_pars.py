@@ -39,7 +39,7 @@ class Node:
         return f"Node({self.fct}, children={self.children}, value={self.value})"
 
 list_types = {"integer", "character", "string", "boolean", "access"}
-catch_tokens = {(0,8) : "function", (0,18): "procedure", (0,5): "end", (0,2):"begin", (0,7):"for", (0,9):"loop", (0,27):"while"}
+catch_tokens = {(0,2):"begin", (0,3): "else", (0,4): "elsif", (0,5): "end", (0,7):"for", (0,8) : "function", (0,9):"if", (0,12) : "loop", (0,18): "procedure", (0,27):"while"}
 
 
 def inverser_enfants_arbre(node):
@@ -119,6 +119,36 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else:
                     print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été initialisée avant utilisation.")
                     pass
+        
+        # Ici on gère les if
+        # On vérifie juste si ce n'est pas le if suivi d'un point virgule qui signifie la fin de la boucle
+        elif (token_lu[0], token_lu[1])==(0,9) and lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]!=";":
+            current = tds.get_current_bloc()
+            count=1
+            if "if" not in current:
+                current["if"]={}
+                tds.path.append("if")
+            else:
+                while ("if"+str(count)) in current:
+                    count+=1
+                current["if"+str(count)]={}
+                tds.path.append("if"+str(count))
+
+        # Ici on gère les for
+        elif (token_lu[0], token_lu[1])==(0,7):
+            pass
+
+        # Ici on gère les while
+        elif (token_lu[0], token_lu[1])==(0,27):
+            pass
+
+        # Ici on gère les elif
+        elif (token_lu[0], token_lu[1])==(0,4):
+            pass
+        
+        # Ici on gère les else
+        elif (token_lu[0], token_lu[1])==(0,3):
+            pass
         
         # Ici on gère les procédures
         elif (token_lu[0],token_lu[1])==(0,18):
@@ -289,7 +319,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
 
     if succes:
         print("L'analyse syntaxique a réussi sans erreur.")
-        print(tds.tds)
+        print(tds)
         return pile_arbre
     else:
         print("L'analyse syntaxique a échoué en raison d'une erreur de syntaxe.")
