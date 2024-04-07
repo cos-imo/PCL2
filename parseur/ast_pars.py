@@ -86,6 +86,13 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
         elif (token_lu == (0, 8) or token_lu == (0, 18)) and (lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] == tds.path[-1]):
             pass
 
+        # Ici on gère les access 
+        # Si on a un access il faut qu'après le . il y a bien un identifiant 
+        elif token_lu[1] == ".":
+            if lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] != (3, 0):
+                print(f"\tErreur de sémantique: un accès via un . doit être suivi d'un identifiant.")
+                pass
+
         # Ici on gère les variables
         elif (token_lu[0] == 3):
             # Si c'est un type c'est que l'on définit une variable. Donc on ne s'en occupe pas. On les récupère lorsque initialise la varible
@@ -112,13 +119,34 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else:
                     print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant affectation.")
                     pass
-
-            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]] in lexical_table[1] :
+            # On vérifie si la variable a été initialisée avant utilisation        
+            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]=="(" or lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==")" or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]==",":
                 if sc.variableAffectationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
                     pass
                 else:
                     print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été initialisée avant utilisation.")
                     pass
+            # On vérifie si une fonction a été déclarée avant utilisation
+            # Car les fonctions sont des tokens représentés comme des variables
+            # On vérifie aussi le nombre de paramètres
+            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="(" and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!= (0,8):
+                params = []
+                i = ind
+                while lexical_table[list_tokens[i][0]][list_tokens[i][1]]!=")":
+                    if lexical_table[list_tokens[i][0]][list_tokens[i][1]]==",":
+                        i+=1
+                    params.append(list_tokens[i])
+                    i+=1
+                if not (sc.fonctionImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]])):
+                    print(f"\tErreur de sémantique: la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant utilisation.")
+                    pass
+                elif not (sc.fonctionParamControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], params)):
+                    print(f"\tErreur de sémantique: le nombre de paramètres de la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'est pas correct.")
+                    pass
+                else :
+                    pass
+
+                
         
         # Ici on gère les if
         # On vérifie juste si ce n'est pas le if suivi d'un point virgule qui signifie la fin de la boucle
@@ -195,7 +223,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 function = table_des_symboles.fonction(name = procedure_name, parametres = params)
                 tds.import_function(function)
 
-        # Ici on gère les function    
+        # Ici on gère les functions    
         elif (token_lu[0],token_lu[1])==(0,8):
             # J'initialise mes variables
             index = ind
@@ -238,6 +266,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n])] = None
                 function = table_des_symboles.fonction(name = function_name, parametres = params, type_de_retour=lexical_table[list_tokens[index][0]][list_tokens[index][1]])
                 tds.import_function(function)
+
 
 
 # Fonction qui permet de faire l'analyse syntaxique

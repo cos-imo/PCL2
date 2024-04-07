@@ -8,8 +8,9 @@ a : Integer;
 b : Integer;
 
 begin
-
-b = a + 5 ;
---On utilise A dans un calcul alors qu'elle n'a pas de valeur.
+a = 5 ;
+b = 6 ; 
+fonction(a,b);
+-- On utilise la fonction "fonction" alors qu'elle n'a pas été déclarée
 
 end Main ; eof

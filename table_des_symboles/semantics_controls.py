@@ -41,7 +41,7 @@ def getParams(tds, pile, fonction_name):
 def variableImbricationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if getVar(tds, pile, variable):
+        if (getVar(tds, pile, variable)!=None):
             return True
         else :
             pile.pop()
@@ -69,16 +69,8 @@ def variableAffectationControl(pile_originale, tds, variable):
 #(si la fonction a été déclarée dans le bloc courant ou dans un bloc parent avant d'être utilisée)
 def fonctionImbricationControl(pile_originale, tds, fonction):
     pile = deepcopy(pile_originale)
-    while (pile and not(getVar(tds, pile, fonction)!=None)) :
-        pile.pop()
-    return (pile!=[])
-
-#Controle de l'affectation des fonctions
-#(si la fonction a été initialisée dans le bloc courant ou dans un bloc parent avant d'être utilisée)
-def fonctionAffectationControl(pile_originale, tds, fonction):
-    pile = deepcopy(pile_originale)
     while (pile) :
-        if ((getVar(tds, pile, fonction)!=None) and (getValue(tds, pile, fonction) != None)):
+        if (getVar(tds, pile, fonction)!= None):
             return True
         else :
             pile.pop()
@@ -88,23 +80,15 @@ def fonctionAffectationControl(pile_originale, tds, fonction):
 def fonctionParamControl(pile_originale, tds, fonction, params):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if (getVar(tds, pile, fonction)!=None):
-            if (len(params) == len(getParams(tds, pile, fonction))):
+        fonct = getVar(tds, pile, fonction)
+        if fonct != None:
+            if len(params) == len(fonct.parametres):
                 return True
-            else:
-                return False
         else :
             pile.pop()
+    return False
 
 
-#Vérification supplémentaire pour la grammaire
-#on vérifie que expr.ident a bien un ident et pas une expr quelconque 
-def accessControl(access):
-    if access[1] == "ident": #on vérifie que le deuxième élément est bien un ident 
-        return True
-    else:
-        return False
-    
 #Vérification spécifique en Ada
 
 #Vérification de la déclaration de procédure ou de fonction
