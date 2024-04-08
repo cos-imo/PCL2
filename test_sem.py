@@ -10,7 +10,7 @@ import parseur.show as show
 
 class MyTestCase(unittest.TestCase):
     def test_pres(self):
-        with open("tests/test_semantic/params_test.txt") as f:
+        with open("tests/test_semantic/return_test.txt") as f:
             source_code = f.read()
 
         tok, lex = lexical_analysis(source_code)

@@ -52,7 +52,8 @@ def variableImbricationControl(pile_originale, tds, variable):
 def variableAffectationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if (getValue(tds, pile, variable) != None):
+        var = getVar(tds, pile, variable)
+        if var != None and (var.value != None or var.parametre == True):
             return True
         else :
             pile.pop()
@@ -144,11 +145,15 @@ un champ de x ne peut pas être modifié avec une affectation x.f := e
 def paramInControl(pile_originale, tds, param):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if getVar(tds, pile, param) and getParams(tds, pile, param).mode == "in":
-            return True
+        if getVar(tds, pile, param) != None:
+            mode = getVar(tds, pile, param).mode
+            if mode == "in":
+                return True
         else :
             pile.pop()
     return False
 #on regarde si le paramètre est déclaré en in
 #si c'est le cas on ne peut pas le modifier avec une affectation 
 #donc si on a une affectation on renvoie False
+#cela n'est valable que pour les paramètres de fonction ou de procédure et non pas pour les variables 
+#il va falloir revoir un certain nombre de truc là je crois... 
