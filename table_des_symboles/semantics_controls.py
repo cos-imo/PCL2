@@ -107,6 +107,19 @@ def fonctionParamControl(pile_originale, tds, fonction, params):
     return False
 
 
+# Controle de la résolution type - valeur des paramètres (si les paramètres ont été déclarés avec un type et que la valeur affectée est du même type)
+def fonctionParamTypeControl(pile_originale, tds, fonction, params):
+    pile = deepcopy(pile_originale)
+    for i in range(len(params)):
+        if params[i].type == fonction.parametres[i].type:
+            return False
+    return True
+
+# Controle du type de retour de la fonction
+#def fonctionReturnTypeControl(pile_originale, tds, fonction, type_retour):
+    
+
+
 #Vérification spécifique en Ada
 
 #Vérification de la déclaration de procédure ou de fonction
