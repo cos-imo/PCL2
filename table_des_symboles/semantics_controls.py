@@ -64,14 +64,12 @@ def variableAffectationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
         var = getVar(tds, pile, variable)
-        if var != None and (var.value != None or var.parametre == True):
+        if var != None and (var.value != None or var.parametre == True): # Si c'est un paramètre de fonction on peut l'utiliser dans la fonction sans l'avoir initialisée
             return True
         else :
             pile.pop()
     return False
 
-#Controle du type de la variable
-#pour l'instant on ne peut pas le faire, d'ailleurs on le fera peut être dans le controle de l'imbrication ?
 
 # Controle de la résolution type - valeur (si la variable a été déclarée avec un type et que la valeur affectée est du même type)
 def variableTypeControl(pile_originale, tds, variable_name, value):
@@ -115,9 +113,9 @@ def fonctionParamControl(pile_originale, tds, fonction, params):
 #dans une déclaration de procédure ou de fonction, si un identificateur suit le mot clé end, alors celui-ci doit être
 #identique au nom de la procédure ou de la fonction déclarée.
 
+
    
     
-
 #Vérification des déclarations
 #toutes les déclarations d'un même niveau doivent porter des noms diérents. La seule exception est celle d'un
 #type enregistrement déclaré, puis déni plus loin (il faut donc vérifier à la déclaration que le nom n'est pas déjà dans la TDS)
@@ -131,14 +129,14 @@ def declarationControl(pile_originale, tds, ident):
             pile.pop()
     return True
 
+
+
 #Vérification fin de fonction 
 #l'exécution de toute fonction doit impérativement se terminer par une instruction return
-#on pourra se servir de cette fonction pour vérifier le type du retour de la fonction   
 def fonctionReturnControl(pile_originale, tds):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if getValue(tds, pile, "return") != None: #on vérifie que la fonction a bien un return
-                                                    #on ne vérifie pas si il est à la fin de la fonction donc tout ce qui est entre le return et le end n'est pas prix en compte
+        if getValue(tds, pile, "return") != None: 
             return True
         else :
             pile.pop()
