@@ -119,10 +119,9 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     var = table_des_symboles.variable(name = name_var, type_entree = type_var, parametre = parametre)
                     tds.import_variable(var)
             
-            # l'affectation d'une varible : 'name = valeur'. On vérifie si la variable a été déclarée avant affectation et on affecte la variable
-            # On vérifie aussi si la variable est de type in, si oui on ne peut pas la modifier via une affectation 
+            # l'affectation d'une varible : 'name = valeur'. On vérifie si la variable a été déclarée avant affectation et on affecte la variable, on verifie aussi le type de la variable pour qu'il soit du même type que la variable
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="=":
-                if sc.variableImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
+                if sc.variableImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]) and sc.variableTypeControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
                     tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
                     pass
                 else:

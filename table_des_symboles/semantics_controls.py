@@ -33,11 +33,23 @@ def getParams(tds, pile, fonction_name):
         return fonction.parametres
     return None
 
+# Fonction qui retourne le type de la variable sous le bon format pour les comparer (Integer, Char, ...), permet de comparer avec le type renvoyer par la fonction type() qui sont de la forme <class 'int'>, <class 'str'>, ...
+def getType(variable_name):
+    if type(variable_name) == int:
+        return "integer"
+    if type(variable_name) == str:
+        return "char" # A modifier pour distinguer les chaines de caractères des string (python considère un caractère comme une chaine de caractère de taille 1 donc str)
+    if type(variable_name) == float:
+        return "float"
+    if type(variable_name) == bool:
+        return "boolean"
+ 
 
-#Controls sémantiques pour les variables
 
-#Controle de l'imbrication des variables 
-#(si la variable a été déclarée dans le bloc courant ou dans un bloc parent avant d'être initialisée)
+
+# Controles sémantiques pour les variables
+
+#Controle de l'imbrication des variables (si la variable a été déclarée dans le bloc courant ou dans un bloc parent avant d'être initialisée)
 def variableImbricationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
@@ -47,8 +59,7 @@ def variableImbricationControl(pile_originale, tds, variable):
             pile.pop()
     return (pile!=[])
 
-#Controle de l'affectation des variables 
-#(si la variable a été initialisée dans le bloc courant ou dans un bloc parent avant d'être utilisée)
+#Controle de l'affectation des variables (si la variable a été initialisée dans le bloc courant ou dans un bloc parent avant d'être utilisée)
 def variableAffectationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
@@ -61,6 +72,14 @@ def variableAffectationControl(pile_originale, tds, variable):
 
 #Controle du type de la variable
 #pour l'instant on ne peut pas le faire, d'ailleurs on le fera peut être dans le controle de l'imbrication ?
+
+# Controle de la résolution type - valeur (si la variable a été déclarée avec un type et que la valeur affectée est du même type)
+def variableTypeControl(pile_originale, tds, variable_name, value):
+    pile = deepcopy(pile_originale)
+    variable = getVar(tds, pile, variable_name)
+    if variable != None:
+        return variable.type == getType(value)
+    
 
 
 
