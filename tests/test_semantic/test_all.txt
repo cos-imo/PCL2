@@ -21,7 +21,7 @@ C = 1 ;
 
 end erreursVariables ; 
 
-function fonct(a: Integer, b: Integer) return Integer is c : Integer ;
+function fonct(a: Integer; b: Integer) return Integer is c : Integer ;
 begin
 c := a*b ;
 return c ;
@@ -31,7 +31,7 @@ end fonct ;
 function error(e: Integer) return Integer is d : Integer ;
 begin
 d := e ;
-retrun e ;
+return e ;
 end noerror ;
 
 -- La fonction n'a pas de return
@@ -41,7 +41,7 @@ d := e ;
 end noReturn ;
 
 -- On crée une fonction avec un nom déjà utiliser 
-function fonct(a: Integer, b: Integer) return Integer is c : Integer ;
+function fonct(a: Integer; b: Integer) return Integer is c : Integer ;
 begin
 c := a-b ;
 return c ;
