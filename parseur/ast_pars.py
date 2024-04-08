@@ -359,6 +359,18 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 # Fonction qui permet de faire l'analyse syntaxique
 def parseur(list_tokens, lexical_table, table_ll1):
     pile = []
@@ -453,6 +465,9 @@ def inverser_enfants_arbre(node):
             inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
 
 def construire_arbre(liste_regles):
+    if liste_regles == []:
+        print("La liste des règles est vide, la construction de l'arbre est impossible.")
+        return None
     arbre = Node(liste_regles[0][0])  # On crée la racine de l'arbre
     pile_arbre = []  # On crée une pile qui va contenir les noeuds de l'arbre
     pile_arbre.append(arbre)  # On empile la racine de l'arbre

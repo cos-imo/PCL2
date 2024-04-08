@@ -10,19 +10,23 @@ import parseur.show as show
 
 class MyTestCase(unittest.TestCase):
     def test_pres(self):
-        with open("tests/test_semantic/return_test.txt") as f:
+        with open("tests/test_semantic/test_all.txt") as f:
             source_code = f.read()
 
-        tok, lex = lexical_analysis(source_code)
-        arbre = construire_arbre(parseur(tok, lex, table_syntaxique))
+        tok, lex,  = lexical_analysis(source_code)
+        list_regle = parseur(tok, lex, table_syntaxique)
+        arbre = construire_arbre(list_regle)
+        
+        if list_regle == []:
+            print("Erreur lors de la compilation")
+        else:
+            show.afficher(arbre, 'LR', 'test_pres_syntax_tree_LR', './output/basic')
+            show.afficher(arbre, '', 'test_pres_syntax_tree', './output/basic')
 
-        show.afficher(arbre, 'LR', 'test_pres_syntax_tree_LR', './output/basic')
-        show.afficher(arbre, '', 'test_pres_syntax_tree', './output/basic')
+            arbre_elaguer = elaguer(arbre)
 
-        arbre_elaguer = elaguer(arbre)
-
-        show.afficher(arbre_elaguer, 'LR', 'test_pres_syntax_tree_elaguer_LR', './output/reduced')
-        show.afficher(arbre_elaguer, '', 'test_pres_syntax_tree_elaguer', './output/reduced')
+            show.afficher(arbre_elaguer, 'LR', 'test_pres_syntax_tree_elaguer_LR', './output/reduced')
+            show.afficher(arbre_elaguer, '', 'test_pres_syntax_tree_elaguer', './output/reduced')
 
 if __name__ == '__main__':
     unittest.main()
