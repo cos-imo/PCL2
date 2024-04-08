@@ -80,6 +80,9 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
         
         # Lorsque l'on arrive à la fin d'un block ("end") on m'est à jour le PATH
         if (token_lu[0], token_lu[1]) == (0, 5):
+            if lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=='if':
+                while tds.path[-1][:2]!='if':
+                    tds.path.pop()
             tds.path.pop()
         
         # Ici on gère les "procedure" et les "function" que l'on regarde plusieurs fois
