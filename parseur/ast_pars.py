@@ -104,9 +104,10 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 type_var = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
                 parametre = False
                 # On vérifie si c'est un paramètre de fonction
-                if type(tds.tds_data[tds.path[-1]])== table_des_symboles.symbole.fonction:
+                if tds.path[-1]!="F" and type(tds.tds_data[tds.path[-1]])== table_des_symboles.symbole.fonction:
                     # On regade si la variable est dans le bloc courant
-                    for param in tds.tds_data[tds.path[-1]].parametres :
+                    funct = tds.tds_data[tds.path[-1]]
+                    for param in {**funct.parametres, **funct.var_de_retour}:
                         if lexical_table[param.name[0]][param.name[1]] == name_var:
                             parametre = True
                             pass
@@ -154,11 +155,9 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else :
                     pass
 
-                
-        
         # Ici on gère les if
         # On vérifie juste si ce n'est pas le if suivi d'un point virgule qui signifie la fin de la boucle
-        elif (token_lu[0], token_lu[1])==(0,9) and lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]!=";":
+        elif (token_lu[0], token_lu[1])==(0,9) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
             current = tds.get_current_bloc()
             count=1
             if "if" not in current:
@@ -171,19 +170,59 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 tds.path.append("if"+str(count))
 
         # Ici on gère les for
-        elif (token_lu[0], token_lu[1])==(0,7):
+        elif (token_lu[0], token_lu[1])==(0,7) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
+            current = tds.get_current_bloc()
+            count=1
+            if "for" not in current:
+                current["for"]={}
+                tds.path.append("for")
+            else:
+                while ("for"+str(count)) in current:
+                    count+=1
+                current["for"+str(count)]={}
+                tds.path.append("for"+str(count))
             pass
 
         # Ici on gère les while
-        elif (token_lu[0], token_lu[1])==(0,27):
+        elif (token_lu[0], token_lu[1])==(0,27) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
+            current = tds.get_current_bloc()
+            count=1
+            if "while" not in current:
+                current["while"]={}
+                tds.path.append("while")
+            else:
+                while ("while"+str(count)) in current:
+                    count+=1
+                current["while"+str(count)]={}
+                tds.path.append("while"+str(count))
             pass
 
-        # Ici on gère les elif
-        elif (token_lu[0], token_lu[1])==(0,4):
+        # Ici on gère les elsif
+        elif (token_lu[0], token_lu[1])==(0,4) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
+            current = tds.get_current_bloc()
+            count=1
+            if "elsif" not in current:
+                current["elsif"]={}
+                tds.path.append("elsif")
+            else:
+                while ("elsif"+str(count)) in current:
+                    count+=1
+                current["elsif"+str(count)]={}
+                tds.path.append("elsif"+str(count))
             pass
         
         # Ici on gère les else
-        elif (token_lu[0], token_lu[1])==(0,3):
+        elif (token_lu[0], token_lu[1])==(0,3) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
+            current = tds.get_current_bloc()
+            count=1
+            if "else" not in current:
+                current["else"]={}
+                tds.path.append("else")
+            else:
+                while ("else"+str(count)) in current:
+                    count+=1
+                current["else"+str(count)]={}
+                tds.path.append("else"+str(count))
             pass
         
         # Ici on gère les procédures
@@ -237,7 +276,10 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             index = ind
             list_name_params = []
             list_type_params = []
+            list_name_var_retour = []
+            list_type_var_retour = []
             params = {}
+            var_retour = {}
 
             # On se place au niveau du nom de la procedure
             index += 1
@@ -246,8 +288,8 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             # On étudie cette fois les params
             index += 1
 
-            # tant que l'on est pas sur un token 'return' ou tant que l'on n'est pas sur le token is
-            while (list_tokens[index][0],list_tokens[index][1])!= (0,21): #or not lexical_table[list_tokens[index][0]][list_tokens[index][1]] == "is":
+            # tant que l'on est pas sur un token 'return' on récupère les paramètres
+            while (list_tokens[index][0],list_tokens[index][1])!= (0,21):
                 if list_tokens[index]==(-1, 'EOF', -1):
 
                     print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
@@ -269,16 +311,47 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else :
                     print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
                     break
-            # Vérification que les params sont bien initialisé
+            
+            # On incrémente jusqu'au is pour retrouver les déclarations de variables
+            while lexical_table[list_tokens[index][0]][list_tokens[index][1]] != "is":
+                index+=1
+
+            # tant que l'on est pas sur un token ';' on récupère les variables de retour
+            while (list_tokens[index][0],list_tokens[index][1])!= (2,11): 
+                if list_tokens[index]==(-1, 'EOF', -1):
+
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
+                    break
+                
+                # On vérifie si le token est un type et on l'ajoute dans la liste des types des var de retour
+                elif lexical_table[list_tokens[index][0]][list_tokens[index][1]] in list_types:
+                    list_type_var_retour.append(list_tokens[index])
+                # Si c'est un autre id c'est un nom et on l'ajoute à la liste des noms des var de retour
+                elif list_tokens[index][0] == 3:
+                    list_name_var_retour.append(list_tokens[index])
+                # On incrémente notre index
+                if index<len(list_tokens)-1:
+                    index += 1
+                # Condition au cas où, on break (Si on n'incrémente plus et que l'on n'est pas sortie de la boucle)
+                else :
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
+                    break
+
+            # Vérification que les params sont bien initialisés
             if len(list_name_params)!=len(list_type_params):
                 print(f"\tErreur de sémantique: un (ou plusieurs) paramètre(s) de la fonction n'a (ont) pas de type.")
                 pass
-
+            # Vérification que les var de retour sont bien initialisées
+            if len(list_name_var_retour)!=len(list_type_var_retour):
+                print(f"\tErreur de sémantique: une (ou plusieurs) variables(s) de retour de la fonction n'a (ont) pas de type.")
+                pass
             #return_type = lexical_table(list_tokens[index])
             else :
                 for n in range(len(list_type_params)):
                     params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n], parametre = True)] = None
-                function = table_des_symboles.fonction(name = function_name, parametres = params, type_de_retour=lexical_table[list_tokens[index][0]][list_tokens[index][1]])
+                for n in range(len(list_type_var_retour)):
+                    var_retour[table_des_symboles.variable(name = list_name_var_retour[n], type_entree = list_type_var_retour[n], parametre = True)] = None
+                function = table_des_symboles.fonction(name = function_name, parametres = params, var_de_retour=var_retour)
                 tds.import_function(function)
 
 

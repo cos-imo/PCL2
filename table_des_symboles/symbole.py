@@ -34,10 +34,10 @@ class variable:
 
 class fonction:
 
-    def __init__(self, name, parametres = {}, type_de_retour = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
+    def __init__(self, name, parametres = {}, var_de_retour = {}, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
         self.name = name
         self.parametres = parametres
-        self.type_de_retour = type_de_retour
+        self.var_de_retour = var_de_retour
         self.size = size
         self.Dimension = Dimension
         self.ligne_declaration = ligne_declaration
@@ -81,7 +81,7 @@ class procedure:
         self.address = address
 
     def __repr__(self):
-        return f"procedure({self.name}) : self.{sous_bloc}"
+        return f"procedure({self.name}) : self.{self.parametres}"
         sys.stdout.write("\n\t => PROCEDURE\n")
         sys.stdout.write("\t\tNom: " + str(self.name))
         if len(self.parametres)>1:
