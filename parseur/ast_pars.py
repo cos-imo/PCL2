@@ -127,12 +127,17 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             
             # l'affectation d'une varible : 'name = valeur'. On vérifie si la variable a été déclarée avant affectation et on affecte la variable, on verifie aussi le type de la variable pour qu'il soit du même type que la variable
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="=":
-                if sc.variableImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]) and sc.variableTypeControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
-                    tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
-                    pass
+                if sc.variableImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
+                    # La variable a été déclarée avant affectation, maintenant on vérifie le type
+                    if sc.variableTypeControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
+                        tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+                    else: 
+                        print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas le même type que la valeur affectée. Voir ligne: {list_tokens[ind][2]}")
                 else:
                     print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant affectation. Voir ligne: {list_tokens[ind][2]}")
-                    pass
+                    
+                
+                
             # On vérifie si la variable a été initialisée avant utilisation        
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]=="(" or lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==")" or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]==",":
                 if sc.variableAffectationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):

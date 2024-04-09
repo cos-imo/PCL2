@@ -75,8 +75,10 @@ def variableAffectationControl(pile_originale, tds, variable):
 def variableTypeControl(pile_originale, tds, variable_name, value):
     pile = deepcopy(pile_originale)
     variable = getVar(tds, pile, variable_name)
+    print(value)
     if variable != None:
         return variable.type == getType(value)
+    return False
     
 
 

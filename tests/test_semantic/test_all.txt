@@ -10,6 +10,7 @@ B : Integer ;
 C : Character ; 
 
 begin
+
 -- On initialise une variable non déclarée
 z = 5 ;
 
@@ -18,6 +19,7 @@ B = A + 5 ;
 
 -- On initialise une variable avec un élément qui n'est pas de son type
 C = 1 ; 
+B = C ;
 
 end erreursVariables ; 
 
@@ -48,6 +50,7 @@ return o ;
 end fonct ;
 
 
+c : integer ;
 
 begin 
 
@@ -57,8 +60,9 @@ fonction(2,3) ;
 -- On appelle la fonction avec plus de paramètres 
 fonct(1,2,3) ;
 
+c = 2 ;
 -- On appelle la fonction avec un paramètre du mauvais type
-fonct(1,C) ;
+fonct(1,c) ;
 
 
 end Main ; eof
