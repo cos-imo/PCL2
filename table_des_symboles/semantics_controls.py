@@ -90,17 +90,50 @@ def variableAffectationControl(pile_originale, tds, variable):
     return False
 
 
-# Controle de la résolution type - valeur (si la variable a été déclarée avec un type et que la valeur affectée est du même type)
-def variableTypeControl(pile_originale, tds, variable_name, value):
+# Controle de la résolution de type entre variable = VALEUR (si la variable a été déclarée avec un type et que la valeur affectée est du même type) 
+def valueTypeControl(pile_originale, tds, variable_name, value):
     pile = deepcopy(pile_originale)
     while (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if' or pile[-1][:3]=='for' or pile[-1][:5]=='while'):
         pile.pop()
     variable = getVar(tds, pile, variable_name)
     if variable != None:
         return variable.type == getType(value)
-    return False
     
+    return False
 
+# Controle de la résolution type entre Variable = VARIABLE (si la variable a été déclarée avec un type et que la variable affectée est du même type)
+def variableTypeControl(pile_originale, tds, variable_gauche_name, variable_droite_name):
+    pile = deepcopy(pile_originale)
+    while (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if' or pile[-1][:3]=='for' or pile[-1][:5]=='while'):
+        pile.pop()
+    variable_gauche = getVar(tds, pile, variable_gauche_name)
+    print("variable de droite : ", variable_droite_name)
+    variable_droite = getVar(tds, pile, variable_droite_name)
+    if variable_gauche != None and variable_droite != None:
+        return variable_gauche.type == variable_droite.type
+    return False
+
+
+# Retourne l'occurence de la fonction (la déclaration la plus récente, si il y a en a plusieurs), None si la fonction n'existe pas
+def getFunction(tds, pile, fonction_name):
+    current_node = getBloc(tds, pile)
+    for element in current_node:
+        if element == fonction_name:
+            return current_node[element]
+    return None
+
+# Controle de la résolutio type entre Variable = FONCTION (si la variable a été déclarée avec un type et que la fonction affectée est du même type)
+def returnTypeControl(pile_originale, tds, variable_gauche_name,fonction_name):
+    pile = deepcopy(pile_originale)
+    while (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if' or pile[-1][:3]=='for' or pile[-1][:5]=='while'):
+        pile.pop()
+    variable_gauche = getVar(tds, pile, variable_gauche_name)
+    fonction = getFunction(tds, pile, fonction_name)
+    if variable_gauche != None and fonction != None:
+        return variable_gauche.type == fonction.var_de_retour.type
+    if fonction == None:
+        print("Erreur de sémantique : la fonction ", fonction_name, " n'a pas été déclarée")
+    return False
 
 
 #Controls sémantiques pour les fonctions"

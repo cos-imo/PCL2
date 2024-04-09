@@ -135,16 +135,42 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     var.parametre = 2
             # l'affectation d'une varible : 'name = valeur'. On vérifie si la variable a été déclarée avant affectation et on affecte la variable, on verifie aussi le type de la variable pour qu'il soit du même type que la variable
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="=":
+                # Il faut faire la distinction entre une valeur, une  variable, une fonction (donc voir le type de retour de la fonction), une operation entre deux valeurs ou variables
+                
+                # On controle sur la varaible de gauche est bien déclarée
                 if sc.variableImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
                     # La variable a été déclarée avant affectation, maintenant on vérifie le type
-                    if sc.variableTypeControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
-                        tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
-                    else: 
-                        print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas le même type que la valeur affectée. Voir ligne: {list_tokens[ind][2]}")
+                    
+                    #Si on lui affecte une valeur (faire condition pour voir si c'est une valeur ou une variable, gerer le - également lire - puis voir si c'est variable ou autre)
+                    # On dit qu'une valeur ne peut etre uniquement un entier
+                    if type(lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]])==int:
+                        if sc.valueTypeControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
+                            tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+                        else: 
+                            print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas le même type que la valeur affectée. Type de la variable: {tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].type} et type de la valeur affectée: {sc.getType(lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]])}. Voir ligne: {list_tokens[ind][2]}")
+                    
+                    # On regarde si c'est une vriable, donc si le token est un identifiant
+                    elif lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]] in lexical_table[3]:
+                        if sc.variableImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
+                            #on vérifie si elle est bien affectée
+                            if sc.variableAffectationControl(tds.path, tds.tds, lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
+                                if sc.variableTypeControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
+                                    tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+                
+                        
+                    # Si c'est une fonction, on regarde si la fonction a été déclarée avant utilisation et on regarde le type de retour de la fonction
+                    elif lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]=="(":
+                        if sc.fonctionImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
+                            if sc.returnTypeControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
+                                tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+                            else:
+                                print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas le même type que la fonction affectée. Type de la variable: {tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].type} et type de la fonction affectée: {sc.getType(lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]])}. Voir ligne: {list_tokens[ind][2]}")
+                                pass
+                        else:
+                            print(f"\tErreur de sémantique: la fonction {lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]} n'a pas été déclarée avant utilisation. Voir ligne: {list_tokens[ind][2]}")
+                            pass
                 else:
                     print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant affectation. Voir ligne: {list_tokens[ind][2]}")
-                    
-                
                 
             # On vérifie si la variable a été initialisée avant utilisation        
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]=="(" or lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==")" or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]==",":

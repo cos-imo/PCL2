@@ -14,12 +14,19 @@ begin
 -- On initialise une variable non déclarée
 z = 5 ;
 
--- On utilise une varible non initialisée
-B = A + 5 ;
+-- On utilise une variable non initialisée
+B = A ;
 
--- On initialise une variable avec un élément qui n'est pas de son type
-C = 1 ; 
-B = C ;
+-- On initialise une variable avec une variable qui n'est pas de son type
+C = 23 ; 
+
+-- On initialise une variable avec une variable qui n'est pas de son type
+C = A ;
+
+
+
+
+
 
 end erreursVariables ; 
 
@@ -54,6 +61,9 @@ c : integer ;
 indice : integer ;
 
 begin 
+
+-- On initialise une variable avec une fonction qui n'a pas le retour de son type
+c = fonct(2,3) ;
 
 -- On appelle une fonction qui n'existe pas 
 fonction(2,3) ;
