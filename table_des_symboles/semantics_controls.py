@@ -74,7 +74,7 @@ def variableAffectationControl(pile_originale, tds, variable):
 # Controle de la résolution type - valeur (si la variable a été déclarée avec un type et que la valeur affectée est du même type)
 def variableTypeControl(pile_originale, tds, variable_name, value):
     pile = deepcopy(pile_originale)
-    while not getVar(tds,pile,variable_name) and (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if'):
+    while (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if' or pile[-1][:3]=='for' or pile[-1][:5]=='while'):
         pile.pop()
     variable = getVar(tds, pile, variable_name)
     if variable != None:

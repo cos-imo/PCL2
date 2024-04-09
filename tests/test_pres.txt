@@ -11,13 +11,13 @@ end aireRectangle ;
 choix : integer ;
 -- PROCEDURE PRINCIPALE
 begin
-choix = -1 ;
+choix = 1 ;
 if choix < 0 then
-choix = -1 ;
+choix = 1 ;
 elsif choix = 0 then
-choix = -1 ;
+choix = 1 ;
 else
-choix = -1 ;
+choix = 1 ;
 end if;
 aireRectangle(2,3) ;
 end unDebut ; eof
