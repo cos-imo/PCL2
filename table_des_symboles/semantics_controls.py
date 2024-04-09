@@ -104,7 +104,6 @@ def variableTypeControl(pile_originale, tds, variable_gauche_name, variable_droi
     while (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if' or pile[-1][:3]=='for' or pile[-1][:5]=='while'):
         pile.pop()
     variable_gauche = getVar(tds, pile, variable_gauche_name)
-    print("variable de droite : ", variable_droite_name)
     variable_droite = getVar(tds, pile, variable_droite_name)
     if variable_gauche != None and variable_droite != None:
         return variable_gauche.type == variable_droite.type

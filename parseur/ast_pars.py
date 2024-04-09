@@ -150,6 +150,9 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                             if sc.variableAffectationControl(tds.path, tds.tds, lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
                                 if sc.variableTypeControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
                                     tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+                                else:
+                                    print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas le même type que la variable affectée. Type de la variable {tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].name} : {tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].type} et type de la variable affectée {tds.tds_data[lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]].name}: {tds.tds_data[lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]].type}. Voir ligne: {list_tokens[ind][2]}")
+                
                 
                         
                     # Si c'est une fonction, on regarde si la fonction a été déclarée avant utilisation et on regarde le type de retour de la fonction
