@@ -93,7 +93,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
         # Si on a un access il faut qu'après le . il y a bien un identifiant 
         elif token_lu[1] == ".":
             if lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] != (3, 0):
-                print(f"\tErreur de sémantique: un accès via un . doit être suivi d'un identifiant.")
+                print(f"\tErreur de sémantique: un accès via un . doit être suivi d'un identifiant. Voir ligne: {list_tokens[ind][2]}")
                 pass
 
         # Ici on gère les variables
@@ -129,14 +129,14 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
                     pass
                 else:
-                    print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant affectation.")
+                    print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant affectation. Voir ligne: {list_tokens[ind][2]}")
                     pass
             # On vérifie si la variable a été initialisée avant utilisation        
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]=="(" or lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==")" or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]==",":
                 if sc.variableAffectationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
                     pass
                 else:
-                    print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été initialisée avant utilisation.")
+                    print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été initialisée avant utilisation. Voir ligne: {list_tokens[ind][2]}")
                     pass
             # On vérifie si une fonction a été déclarée avant utilisation
             # Car les fonctions sont des tokens représentés comme des variables
@@ -150,7 +150,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     params.append(list_tokens[i])
                     i+=1
                 if not (sc.fonctionImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]])):
-                    print(f"\tErreur de sémantique: la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant utilisation.")
+                    print(f"\tErreur de sémantique: la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant utilisation.  Voir ligne: {list_tokens[ind][2]}")
                     pass
                 #elif not (sc.fonctionParamControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], params)):
                     #print(f"\tErreur de sémantique: le nombre de paramètres de la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'est pas correct.")
@@ -263,7 +263,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             
             # Vérification que les params sont bien initialisé
             if len(list_name_params)!=len(list_type_params):
-                print(f"\tErreur de sémantique: un (ou plusieurs) paramètre(s) de la procédure n'a (ont) pas de type.")
+                print(f"\tErreur de sémantique: un (ou plusieurs) paramètre(s) de la procédure n'a (ont) pas de type.  Voir ligne: {list_tokens[ind][2]}")
                 pass
             
             # Ici on créée l'instance de la procedure
@@ -295,7 +295,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             while (list_tokens[index][0],list_tokens[index][1])!= (0,21):
                 if list_tokens[index]==(-1, 'EOF', -1):
 
-                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.  Voir ligne: {list_tokens[ind][2]}")
                     break
                 
                 # On vérifie si le token est un type et on l'ajoute dans la liste des types des params
@@ -306,13 +306,13 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     list_name_params.append(list_tokens[index])
 
                 elif (list_tokens[index][0],list_tokens[index][1]) == "end":
-                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.  Voir ligne: {list_tokens[ind][2]}")
                 # On incrémente notre index
                 if index<len(list_tokens)-1:
                     index += 1
                 # Condition au cas où, on break (Si on n'incrémente plus et que l'on n'est pas sortie de la boucle)
                 else :
-                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return. Voir ligne: {list_tokens[ind][2]}")
                     break
             
             # On incrémente jusqu'au is pour retrouver les déclarations de variables
@@ -323,7 +323,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             while (list_tokens[index][0],list_tokens[index][1])!= (2,11): 
                 if list_tokens[index]==(-1, 'EOF', -1):
 
-                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return. Voir ligne: {list_tokens[ind][2]}")
                     break
                 
                 # On vérifie si le token est un type et on l'ajoute dans la liste des types des var de retour
@@ -337,16 +337,16 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     index += 1
                 # Condition au cas où, on break (Si on n'incrémente plus et que l'on n'est pas sortie de la boucle)
                 else :
-                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.")
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return. Voir ligne: {list_tokens[ind][2]}")
                     break
 
             # Vérification que les params sont bien initialisés
             if len(list_name_params)!=len(list_type_params):
-                print(f"\tErreur de sémantique: un (ou plusieurs) paramètre(s) de la fonction n'a (ont) pas de type.")
+                print(f"\tErreur de sémantique: un (ou plusieurs) paramètre(s) de la fonction n'a (ont) pas de type. Voir ligne: {list_tokens[ind][2]}")
                 pass
             # Vérification que les var de retour sont bien initialisées
             if len(list_name_var_retour)!=len(list_type_var_retour):
-                print(f"\tErreur de sémantique: une (ou plusieurs) variables(s) de retour de la fonction n'a (ont) pas de type.")
+                print(f"\tErreur de sémantique: une (ou plusieurs) variables(s) de retour de la fonction n'a (ont) pas de type. Voir ligne: {list_tokens[ind][2]}")
                 pass
             #return_type = lexical_table(list_tokens[index])
             else :
