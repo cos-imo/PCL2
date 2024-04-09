@@ -2,7 +2,7 @@ import sys
 
 class variable:
 
-    def __init__(self, name, type_entree="None", mode="in", value = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None, parametre = False):
+    def __init__(self, name, type_entree="None", mode="in", value = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None, parametre = 0):
         self.name = name
         self.type = type_entree
         self.value = value
