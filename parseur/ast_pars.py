@@ -371,6 +371,8 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return. Voir ligne: {list_tokens[ind][2]}")
                     break
             
+            type_retour = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
+
             # On incrémente jusqu'au is pour retrouver les déclarations de variables
             while lexical_table[list_tokens[index][0]][list_tokens[index][1]] != "is":
                 index+=1
@@ -394,7 +396,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else :
                     print(f"\tErreur de sémantique: la fonction {function_name} n'est pas bien déclaré.")
                     break
-
+            
             # Vérification que les params sont bien initialisés
             if len(list_name_params)!=len(list_type_params):
                 print(f"\tErreur de sémantique: un (ou plusieurs) paramètre(s) de la fonction n'a (ont) pas de type. Voir ligne: {list_tokens[ind][2]}")
@@ -403,7 +405,6 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             if len(list_name_var_retour)!=len(list_type_var_retour):
                 print(f"\tErreur de sémantique: une (ou plusieurs) variables(s) de retour de la fonction n'a (ont) pas de type. Voir ligne: {list_tokens[ind][2]}")
                 pass
-            #return_type = lexical_table(list_tokens[index])
             else :
                 for n in range(len(list_type_params)):
                     params[table_des_symboles.variable(name = list_name_params[n], type_entree = list_type_params[n], parametre = True)] = None
@@ -411,6 +412,11 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     var_retour[table_des_symboles.variable(name = list_name_var_retour[n], type_entree = list_type_var_retour[n], parametre = True)] = None
                 function = table_des_symboles.fonction(name = function_name, parametres = params, var_de_retour=var_retour)
                 tds.import_function(function)
+            # Vérification que le type de retour est le même que le type de la variable de retour
+            if list_type_var_retour[0]!=type_retour:
+                print(f"\tErreur de sémantique: Le type de retour de la fonction n'est pas le même que celui de la variable de retour. Voir ligne: {list_tokens[ind][2]}")
+                pass
+            # On vérifie ici que l'on a un return dans le corps de la fonction
             verif_return=True
             while (list_tokens[index][0],list_tokens[index][1])!= (0,5):
                 if (list_tokens[index][0],list_tokens[index][1]) == (0,21):
