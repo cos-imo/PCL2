@@ -53,11 +53,24 @@ def getType(variable_name):
 def variableImbricationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
-        if (getVar(tds, pile, variable)!=None):
+        var = getVar(tds, pile, variable)
+        if (var != None):
+            if var.parametre == 2 :
+                print ("\tErreur de sémantique: la variable de boucle for ne peut pas être affecté à l'intérieur de la boucle")
             return True
         else :
             pile.pop()
     return (pile!=[])
+
+#Return la var dans le parents le plus proche
+def getParentsVar(pile_originale, tds, variable):
+    pile = deepcopy(pile_originale)
+    while (pile) :
+        if (getVar(tds, pile, variable)!=None):
+            return getVar(tds, pile, variable)
+        else :
+            pile.pop()
+    return None
 
 #Controle de l'affectation des variables (si la variable a été initialisée dans le bloc courant ou dans un bloc parent avant d'être utilisée)
 def variableAffectationControl(pile_originale, tds, variable):
@@ -66,11 +79,12 @@ def variableAffectationControl(pile_originale, tds, variable):
         var = getVar(tds, pile, variable)
         if var != None and var.parametre == 1 : # Si c'est un paramètre de fonction on peut l'utiliser dans la fonction sans l'avoir initialisée
             return True
-        elif var != None and var.value != None : # La variable a été initialisée
-            return True
         elif var != None and var.parametre == 2 : # La variable est la variable de boucle for 
             print ("Erreur de sémantique : la variable de boucle for ne peut pas être affectée à l'intérieur de la boucle")
             return True
+        elif var != None and var.value != None : # La variable a été initialisée
+            return True
+        
         else :
             pile.pop()
     return False

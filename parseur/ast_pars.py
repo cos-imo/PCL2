@@ -1,5 +1,6 @@
 import table_des_symboles
 import table_des_symboles.semantics_controls as sc
+from copy import deepcopy
 
 # Définition de la structure de l'arbre
 class Node:
@@ -108,14 +109,14 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==":":
                 name_var = lexical_table[token_lu[0]][token_lu[1]]
                 type_var = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
-                parametre = False
+                parametre = 0
                 # On vérifie si c'est un paramètre de fonction
                 if tds.path[-1]!="F" and type(tds.tds_data[tds.path[-1]])== table_des_symboles.symbole.fonction:
                     # On regade si la variable est dans le bloc courant
                     funct = tds.tds_data[tds.path[-1]]
                     for param in {**funct.parametres, **funct.var_de_retour}:
                         if lexical_table[param.name[0]][param.name[1]] == name_var:
-                            parametre = True
+                            parametre = 1
                             pass
                 # S'il y a une valeur on la récupère
                 if lexical_table[list_tokens[ind+3][0]][list_tokens[ind+3][1]]=="=":
@@ -125,7 +126,13 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else :
                     var = table_des_symboles.variable(name = name_var, type_entree = type_var, parametre = parametre)
                     tds.import_variable(var)
-            
+            # On vérifie si c'est une variable de boucle for
+            if lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]][:3]=="for":
+                path = deepcopy(tds.path)
+                path.pop()
+                var = sc.getParentsVar(path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]])
+                if var != None:
+                    var.parametre = 2
             # l'affectation d'une varible : 'name = valeur'. On vérifie si la variable a été déclarée avant affectation et on affecte la variable, on verifie aussi le type de la variable pour qu'il soit du même type que la variable
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="=":
                 if sc.variableImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
@@ -151,20 +158,23 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             # On vérifie aussi le nombre de paramètres
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="(" and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!= (0,8):
                 params = []
-                i = ind
+                i = ind + 2
                 while lexical_table[list_tokens[i][0]][list_tokens[i][1]]!=")":
                     if lexical_table[list_tokens[i][0]][list_tokens[i][1]]==",":
                         i+=1
-                    params.append(list_tokens[i])
-                    i+=1
+                    else :
+                        params.append(list_tokens[i])
+                        i+=1
                 if not (sc.fonctionImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]])):
                     print(f"\tErreur de sémantique: la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant utilisation.  Voir ligne: {list_tokens[ind][2]}")
-                    pass
-                #elif not (sc.fonctionParamControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]], params)):
-                    #print(f"\tErreur de sémantique: le nombre de paramètres de la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'est pas correct.")
-                    #pass
-                else :
-                    pass
+                # On récupère la fonction et on compte le nombre de paramètres avec lesquels on l'appelle
+                # Puis on appelle fonctionParamControl pour vérifier que le nombre de paramètres est correct
+                funct = sc.getVar(tds.tds, tds.path, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]])
+                if funct != None:
+                    funct = tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]]
+                    if len(params)!=len(funct.parametres):
+                        print(f"\tErreur de sémantique: le nombre de paramètres de la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'est pas correct.Voir ligne: {list_tokens[ind][2]}")
+                        
 
         # Ici on gère les if
         # On vérifie juste si ce n'est pas le if suivi d'un point virgule qui signifie la fin de la boucle

@@ -51,7 +51,7 @@ end fonct ;
 
 
 c : integer ;
-i : integer ;
+indice : integer ;
 
 begin 
 
@@ -65,8 +65,8 @@ c = 2 ;
 -- On appelle la fonction avec un paramètre du mauvais type
 fonct(1,c) ;
 
-for i in 0_5 loop
-i = 3 ;
+for indice in 0_5 loop
+indice = 3 ;
 end loop ;
 
  
