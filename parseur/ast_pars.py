@@ -2,6 +2,8 @@ import table_des_symboles
 import table_des_symboles.semantics_controls as sc
 from copy import deepcopy
 
+import table_des_symboles.symbole
+
 # Définition de la structure de l'arbre
 class Node:
     def __init__(self, fct, children=None, value=None):
@@ -166,8 +168,8 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else:
                     print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant affectation. Voir ligne: {list_tokens[ind][2]}")
                 
-            # On vérifie si la variable a été initialisée avant utilisation        
-            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]=="(" or lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==")" or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]==",":
+            # On vérifie si la variable a été initialisée avant utilisation
+            elif (lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]] in lexical_table[1] or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]=="(" or lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==")" or lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]==",") and type(tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]])!=table_des_symboles.symbole.fonction:
                 if sc.variableAffectationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]):
                     pass
                 else:
