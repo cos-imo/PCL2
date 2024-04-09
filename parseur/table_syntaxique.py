@@ -388,6 +388,8 @@ table_syntaxique = {
         # Operator
         # !=
         (1, 8): ['EGAL', 'OPE4', "OPE3'"],
+        # ==
+        (1, 15): ['EGAL', 'OPE4', "OPE3'"],
         # =
         (1, 9): ['EGAL', 'OPE4', "OPE3'"],
         # .
@@ -458,6 +460,8 @@ table_syntaxique = {
         (1, 7): ['ORDRE', 'OPE5', "OPE4'"],
         # /=
         (1, 8): ["epsilon"],
+        # ==
+        (1,15): ["epsilon"],
         # =
         (1, 9): ["epsilon"],
         # .
@@ -532,6 +536,8 @@ table_syntaxique = {
         (1, 7): ["epsilon"],
         # /=
         (1, 8): ["epsilon"],
+        # ==
+        (1, 15): ["epsilon"],
         # =
         (1, 9): ["epsilon"],
         # .
@@ -612,6 +618,8 @@ table_syntaxique = {
         (1, 7): ["epsilon"],
         # /=
         (1, 8): ["epsilon"],
+        # ==
+        (1, 15): ["epsilon"],
         # =
         (1, 9): ["epsilon"],
         # .
@@ -746,6 +754,8 @@ table_syntaxique = {
         (1, 7): ["epsilon"],
         # /=
         (1, 8): ["epsilon"],
+        # ==
+        (1, 15): ["epsilon"],
         # =
         (1, 9): ["epsilon"],
         # .
@@ -843,7 +853,9 @@ table_syntaxique = {
         # =
         (1, 8): [(1, 8)],
         # /=
-        (1, 9): [(1, 9)]
+        (1, 9): [(1, 9)],
+        # ==
+        (1, 15): [(1, 15)]
     },
     'ORDRE': {
 
