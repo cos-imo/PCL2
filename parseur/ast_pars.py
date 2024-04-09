@@ -411,8 +411,20 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     var_retour[table_des_symboles.variable(name = list_name_var_retour[n], type_entree = list_type_var_retour[n], parametre = True)] = None
                 function = table_des_symboles.fonction(name = function_name, parametres = params, var_de_retour=var_retour)
                 tds.import_function(function)
-
-
+            verif_return=True
+            while (list_tokens[index][0],list_tokens[index][1])!= (0,5):
+                if (list_tokens[index][0],list_tokens[index][1]) == (0,21):
+                    verif_return=False
+                # On incrémente notre index
+                if index<len(list_tokens)-1:
+                    index += 1
+                # Condition au cas où, on break (Si on n'incrémente plus et que l'on n'est pas sortie de la boucle)
+                else :
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'est pas bien déclaré.")
+                    break
+            if verif_return:
+                print(f"\tErreur de sémantique: Le fonction {function_name} ne return rien. Voir ligne: {list_tokens[index][2]}")
+                pass
 
 
 
