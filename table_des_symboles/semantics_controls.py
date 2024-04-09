@@ -1,5 +1,6 @@
 from copy import deepcopy
 import table_des_symboles as table_des_symboles
+import table_des_symboles.symbole
 
 #Fichier contenant les controles sémantiques à faire lors de la fabrication de la TDS
 
@@ -54,7 +55,7 @@ def variableImbricationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
         var = getVar(tds, pile, variable)
-        if (var != None):
+        if (type(var) == table_des_symboles.symbole.variable):
             if var.parametre == 2 :
                 print ("\tErreur de sémantique: la variable de boucle for ne peut pas être affecté à l'intérieur de la boucle")
             return True
@@ -77,11 +78,10 @@ def variableAffectationControl(pile_originale, tds, variable):
     pile = deepcopy(pile_originale)
     while (pile) :
         var = getVar(tds, pile, variable)
-        if var != None and var.parametre == 1 : # Si c'est un paramètre de fonction on peut l'utiliser dans la fonction sans l'avoir initialisée
+        if type(var) == table_des_symboles.symbole.variable and var.parametre == 1 : # Si c'est un paramètre de fonction on peut l'utiliser dans la fonction sans l'avoir initialisée
             return True
-        elif var != None and var.value != None : # La variable a été initialisée
+        elif type(var) == table_des_symboles.symbole.variable and var.value != None : # La variable a été initialisée
             return True
-        
         else :
             pile.pop()
     return False
@@ -119,14 +119,16 @@ def getFunction(tds, pile, fonction_name):
     return None
 
 # Controle de la résolutio type entre Variable = FONCTION (si la variable a été déclarée avec un type et que la fonction affectée est du même type)
-def returnTypeControl(pile_originale, tds, variable_gauche_name,fonction_name):
+def returnTypeControl(pile_originale, tds, tds_data, variable_gauche_name,fonction_name):
     pile = deepcopy(pile_originale)
     while (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if' or pile[-1][:3]=='for' or pile[-1][:5]=='while'):
         pile.pop()
     variable_gauche = getVar(tds, pile, variable_gauche_name)
     fonction = getFunction(tds, pile, fonction_name)
     if variable_gauche != None and fonction != None:
-        return variable_gauche.type == fonction.var_de_retour.type
+        for i in tds_data[fonction_name].var_de_retour:
+            if variable_gauche.type == i.type:
+                return True
     if fonction == None:
         print("Erreur de sémantique : la fonction ", fonction_name, " n'a pas été déclarée")
     return False
@@ -165,6 +167,7 @@ def fonctionParamTypeControl(pile_originale, tds, fonction, params):
         if params[i].type == fonction.parametres[i].type:
             return False
     return True
+
 
 # Controle du type de retour de la fonction
 #def fonctionReturnTypeControl(pile_originale, tds, fonction, type_retour):
