@@ -133,7 +133,7 @@ table_syntaxique = {
         # false
         (0, 6): ['EXPR', "INSTR'"],
         # for
-        (0, 7): [(0, 7), 'IDENT', (0, 10), (0, 22), (2, 12), 'EXPR', (2, 18), 'EXPR', (0, 12), 'INSTR_PLUS', (0, 5),
+        (0, 7): [(0, 7), 'IDENT', (0, 10), 'EXPR', (2, 18), 'EXPR', (0, 12), 'INSTR_PLUS', (0, 5),
                  (0, 12), (2, 11)],
         # if
         (0, 9): [(0, 9), 'EXPR', (0, 23), 'INSTR_PLUS', 'ELSIF_STAR', 'ELSE_BIN', (0, 5), (0, 9), (2, 11)],
