@@ -80,9 +80,11 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
         
         # Lorsque l'on arrive à la fin d'un block ("end") on m'est à jour le PATH
         if (token_lu[0], token_lu[1]) == (0, 5):
-            if lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=='if':
+            if lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=='if' and (tds.path[-1][:2]=='if' or tds.path[-1][:5]=='elsif' or tds.path[-1][:4]=='else'):
                 while tds.path[-1][:2]!='if':
                     tds.path.pop()
+            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]!= tds.path[-1]:
+                print(f"\tErreur de sémantique: le end n'est pas correct. Il ne devrait pas être suivi de {lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]} ici. Voir ligne: {list_tokens[ind][2]}")
             tds.path.pop()
         
         # Ici on gère les "procedure" et les "function" que l'on regarde plusieurs fois
@@ -173,6 +175,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 tds.path.append("if"+str(count))
 
         # Ici on gère les for
+        # On vérifie juste si ce n'est pas le for suivi d'un point virgule qui signifie la fin de la boucle
         elif (token_lu[0], token_lu[1])==(0,7) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
             current = tds.get_current_bloc()
             count=1
@@ -187,6 +190,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             pass
 
         # Ici on gère les while
+        # On vérifie juste si ce n'est pas le while suivi d'un point virgule qui signifie la fin de la boucle
         elif (token_lu[0], token_lu[1])==(0,27) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
             current = tds.get_current_bloc()
             count=1
@@ -201,6 +205,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             pass
 
         # Ici on gère les elsif
+        # On vérifie juste si ce n'est pas le elsif suivi d'un point virgule qui signifie la fin de la boucle
         elif (token_lu[0], token_lu[1])==(0,4) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
             current = tds.get_current_bloc()
             count=1
@@ -215,6 +220,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             pass
         
         # Ici on gère les else
+        # On vérifie juste si ce n'est pas le else suivi d'un point virgule qui signifie la fin de la boucle
         elif (token_lu[0], token_lu[1])==(0,3) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
             current = tds.get_current_bloc()
             count=1
@@ -294,8 +300,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             # tant que l'on est pas sur un token 'return' on récupère les paramètres
             while (list_tokens[index][0],list_tokens[index][1])!= (0,21):
                 if list_tokens[index]==(-1, 'EOF', -1):
-
-                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return.  Voir ligne: {list_tokens[ind][2]}")
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return. Vous vouliez peut-être déclarer une procédure.")
                     break
                 
                 # On vérifie si le token est un type et on l'ajoute dans la liste des types des params
@@ -322,8 +327,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             # tant que l'on est pas sur un token ';' on récupère les variables de retour
             while (list_tokens[index][0],list_tokens[index][1])!= (2,11): 
                 if list_tokens[index]==(-1, 'EOF', -1):
-
-                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return. Voir ligne: {list_tokens[ind][2]}")
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'est pas bien déclaré.")
                     break
                 
                 # On vérifie si le token est un type et on l'ajoute dans la liste des types des var de retour
@@ -337,7 +341,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     index += 1
                 # Condition au cas où, on break (Si on n'incrémente plus et que l'on n'est pas sortie de la boucle)
                 else :
-                    print(f"\tErreur de sémantique: la fonction {function_name} n'a pas de return. Voir ligne: {list_tokens[ind][2]}")
+                    print(f"\tErreur de sémantique: la fonction {function_name} n'est pas bien déclaré.")
                     break
 
             # Vérification que les params sont bien initialisés
