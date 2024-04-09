@@ -79,9 +79,6 @@ def variableAffectationControl(pile_originale, tds, variable):
         var = getVar(tds, pile, variable)
         if var != None and var.parametre == 1 : # Si c'est un paramètre de fonction on peut l'utiliser dans la fonction sans l'avoir initialisée
             return True
-        elif var != None and var.parametre == 2 : # La variable est la variable de boucle for 
-            print ("Erreur de sémantique : la variable de boucle for ne peut pas être affectée à l'intérieur de la boucle")
-            return True
         elif var != None and var.value != None : # La variable a été initialisée
             return True
         

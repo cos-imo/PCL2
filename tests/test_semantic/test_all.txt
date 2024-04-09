@@ -63,7 +63,7 @@ indice : integer ;
 begin 
 
 -- On initialise une variable avec une fonction qui n'a pas le retour de son type
-c = fonct(2,3) ;
+-- c = fonct(2,3) ;
 
 -- On appelle une fonction qui n'existe pas 
 fonction(2,3) ;

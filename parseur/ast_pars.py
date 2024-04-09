@@ -126,13 +126,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else :
                     var = table_des_symboles.variable(name = name_var, type_entree = type_var, parametre = parametre)
                     tds.import_variable(var)
-            # On vérifie si c'est une variable de boucle for
-            if lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]][:3]=="for":
-                path = deepcopy(tds.path)
-                path.pop()
-                var = sc.getParentsVar(path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]])
-                if var != None:
-                    var.parametre = 2
+            
             # l'affectation d'une varible : 'name = valeur'. On vérifie si la variable a été déclarée avant affectation et on affecte la variable, on verifie aussi le type de la variable pour qu'il soit du même type que la variable
             elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="=":
                 # Il faut faire la distinction entre une valeur, une  variable, une fonction (donc voir le type de retour de la fonction), une operation entre deux valeurs ou variables
@@ -201,6 +195,13 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     if len(params)!=len(funct.parametres):
                         print(f"\tErreur de sémantique: le nombre de paramètres de la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'est pas correct.Voir ligne: {list_tokens[ind][2]}")
                         
+            # On vérifie si c'est une variable de boucle for
+            if lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]][:3]=="for":
+                path = deepcopy(tds.path)
+                path.pop()
+                var = sc.getParentsVar(path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]])
+                if var != None:
+                    var.parametre = 2
 
         # Ici on gère les if
         # On vérifie juste si ce n'est pas le if suivi d'un point virgule qui signifie la fin de la boucle
@@ -287,7 +288,10 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             # On se place au niveau du nom de la procedure
             index += 1
             # On récupère le nom de la variable
-            procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]     
+            procedure_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]] 
+            if procedure_name in tds.tds_data:
+                print(f"\tErreur de sémantique: la procédure {procedure_name} a déjà été déclarée. Voir ligne: {list_tokens[ind][2]}")
+                pass
             # On étudie cette fois les params
             index += 1
 
@@ -336,6 +340,9 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             index += 1
             # On récupère le nom de la variable
             function_name = lexical_table[list_tokens[index][0]][list_tokens[index][1]]
+            if function_name in tds.tds_data:
+                print(f"\tErreur de sémantique: la fonction {function_name} a déjà été déclarée. Voir ligne: {list_tokens[ind][2]}")
+                pass
             # On étudie cette fois les params
             index += 1
 
