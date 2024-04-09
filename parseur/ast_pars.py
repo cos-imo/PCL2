@@ -83,7 +83,8 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
             if lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=='if' and (tds.path[-1][:2]=='if' or tds.path[-1][:5]=='elsif' or tds.path[-1][:4]=='else'):
                 while tds.path[-1][:2]!='if':
                     tds.path.pop()
-            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]!= tds.path[-1]:
+            # On vérifie que le token suivant end correspond bien à celui en haut de la pile (on prend en compte que la longueur du token car on aura d'un côté 'if' et de l'autre 'if4')
+            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]!= tds.path[-1][:len(lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]])]:
                 print(f"\tErreur de sémantique: le end n'est pas correct. Il ne devrait pas être suivi de {lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]} ici. Voir ligne: {list_tokens[ind][2]}")
             tds.path.pop()
         
@@ -184,14 +185,14 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
         elif (token_lu[0], token_lu[1])==(0,7) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
             current = tds.get_current_bloc()
             count=1
-            if "for" not in current:
-                current["for"]={}
-                tds.path.append("for")
+            if "loop_for" not in current:
+                current["loop_for"]={}
+                tds.path.append("loop_for")
             else:
-                while ("for"+str(count)) in current:
+                while ("loop_for"+str(count)) in current:
                     count+=1
-                current["for"+str(count)]={}
-                tds.path.append("for"+str(count))
+                current["loop_for"+str(count)]={}
+                tds.path.append("loop_for"+str(count))
             pass
 
         # Ici on gère les while
@@ -199,14 +200,14 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
         elif (token_lu[0], token_lu[1])==(0,27) and lexical_table[list_tokens[ind-1][0]][list_tokens[ind-1][1]]!="end":
             current = tds.get_current_bloc()
             count=1
-            if "while" not in current:
-                current["while"]={}
-                tds.path.append("while")
+            if "loop_while" not in current:
+                current["loop_while"]={}
+                tds.path.append("loop_while")
             else:
-                while ("while"+str(count)) in current:
+                while ("loop_while"+str(count)) in current:
                     count+=1
-                current["while"+str(count)]={}
-                tds.path.append("while"+str(count))
+                current["loop_while"+str(count)]={}
+                tds.path.append("loop_while"+str(count))
             pass
 
         # Ici on gère les elsif
