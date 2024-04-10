@@ -50,7 +50,7 @@ l := k ;
 end noReturn ;
 
 -- On crée une fonction avec un nom déjà utiliser 
-function fonct(m: Integer; n: Integer) return Integer is o : Character ;
+function fonct(m: Integer; n: Integer) return Integer is o : Integer ;
 begin
 o := m-n ;
 return o ;
@@ -73,7 +73,7 @@ fonct(1,2,3) ;
 
 c = 2 ;
 -- On appelle la fonction avec un paramètre du mauvais type
-fonct(1,c) ;
+fonct(1, C) ;
 
 for indice in 0_5 loop
 indice = 3 ;

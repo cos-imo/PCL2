@@ -15,11 +15,12 @@ class MyTestCase(unittest.TestCase):
 
         tok, lex,  = lexical_analysis(source_code)
         list_regle = parseur(tok, lex, table_syntaxique)
-        arbre = construire_arbre(list_regle)
+        
         
         if list_regle == []:
             print("Erreur lors de la compilation")
-        else:
+        elif False: # Passer en False pour ne pas afficher les arbres
+            arbre = construire_arbre(list_regle)
             show.afficher(arbre, 'LR', 'test_pres_syntax_tree_LR', './output/basic')
             show.afficher(arbre, '', 'test_pres_syntax_tree', './output/basic')
 

@@ -161,12 +161,23 @@ def fonctionParamControl(pile_originale, tds, fonction, params):
 
 
 # Controle de la résolution type - valeur des paramètres (si les paramètres ont été déclarés avec un type et que la valeur affectée est du même type)
-def fonctionParamTypeControl(pile_originale, tds, fonction, params):
+def fonctionParamTypeControl(pile_originale,tds, fonction, params, tds_data):
     pile = deepcopy(pile_originale)
-    for i in range(len(params)):
-        if params[i].type == fonction.parametres[i].type:
-            return False
-    return True
+  
+    func = getFunction(tds, pile, fonction.name)
+    
+    k= 0
+    rep = 1
+    func.popitem()
+    for i in func:
+        var_param = tds_data[i].type # On récupère la variable correspondant à la definition de la fonction
+
+        if params[k][0] == 4 and var_param == "integer":
+            k = k + 1
+        else:
+            k = k + 1
+            rep = 0
+    return rep
 
 
 # Controle du type de retour de la fonction
