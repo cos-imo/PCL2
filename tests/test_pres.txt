@@ -8,9 +8,16 @@ aire := larg * long  ;
 return aire;
 end aireRectangle ;
 -- VARIABLES
+type point is record
+abcisse : integer ;
+ordonnee : integer ;
+end record;
+
 choix : integer ;
+test : integer ;
 -- PROCEDURE PRINCIPALE
 begin
+test = 3*2+(5-2)*6 ;
 choix = 1 ;
 if choix < 0 then
 choix = 1 ;

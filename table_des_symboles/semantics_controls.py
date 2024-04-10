@@ -98,6 +98,17 @@ def valueTypeControl(pile_originale, tds, variable_name, value):
     
     return False
 
+# Controle de la résolution de type entre variable = VALEUR (si la variable a été déclarée avec un type et que la valeur affectée est du même type) 
+def valueIsTypeControl(pile_originale, tds, type, value):
+    pile = deepcopy(pile_originale)
+    while (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if' or pile[-1][:3]=='for' or pile[-1][:5]=='while'):
+        pile.pop()
+    variable = getVar(tds, pile, type)
+    if variable != None:
+        return variable.type == getType(value)
+    
+    return False
+
 # Controle de la résolution type entre Variable = VARIABLE (si la variable a été déclarée avec un type et que la variable affectée est du même type)
 def variableTypeControl(pile_originale, tds, variable_gauche_name, variable_droite_name):
     pile = deepcopy(pile_originale)

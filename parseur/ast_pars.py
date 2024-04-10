@@ -121,7 +121,9 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                             parametre = 1
                             pass
                 # S'il y a une valeur on la récupère
-                if lexical_table[list_tokens[ind+3][0]][list_tokens[ind+3][1]]=="=":
+                if lexical_table[list_tokens[ind+3][0]][list_tokens[ind+3][1]]==":=":
+                #    if sc.valueTypeControl(tds.path, tds, lexical_table[list_tokens[ind+4][0]][list_tokens[ind+4][1]], lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]):
+                #        pass
                     var = table_des_symboles.variable(name = name_var, type_entree = type_var, value = lexical_table[list_tokens[ind+4][0]][list_tokens[ind+4][1]])
                     tds.import_variable(var)
                 # Sinon on laisse sans valeur

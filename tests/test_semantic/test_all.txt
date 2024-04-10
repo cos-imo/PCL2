@@ -8,7 +8,8 @@ procedure erreursVariables is
 A : Integer ;
 B : Integer ;
 C : Character ; 
-D : Integer ;
+D : Integer := 4 ;
+E : Character := 5 ;
 
 begin
 
@@ -22,7 +23,6 @@ B = A ;
 C = 23 ; 
 
 -- On initialise une variable avec une variable qui n'est pas de son type
-D = 4 ;
 C = D ;
 
 
