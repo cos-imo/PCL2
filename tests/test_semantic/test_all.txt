@@ -50,7 +50,7 @@ l := k ;
 end noReturn ;
 
 -- On crée une fonction avec un nom déjà utiliser 
-function fonct(m: Integer; n: Integer) return Integer is o : Integer ;
+function fonct(m: Integer; n: Integer) return Integer is o : Character ;
 begin
 o := m-n ;
 return o ;
@@ -63,7 +63,7 @@ indice : integer ;
 begin 
 
 -- On initialise une variable avec une fonction qui n'a pas le retour de son type
--- c = fonct(2,3) ;
+c = fonct(2,3) ;
 
 -- On appelle une fonction qui n'existe pas 
 fonction(2,3) ;
