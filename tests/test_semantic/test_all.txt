@@ -58,6 +58,13 @@ o := m-n ;
 return o ;
 end fonct ;
 
+-- On crée une fonction avec un mauvais type de retour
+function fonctiontest(m: Integer; n: Integer) return Integer is o : Character ;
+begin
+o := m-n ;
+return o;
+end fonctiontest ;
+
 
 c : integer ;
 indice : integer ;
