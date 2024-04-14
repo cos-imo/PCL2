@@ -214,7 +214,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
             token_lu_table = (token_lu[0], 0, token_lu[2]) if token_lu[0] in [3, 4] else token_lu
             rule = table_ll1[sommet_pile].get((token_lu_table[0], token_lu_table[1]))
 
-            if rule is not None:
+            if rule:
                 if rule != ["epsilon"]:
                     
                     pile.pop()
