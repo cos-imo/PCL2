@@ -3,6 +3,7 @@ import argparse
 from lexeur.lexeur import lexical_analysis
 from parseur.ast_pars import Node, construire_arbre, elaguer, parseur
 from parseur.table_syntaxique import table_syntaxique
+from assembly.asm_generator.assembly_generator import *
 
 
 class Parser:
@@ -15,7 +16,9 @@ class Parser:
 
         self.parser.add_argument('-h','--help', action='help', help="Affiche ce message d'aide")
         self.parser.add_argument('-v','--verbose', help="Active le mode verbose")
-        self.parser.add_argument('-T', '--tree', help="Affiche l'arbre'")
+        self.parser.add_argument('-T', '--tree', help="Affiche l'arbre")
+        self.parser.add_argument('-a', '--assembly', help="Génère le code assembleur")
+        self.parser.add_argument('-d', '--debug', help="Active le mode débogueur")
 
         self.args = self.parser.parse_args()
 
@@ -34,6 +37,12 @@ def pcl1(source_code: str) -> Node:
     if parser.args.tree:
         show.afficher(arbre_elaguer, 'LR', 'test_pres_syntax_tree_elaguer_LR', './output/reduced')
         show.afficher(arbre_elaguer, '', 'test_pres_syntax_tree_elaguer', './output/reduced')
+
+    if parser.args.assembly:
+        assembly = assembly_generator(parseur(token, lexical_table, table_syntaxique))
+
+    if parser.args.debug:
+        print(parseur(token, lexical_table, table_syntaxique))
 
     return tree
 
