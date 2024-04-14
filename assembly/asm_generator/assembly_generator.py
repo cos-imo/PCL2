@@ -3,15 +3,16 @@ import sys
 
 class assembly_generator:
 
-    def __init__(self, tds):
+    def __init__(self, arbre):
         # Variable contenant le numéro de ligne (du fichier assembleur) actuel
         self.line_index = 0  
 
         # Dictionnaire contenant les addresses des variables, de la forme {'nom_de_la_variable': 'addresse'}
         self.variables_addresses = {}
 
-        self.tds = tds
-        self.write_assembly()
+        self.arbre = arbre
+
+        self.generate_assembly()
 
         ### Création du fichier de code assembleur
         ## Création du dossier s'il n'existe pas déjà au préalable
@@ -68,7 +69,7 @@ class assembly_generator:
                 file.write(line)
 
     def generate_assembly(self):
-        for element in arbre:
+        for element in self.arbre:
             if type(element) == function:
                 return
                 with open("assembly/snippets/calling_frame.s") as f:
