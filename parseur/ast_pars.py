@@ -12,7 +12,7 @@ class Node:
         :param value: Valeur du nœud (utile pour les feuilles comme les nombres ou les identifiants).
         """
         self.fct = fct
-        self.children = children if children is not None else []
+        self.children = children if children else []
         self.value = value
 
     def add_child(self, child):
