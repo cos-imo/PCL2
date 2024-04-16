@@ -39,10 +39,10 @@ def pcl1(source_code: str) -> Node:
         show.afficher(arbre_elaguer, '', 'test_pres_syntax_tree_elaguer', './output/reduced')
 
     if parser.args.assembly:
-        assembly = assembly_generator(parseur(token, lexical_table, table_syntaxique))
+        assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))))
 
     if parser.args.debug:
-        print(parseur(token, lexical_table, table_syntaxique))
+        print(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))))
 
     return tree
 
