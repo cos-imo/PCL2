@@ -66,6 +66,13 @@ class assembly_generator:
     def add_procedure(self, procedure_name):
         pass
 
+    def add_variable(self, variable_name, variable_value, variable_type):
+        if variable_type == "string":
+            declaration = "\t.asciz " + variable_value
+        self.data = self.data[:self.line_index[0]] + declaration + self.data[self.line_index[0]:]
+        for i in range(len(line_index)):
+            self.line_index[i]+=1
+
     def update_line_index(self, offset):
         pass
 
@@ -78,16 +85,25 @@ class assembly_generator:
         self.dfs(self.arbre)
 
     def write_assembly(self, element):
-        flags= [0] # flag 0: function, flag 1: procedure, flag2: variable, flag3: Ident
+        flags= [0, 0, 0, 0] # flag 0: function, flag 1: procedure, flag2: variable, flag3: Ident
         if any(flags):
             if flags[0]:
-                
+               pass 
+            elif flags[1]:
+               pass
+            elif flags[2]:
+               variable_data = self.tds[element.value]
+               pass
         else:
             if element.value == "procedure":
-                flags[1] == 1
-                pass
-            if element.value == "function":
-                flags[0] == 1
+                flags = [0 for i in range(4)]
+                flags[1] = 1
+            elif element.value == "function":
+                flags = [0 for i in range(4)]
+                flags[0] = 1
+            elif element.value in ["integer"]: # Rajouter tout les types de variables dispo instruction
+                flags = [0 for i in range(4)]
+                flags[2] = 1
 
     def dfs(self, currentNode):
         self.write_assembly(currentNode)

@@ -274,7 +274,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
     if succes:
         print("L'analyse syntaxique a réussi sans erreur.")
         print(tds.tds)
-        return pile_arbre
+        return pile_arbre, tds
     else:
         print("L'analyse syntaxique a échoué en raison d'une erreur de syntaxe.")
         return []
@@ -288,6 +288,7 @@ def inverser_enfants_arbre(node):
             inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
 
 def construire_arbre(liste_regles):
+    liste_regles = liste_regles[0]
     arbre = Node(liste_regles[0][0])  # On crée la racine de l'arbre
     pile_arbre = []  # On crée une pile qui va contenir les noeuds de l'arbre
     pile_arbre.append(arbre)  # On empile la racine de l'arbre
