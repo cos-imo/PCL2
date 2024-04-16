@@ -45,7 +45,7 @@ class assembly_generator:
             sys.stdout.write("[+] Suppression de output.s...\n")
             os.remove("asm_output/output.s")
         else:
-            file_exists()
+            self.file_exists()
 
 
     def add_function(self, function_name):
@@ -69,23 +69,43 @@ class assembly_generator:
                 file.write(line)
 
     def generate_assembly(self):
-        for element in self.arbre:
-            if type(element) == function:
-                return
-                with open("assembly/snippets/calling_frame.s") as f:
-                    frame = [element.replace("<SIZE>", function.retour.size) for element in f.readlines()] 
-                self.data = self.data[:self.line_index] + function + self.data[self.line_index:]
-                # Ajouter les push(*nombre d'arguments) et jump
-                # ajouter calling frame avec size = taille du type de la valeur de retour
-            elif type(element) == procedure:
-                pass
-                with open("assembly/snippets/calling_frame.s") as f:
-                    frame = [element for element in f.readlines() if "<SIZE>" not in element] 
-                self.data = self.data[:self.line_index] + function + self.data[self.line_index:]
-                # Ajouter les push(*nombre d'arguments) et jump
-                # Ajouter calling frame avec size = 0
+        self.dfs(self.arbre)
 
+    def write_assembly(self, element):
+        if type(element) == function:
+            return
+            with open("assembly/snippets/calling_frame.s") as f:
+                frame = [element.replace("<SIZE>", function.retour.size) for element in f.readlines()] 
+            self.data = self.data[:self.line_index] + function + self.data[self.line_index:]
+            # Ajouter les push(*nombre d'arguments) et jump
+            # ajouter calling frame avec size = taille du type de la valeur de retour
+        elif type(element) == procedure:
+            pass
+            with open("assembly/snippets/calling_frame.s") as f:
+                frame = [element for element in f.readlines() if "<SIZE>" not in element] 
+            self.data = self.data[:self.line_index] + function + self.data[self.line_index:]
+            # Ajouter les push(*nombre d'arguments) et jump
+            # Ajouter calling frame avec size = 0
 
+    def dfs(self, arbre):
+        print("début dfs")
+        visited = []
+        stack=arbre.children
+        currentNode = arbre
+        while stack:
+            if currentNode.children:
+                for child in currentNode.children:
+                    if child in visited:
+                        pass
+                    else:
+                        self.append_uniq(child, stack)
+                visited.append(currentNode)
+                stack.pop(stack.index(currentNode))
+                currentNode = stack.children[0]
+
+    def append_uniq(self, element, liste):
+        liste.append(element)
+        liste = list(set(liste))
 
 if __name__ == "__main__":
     gene = assembly_generator()
