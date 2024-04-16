@@ -4,15 +4,19 @@ import sys
 class assembly_generator:
 
     def __init__(self, arbre):
-        # Variable contenant le numéro de ligne (du fichier assembleur) actuel
-        self.line_index = 0  
+        """
+        Variable contenant le numéro de ligne (du fichier assembleur) actuel
+            0: ligne data
+            1: ligne instruction
+        """
+        self.line_index = [0 for i in range (2)]  
 
         # Dictionnaire contenant les addresses des variables, de la forme {'nom_de_la_variable': 'addresse'}
         self.variables_addresses = {}
 
         self.arbre = arbre
 
-        self.generate_assembly()
+        print(self.arbre)
 
         ### Création du fichier de code assembleur
         ## Création du dossier s'il n'existe pas déjà au préalable
@@ -28,6 +32,8 @@ class assembly_generator:
             self.file_exists()
         with open("assembly/program_template/program_template.s", "r") as file:
             self.data = file.readlines()
+
+        self.generate_assembly()
 
         # On écrit dans le fichier
         self.write_file()
@@ -72,36 +78,22 @@ class assembly_generator:
         self.dfs(self.arbre)
 
     def write_assembly(self, element):
-        if type(element) == function:
-            return
-            with open("assembly/snippets/calling_frame.s") as f:
-                frame = [element.replace("<SIZE>", function.retour.size) for element in f.readlines()] 
-            self.data = self.data[:self.line_index] + function + self.data[self.line_index:]
-            # Ajouter les push(*nombre d'arguments) et jump
-            # ajouter calling frame avec size = taille du type de la valeur de retour
-        elif type(element) == procedure:
-            pass
-            with open("assembly/snippets/calling_frame.s") as f:
-                frame = [element for element in f.readlines() if "<SIZE>" not in element] 
-            self.data = self.data[:self.line_index] + function + self.data[self.line_index:]
-            # Ajouter les push(*nombre d'arguments) et jump
-            # Ajouter calling frame avec size = 0
+        flags= [0] # flag 0: function, flag 1: procedure, flag2: variable, flag3: Ident
+        if any(flags):
+            if flags[0]:
+                
+        else:
+            if element.value == "procedure":
+                flags[1] == 1
+                pass
+            if element.value == "function":
+                flags[0] == 1
 
-    def dfs(self, arbre):
-        print("début dfs")
-        visited = []
-        stack=arbre.children
-        currentNode = arbre
-        while stack:
-            if currentNode.children:
-                for child in currentNode.children:
-                    if child in visited:
-                        pass
-                    else:
-                        self.append_uniq(child, stack)
-                visited.append(currentNode)
-                stack.pop(stack.index(currentNode))
-                currentNode = stack.children[0]
+    def dfs(self, currentNode):
+        self.write_assembly(currentNode)
+        if currentNode.children:
+            for child in currentNode.children:
+                self.write_assembly(child)
 
     def append_uniq(self, element, liste):
         liste.append(element)
