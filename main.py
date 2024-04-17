@@ -19,6 +19,7 @@ class Parser:
         self.parser.add_argument('-T', '--tree', help="Affiche l'arbre")
         self.parser.add_argument('-a', '--assembly', help="Génère le code assembleur")
         self.parser.add_argument('-d', '--debug', help="Active le mode débogueur")
+        self.parser.add_argument('-f', '--forcewrite', help="Ecrase l'éventuel fichier assembleur pré-existant")
 
         self.args = self.parser.parse_args()
 
@@ -35,11 +36,15 @@ def pcl1(source_code: str) -> Node:
     tree = elaguer(tree)
 
     if parser.args.tree:
-        show.afficher(arbre_elaguer, 'LR', 'test_pres_syntax_tree_elaguer_LR', './output/reduced')
+        show.afficher(arbre_elaguer, 'LR', 'test_pres_syntax_tree_elagué_LR', './output/reduced')
         show.afficher(arbre_elaguer, '', 'test_pres_syntax_tree_elaguer', './output/reduced')
 
     if parser.args.assembly:
-        assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))))
+        if parser.args.forcewrite:
+            assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))), parseur(token, lexical_table, table_syntaxique)[1], False)
+        else:
+            assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))), parseur(token, lexical_table, table_syntaxique)[1], True)
+
 
     if parser.args.debug:
         print(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))))

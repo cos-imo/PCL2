@@ -1,22 +1,27 @@
 import os
 import sys
+from collections import deque
 
 class assembly_generator:
 
-    def __init__(self, arbre):
+    def __init__(self, arbre, tds, forcewrite):
         """
         Variable contenant le numéro de ligne (du fichier assembleur) actuel
             0: ligne data
             1: ligne instruction
         """
-        self.line_index = [0 for i in range (2)]  
+        self.line_index = [0, 7]  
 
         # Dictionnaire contenant les addresses des variables, de la forme {'nom_de_la_variable': 'addresse'}
         self.variables_addresses = {}
 
         self.arbre = arbre
 
-        print(self.arbre)
+        self.tds = tds
+
+        self.writing_flags = [0 for i in range(4)]
+
+        self.generated = []
 
         ### Création du fichier de code assembleur
         ## Création du dossier s'il n'existe pas déjà au préalable
@@ -25,11 +30,12 @@ class assembly_generator:
         else:
             os.mkdir("asm_output")
 
-        ## Création du fichier
-        # On vérifie si le fichier n'existe pas déjà
-        if os.path.exists("asm_output/output.s"):
-            sys.stdout.write("[!] Attention! Un fichier 'output.s' est déjà présent dans le répertoire 'asm_output'.\n\tVoulez-vous tout de même lancer la génération de code assembleur?\n\tNOTE: Cela écrasera les données pré-existantes\n")
-            self.file_exists()
+        if forcewrite: 
+            ## Création du fichier
+            # On vérifie si le fichier n'existe pas déjà
+            if os.path.exists("asm_output/output.s"):
+                sys.stdout.write("[!] Attention! Un fichier 'output.s' est déjà présent dans le répertoire 'asm_output'.\n\tVoulez-vous tout de même lancer la génération de code assembleur?\n\tNOTE: Cela écrasera les données pré-existantes\n")
+                self.file_exists()
         with open("assembly/program_template/program_template.s", "r") as file:
             self.data = file.readlines()
 
@@ -56,12 +62,10 @@ class assembly_generator:
 
     def add_function(self, function_name):
         function = [f"{function_name}:"]
-        #function_data = self.tds.tds_data[function_name]
         function.append("\tpushl %ebp")
         function.append("\tmovl %esp %ebp")
         self.data = self.data[:self.line_index] + function + self.data[self.line_index:]
         pass
-        #Bonne chance hein
 
     def add_procedure(self, procedure_name):
         pass
@@ -85,35 +89,68 @@ class assembly_generator:
         self.dfs(self.arbre)
 
     def write_assembly(self, element):
-        flags= [0, 0, 0, 0] # flag 0: function, flag 1: procedure, flag2: variable, flag3: Ident
-        if any(flags):
-            if flags[0]:
-               pass 
-            elif flags[1]:
-               pass
-            elif flags[2]:
-               variable_data = self.tds[element.value]
-               pass
+
+        if self.writing_flags[0]:
+            print(element.value)
+            self.writing_flags[0] = 0
+
+        if self.writing_flags[1]:
+            print(element.value)
+            self.writing_flags[1] = 0
+
+        if element.fct=="Keyword":
+            if element.value == "procedure":
+                self.writing_flags[0] = 1
+                return
+        if element.fct=="Keyword":
+            if element.value =="function":
+                self.writing_flags[1] = 1
+                return
+        if element.fct== "Ident":
+            if element.value not in self.generated:
+                pass
+
+        """ Bon en fait j'avais fait tout ça mais c'est compliqué, ça sert à rien et ça marche pas
+        if any(self.writing_flags):
+            if self.writing_flags[0]:
+                print("function flag")
+                self.reset_flags()
+            elif self.writing_flags[1]:
+                print("procedure flag")
+                self.reset_flags()
+            elif self.writing_flags[2]:
+                print(element)
+                variable_data = self.tds.tds_data[element.value]
+                print("DATA VARIABLE")
+                print(variable_data)
+                self.reset_flags()
         else:
             if element.value == "procedure":
-                flags = [0 for i in range(4)]
-                flags[1] = 1
+                print("procedure")
+                self.reset_flags()
+                self.writing_flags[1] = 1
             elif element.value == "function":
-                flags = [0 for i in range(4)]
-                flags[0] = 1
+                print("function")
+                self.reset_flags()
+                self.writing_flags[0] = 1
             elif element.value in ["integer"]: # Rajouter tout les types de variables dispo instruction
-                flags = [0 for i in range(4)]
-                flags[2] = 1
+                print("integer")
+                self.reset_flags()
+                self.writing_flags[2] = 1
+        """
 
-    def dfs(self, currentNode):
-        self.write_assembly(currentNode)
-        if currentNode.children:
-            for child in currentNode.children:
-                self.write_assembly(child)
+    def dfs(self, node):
+        self.write_assembly(node)
+
+        for child in node.children:
+            self.dfs(child)
 
     def append_uniq(self, element, liste):
         liste.append(element)
         liste = list(set(liste))
+
+    def reset_flags(self):
+        self.writing_flags = [0 for i in range(4)]
 
 if __name__ == "__main__":
     gene = assembly_generator()
