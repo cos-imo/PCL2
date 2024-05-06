@@ -1,12 +1,12 @@
-mov dword [saved_eax], eax
-mov dword [saved_ebx], ebx
+mov dword [saved_eax], rax
+mov dword [saved_ebx], rbx
 
-pop eax
-pop ebx
-xor edx, edx
-idiv ebx
+pop rax
+pop rbx
+xor rdx, rdx
+idiv rbx
 
-mov dword [result], eax
+mov dword [result], rax
 
-mov eax, dword [saved_eax]
-mov ebx, dword [saved_ebx]
+mov rax, dword [saved_eax]
+mov rbx, dword [saved_ebx]

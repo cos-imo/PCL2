@@ -9,6 +9,6 @@ _start:
   ; code
 
   ; exiting program
-    mov eax, 1
-    xor ebx, ebx
-    int 0x80
+  mov rax, 1
+  xor rbx, rbx
+  int 0x80

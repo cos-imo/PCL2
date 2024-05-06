@@ -41,9 +41,9 @@ def pcl1(source_code: str) -> Node:
 
     if parser.args.assembly:
         if parser.args.forcewrite:
-            assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))), parseur(token, lexical_table, table_syntaxique)[1], False)
+            assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))), parseur(token, lexical_table, table_syntaxique)[1], False, lexical_table)
         else:
-            assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))), parseur(token, lexical_table, table_syntaxique)[1], True)
+            assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))), parseur(token, lexical_table, table_syntaxique)[1], True, lexical_table)
 
 
     if parser.args.debug:

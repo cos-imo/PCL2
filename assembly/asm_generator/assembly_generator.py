@@ -4,13 +4,18 @@ from collections import deque
 
 class assembly_generator:
 
-    def __init__(self, arbre, tds, forcewrite):
+    def __init__(self, arbre, tds, forcewrite: True, table_lexicale):
         """
         Variable contenant le numéro de ligne (du fichier assembleur) actuel
             0: ligne data
             1: ligne instruction
+            2: ligne fonctions
         """
-        self.line_index = [0, 7]  
+        self.line_index = [0, 7, 8]  
+
+        self.data_index = 0
+        self.instruction_index = 7
+        self.last_line_index = 8 
 
         # Dictionnaire contenant les addresses des variables, de la forme {'nom_de_la_variable': 'addresse'}
         self.variables_addresses = {}
@@ -19,9 +24,20 @@ class assembly_generator:
 
         self.tds = tds
 
+        self.indentation_level = 0
+
+        """
+        Variable contenant le nombre de blocs existants, afin de pouvoir les différencier:
+            0. if blocks
+            1. 
+        """
+        self.blocks_number = [0]
+
         self.writing_flags = [0 for i in range(4)]
 
         self.generated = []
+
+        self.table_lexicale = table_lexicale
 
         ### Création du fichier de code assembleur
         ## Création du dossier s'il n'existe pas déjà au préalable
@@ -61,14 +77,19 @@ class assembly_generator:
 
 
     def add_function(self, function_name):
-        function = [f"{function_name}:"]
-        function.append("\tpushl %ebp")
-        function.append("\tmovl %esp %ebp")
-        self.data = self.data[:self.line_index] + function + self.data[self.line_index:]
-        pass
+        with open("assembly/snippets/calling_frame.s", 'r') as code:
+            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "X") for element in code.readlines()]
+        for element in self.tds.tds_data[function_name].parametres.keys():
+            print(self.table_lexicale[element.name[0]][element.name[1]])
+            print(self.table_lexicale[element.type[0]][element.type[1]])
+        self.data = self.data[:self.line_index[1]] + snippet + self.data[self.line_index[1]:]
+        self.line_index[1] += 4
 
-    def add_procedure(self, procedure_name):
-        pass
+    def add_procedure(self, function_name):
+        with open("assembly/snippets/calling_frame.s", 'r') as code:
+            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "0") for element in code.readlines()]
+        self.data = self.data[:self.line_index[1]] + snippet + self.data[self.line_index[1]:]
+        self.line_index[1] += 4
 
     def add_variable(self, variable_name, variable_value, variable_type):
         if variable_type == "string":
@@ -91,11 +112,11 @@ class assembly_generator:
     def write_assembly(self, element):
 
         if self.writing_flags[0]:
-            print(element.value)
+            self.add_procedure(element.value)
             self.writing_flags[0] = 0
 
         if self.writing_flags[1]:
-            print(element.value)
+            self.add_function(element.value)
             self.writing_flags[1] = 0
 
         if element.fct=="Keyword":
@@ -110,44 +131,11 @@ class assembly_generator:
             if element.value not in self.generated:
                 pass
 
-        """ Bon en fait j'avais fait tout ça mais c'est compliqué, ça sert à rien et ça marche pas
-        if any(self.writing_flags):
-            if self.writing_flags[0]:
-                print("function flag")
-                self.reset_flags()
-            elif self.writing_flags[1]:
-                print("procedure flag")
-                self.reset_flags()
-            elif self.writing_flags[2]:
-                print(element)
-                variable_data = self.tds.tds_data[element.value]
-                print("DATA VARIABLE")
-                print(variable_data)
-                self.reset_flags()
-        else:
-            if element.value == "procedure":
-                print("procedure")
-                self.reset_flags()
-                self.writing_flags[1] = 1
-            elif element.value == "function":
-                print("function")
-                self.reset_flags()
-                self.writing_flags[0] = 1
-            elif element.value in ["integer"]: # Rajouter tout les types de variables dispo instruction
-                print("integer")
-                self.reset_flags()
-                self.writing_flags[2] = 1
-        """
-
     def dfs(self, node):
         self.write_assembly(node)
 
         for child in node.children:
             self.dfs(child)
-
-    def append_uniq(self, element, liste):
-        liste.append(element)
-        liste = list(set(liste))
 
     def reset_flags(self):
         self.writing_flags = [0 for i in range(4)]
