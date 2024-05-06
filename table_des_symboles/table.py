@@ -41,6 +41,7 @@ class table:
             block[variable.name] = variable
         elif type(block)==fonction and variable.name not in block.sous_bloc:
             block.sous_bloc[variable.name]=variable
+        self.tds_data[variable.name] = variable
 
 #################################################### Pas compris après MDRRR ################################################################
 
