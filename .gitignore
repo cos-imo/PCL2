@@ -163,3 +163,4 @@ cython_debug/
 output/
 asm_output/*
 .venv
+output/.DS_Store
