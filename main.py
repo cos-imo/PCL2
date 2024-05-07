@@ -32,18 +32,18 @@ def pcl1(source_code: str) -> Node:
     """
 
     token, lexical_table = lexical_analysis(source_code)
-    tree = construire_arbre(parseur(token, lexical_table, table_syntaxique))
-    tree = elaguer(tree)
+    parseur_obj = parseur(token, lexical_table, table_syntaxique)
+    tree = elaguer(construire_arbre(parseur_obj))
 
     if parser.args.tree:
         show.afficher(arbre_elaguer, 'LR', 'test_pres_syntax_tree_elagué_LR', './output/reduced')
-        show.afficher(arbre_elaguer, '', 'test_pres_syntax_tree_elaguer', './output/reduced')
+        show.afficher(arbre_elaguer, '', 'test_pres_syntax_tree_elagué', './output/reduced')
 
     if parser.args.assembly:
         if parser.args.forcewrite:
-            assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))), parseur(token, lexical_table, table_syntaxique)[1], False, lexical_table)
+            assembly = assembly_generator(tree, parseur_obj[1], False, lexical_table)
         else:
-            assembly = assembly_generator(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))), parseur(token, lexical_table, table_syntaxique)[1], True, lexical_table)
+            assembly = assembly_generator(tree, parseur_obj[1], True, lexical_table)
 
 
     if parser.args.debug:
