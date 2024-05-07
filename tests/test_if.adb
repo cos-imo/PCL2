@@ -1,4 +1,3 @@
--- Test de base qui doit foaire;nctionner
 with Ada.Text_IO ; use Ada.Text_IO ;
 procedure test_if_procedure is
 -- VARIABLES
