@@ -273,7 +273,6 @@ def parseur(list_tokens, lexical_table, table_ll1):
 
     if succes:
         print("L'analyse syntaxique a réussi sans erreur.")
-        print(tds.tds)
         return pile_arbre, tds
     else:
         print("L'analyse syntaxique a échoué en raison d'une erreur de syntaxe.")
