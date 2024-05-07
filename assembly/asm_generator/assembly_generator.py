@@ -129,13 +129,25 @@ class assembly_generator:
             if element.value == "procedure":
                 self.writing_flags[0] = 1
                 return
-        if element.fct=="Keyword":
-            if element.value =="function":
+            elif element.value =="function":
                 self.writing_flags[1] = 1
                 return
         if element.fct== "Ident":
             if element.value not in self.generated:
                 pass
+        if element.fct == "INSTR":
+                if element.children[0].fct == "Ident":
+                    if element.children[1].value == ":=":
+                        print("assignation")
+                        # calculer membre de droite
+                        # assigner valeur dans membre de gauche
+                elif element.children[0].fct == "Keyword":
+                    if element.children[0].value == "if":
+                        print("if statement")
+                    elif element.children[0].value == "while":
+                        print("while loop")
+                    elif element.children[0].value == "for":
+                        print("for loop")
 
     def dfs(self, node):
         self.write_assembly(node)
