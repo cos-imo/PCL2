@@ -5,14 +5,8 @@ from collections import deque
 class assembly_generator:
 
     def __init__(self, arbre, tds, forcewrite: True, table_lexicale):
-        """
-        Variable contenant le numéro de ligne (du fichier assembleur) actuel
-            0: ligne data
-            1: ligne instruction
-            2: ligne fonctions
-        """
-        self.line_index = [8, 5, 5]
 
+        self.current_placement = "<INSTRUCTIONS>\n"
 
         self.data_index = 0
         self.instruction_index = 7
@@ -39,6 +33,8 @@ class assembly_generator:
         self.generated = []
 
         self.table_lexicale = table_lexicale
+
+        self.dfs_history = []
 
         ### Création du fichier de code assembleur
         ## Création du dossier s'il n'existe pas déjà au préalable
@@ -73,18 +69,24 @@ class assembly_generator:
         else:
             self.file_exists()
 
+    def write_data(self, code, placement):
+        self.data = self.data[:self.data.index(placement)] + code + self.data[self.data.index(placement):]
 
-    def add_function(self, function_name):
-        with open("assembly/snippets/calling_frame.s", 'r') as code:
+    def add_function(self, function_name, node):
+        with open("assembly/snippets/calling.s", 'r') as code:
+            snippet = [element.replace("<FUNCTION_NAME>", function_name) for element in code.readlines()]
+        self.write_data(snippet, self.current_placement)
+        with open("assembly/snippets/function_frame.s", 'r') as code:
             snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "X") for element in code.readlines()]
-        self.data = self.data[:self.line_index[1]] + snippet + self.data[self.line_index[1]:]
-        self.line_index[1] += 4
+        self.write_data(snippet, "<FUNCTIONS>\n")
 
-    def add_procedure(self, function_name):
-        with open("assembly/snippets/calling_frame.s", 'r') as code:
+    def add_procedure(self, function_name, node):
+        with open("assembly/snippets/calling.s", 'r') as code:
             snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "0") for element in code.readlines()]
-        self.data = self.data[:self.line_index[1]] + snippet + self.data[self.line_index[1]:]
-        self.line_index[1] += 4
+        self.write_data(snippet, self.current_placement)
+        with open("assembly/snippets/function_frame.s", 'r') as code:
+            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "X") for element in code.readlines()]
+        self.write_data(snippet, "<FUNCTIONS>\n")
 
     def add_variable(self, variable_name, variable_value, variable_type):
         if variable_type == "string":
@@ -94,18 +96,19 @@ class assembly_generator:
             declaration = f"\t{variable_name}\tDW\t{variable_value}\n"
             #else:
              #   declaration = f"\t{variable_name}\tRSW\n"
-        self.data = self.data[:self.line_index[0]] + [declaration] + self.data[self.line_index[0]:]
-        for i in range(len(self.line_index)):
-            self.line_index[i]+=1
+        self.write_data([declaration], "<DATA>\n")
+
+    def add_assignation(self, variable, value):
+        with open("assembly/snippets/assignation.s", 'r') as code:
+            snippet = [element.replace("<VALUE>", value).replace("<VARIABLE>", variable) for element in code.readlines()]
+        self.write_data(snippet, self.current_placement)
 
     def initialize_variables(self, variables_liste):
         for element in variables_liste:
             self.add_variable(self.tds.tds_data[element].name, self.tds.tds_data[element].value, self.tds.tds_data[element].type)
 
-    def update_line_index(self, offset):
-        pass
-
     def write_file(self):
+        self.data = [element for element in self.data if element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n"]]
         with open("asm_output/output.s", "a") as file:
             for line in self.data:
                 file.write(line)
@@ -118,11 +121,11 @@ class assembly_generator:
     def write_assembly(self, element):
 
         if self.writing_flags[0]:
-            self.add_procedure(element.value)
+            self.add_procedure(element.value, element)
             self.writing_flags[0] = 0
 
         if self.writing_flags[1]:
-            self.add_function(element.value)
+            self.add_function(element.value, element)
             self.writing_flags[1] = 0
 
         if element.fct=="Keyword":
@@ -138,7 +141,8 @@ class assembly_generator:
         if element.fct == "INSTR":
                 if element.children[0].fct == "Ident":
                     if element.children[1].value == ":=":
-                        print("assignation")
+                        self.add_assignation(element.children[0].value, str(element.children[2].value))
+                        pass
                         # calculer membre de droite
                         # assigner valeur dans membre de gauche
                 elif element.children[0].fct == "Keyword":
@@ -153,7 +157,9 @@ class assembly_generator:
         self.write_assembly(node)
 
         for child in node.children:
-            self.dfs(child)
+            if child not in self.dfs_history:
+                self.dfs(child)
+                self.dfs_history.append(child)
 
     def reset_flags(self):
         self.writing_flags = [0 for i in range(4)]
