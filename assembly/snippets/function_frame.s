@@ -2,7 +2,7 @@
   push rbp
   mov rbp, rsp
   sub rsp, <SIZE> ; remplacer size par la taille de la variable de retour
-  ; code de la fonction ici
+  <FUNCTION_CODE>
   mov rsp, rbp
   pop rbp
   ret

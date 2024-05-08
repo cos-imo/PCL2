@@ -5,6 +5,8 @@ from parseur.ast_pars import Node, construire_arbre, elaguer, parseur
 from parseur.table_syntaxique import table_syntaxique
 from assembly.asm_generator.assembly_generator import *
 
+import parseur.show as show
+
 
 class Parser:
     def __init__(self):
@@ -36,8 +38,9 @@ def pcl1(source_code: str) -> Node:
     tree = elaguer(construire_arbre(parseur_obj))
 
     if parser.args.tree:
-        show.afficher(arbre_elaguer, 'LR', 'test_pres_syntax_tree_elagué_LR', './output/reduced')
-        show.afficher(arbre_elaguer, '', 'test_pres_syntax_tree_elagué', './output/reduced')
+        arbre_élagué = elaguer(tree)
+        show.afficher(arbre_élagué, 'LR', 'test_pres_syntax_tree_elagué_LR', './output/reduced')
+        show.afficher(arbre_élagué, '', 'test_pres_syntax_tree_elagué', './output/reduced')
 
     if parser.args.assembly:
         if parser.args.forcewrite:

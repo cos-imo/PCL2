@@ -7,6 +7,7 @@ class assembly_generator:
     def __init__(self, arbre, tds, forcewrite: True, table_lexicale):
 
         self.current_placement = "<INSTRUCTIONS>\n"
+        self.placement_history = []
 
         self.data_index = 0
         self.instruction_index = 7
@@ -28,7 +29,7 @@ class assembly_generator:
         """
         self.blocks_number = [0]
 
-        self.writing_flags = [0 for i in range(4)]
+        self.writing_flags = [0 for i in range(5)]
 
         self.generated = []
 
@@ -80,6 +81,9 @@ class assembly_generator:
             snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "X") for element in code.readlines()]
         self.write_data(snippet, "<FUNCTIONS>\n")
 
+        self.placement_history.append(self.current_placement)
+        self.current_placement = "  <FUNCTION_CODE>\n"
+
     def add_procedure(self, function_name, node):
         with open("assembly/snippets/calling.s", 'r') as code:
             snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "0") for element in code.readlines()]
@@ -87,6 +91,9 @@ class assembly_generator:
         with open("assembly/snippets/function_frame.s", 'r') as code:
             snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "X") for element in code.readlines()]
         self.write_data(snippet, "<FUNCTIONS>\n")
+
+        self.placement_history.append(self.current_placement)
+        self.current_placement = "  <FUNCTION_CODE>\n"
 
     def add_variable(self, variable_name, variable_value, variable_type):
         if variable_type == "string":
@@ -108,7 +115,7 @@ class assembly_generator:
             self.add_variable(self.tds.tds_data[element].name, self.tds.tds_data[element].value, self.tds.tds_data[element].type)
 
     def write_file(self):
-        self.data = [element for element in self.data if element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n"]]
+        self.data = [element for element in self.data if element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n", "  <FUNCTION_CODE>\n"]]
         with open("asm_output/output.s", "a") as file:
             for line in self.data:
                 file.write(line)
@@ -128,6 +135,11 @@ class assembly_generator:
             self.add_function(element.value, element)
             self.writing_flags[1] = 0
 
+        if self.writing_flags[4]:
+            self.current_placement = self.placement_history[-1]
+            self.placement_history.pop()
+            self.writing_flags[4] = 0
+
         if element.fct=="Keyword":
             if element.value == "procedure":
                 self.writing_flags[0] = 1
@@ -135,6 +147,8 @@ class assembly_generator:
             elif element.value =="function":
                 self.writing_flags[1] = 1
                 return
+            elif element.value == "end":
+                self.writing_flags[4] == 1
         if element.fct== "Ident":
             if element.value not in self.generated:
                 pass
@@ -160,9 +174,6 @@ class assembly_generator:
             if child not in self.dfs_history:
                 self.dfs(child)
                 self.dfs_history.append(child)
-
-    def reset_flags(self):
-        self.writing_flags = [0 for i in range(4)]
 
 if __name__ == "__main__":
     gene = assembly_generator()
