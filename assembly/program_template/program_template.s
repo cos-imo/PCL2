@@ -1,5 +1,5 @@
 section .text          /* text section */ 
-.global _start
+global _start
 
 _start:
 
