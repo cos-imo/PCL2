@@ -28,7 +28,7 @@ class assembly_generator:
             1. for loops
             2. while loops
         """
-        self.blocks_number = [0]
+        self.blocks_number = [0, 0, 0]
 
         self.writing_flags = [0 for i in range(5)]
 
@@ -111,12 +111,30 @@ class assembly_generator:
             snippet = [element.replace("<VALUE>", value).replace("<VARIABLE>", variable) for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
 
+    def add_for_loop(self, for_node):
+        numero_bloc = self.blocks_number[1]
+
+        self.blocks_number[1] += 1
+
+        self.write_data([f"  call begin_for_loop_{numero_bloc}\n\n"], self.current_placement)
+
+        self.placement_history.append(self.current_placement)
+        self.current_placement = "  <FUNCTION_CODE>\n"
+
+        with open("assembly/snippets/for_loop.s") as code:
+            snippet = [element.replace("X", str(numero_bloc)).replace("<var_indice_start>", str(for_node.children[3].value)).replace("<var_indice_stop>", str(for_node.children[5].value)) for element in code.readlines()]
+
+        self.write_data(snippet, self.current_placement)
+
+        self.placement_history.append(self.current_placement)
+        self.current_placement = f"  <FOR_LOOP_CODE_{numero_bloc}>\n"
+
     def initialize_variables(self, variables_liste):
         for element in variables_liste:
             self.add_variable(self.tds.tds_data[element].name, self.tds.tds_data[element].value, self.tds.tds_data[element].type)
 
     def write_file(self):
-        self.data = [element for element in self.data if element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n", "  <FUNCTION_CODE>\n"]]
+        self.data = [element for element in self.data if ((element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n", "  <FUNCTION_CODE>\n"]) and ("FOR_LOOP_CODE_" not in element))]
         with open("asm_output/output.s", "a") as file:
             for line in self.data:
                 file.write(line)
@@ -157,6 +175,7 @@ class assembly_generator:
                 if element.children[0].fct == "Ident":
                     if element.children[1].value == ":=":
                         self.add_assignation(element.children[0].value, str(element.children[2].value))
+                        print("ouais")
                         pass
                         # calculer membre de droite
                         # assigner valeur dans membre de gauche
@@ -166,7 +185,7 @@ class assembly_generator:
                     elif element.children[0].value == "while":
                         print("while loop")
                     elif element.children[0].value == "for":
-                        self.add_for_loop()
+                        self.add_for_loop(element)
 
     def dfs(self, node):
         self.write_assembly(node)
