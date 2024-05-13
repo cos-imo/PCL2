@@ -166,7 +166,9 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                                 
                         else:
                             print(f"\tErreur de sémantique: la fonction {lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]} n'a pas été déclarée avant utilisation. Voir ligne: {list_tokens[ind][2]}")
-                                
+                    else :
+                        tds.tds_data[lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]].value = lexical_table[list_tokens[ind+2][0]][list_tokens[ind+2][1]]
+
                 else:
                     print(f"\tErreur de sémantique: la variable {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant affectation. Voir ligne: {list_tokens[ind][2]}")
                 

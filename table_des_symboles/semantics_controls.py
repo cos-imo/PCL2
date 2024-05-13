@@ -95,7 +95,9 @@ def valueTypeControl(pile_originale, tds, variable_name, value):
     variable = getVar(tds, pile, variable_name)
     if variable != None:
         return variable.type == getType(value)
-    
+    elif pile!=[]:
+        pile.pop()
+        return valueTypeControl(pile, tds, variable_name, value)
     return False
 
 # Controle de la résolution de type entre variable = VALEUR (si la variable a été déclarée avec un type et que la valeur affectée est du même type) 
