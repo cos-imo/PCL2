@@ -20,6 +20,16 @@ def getVar(tds, pile, variable_name):
             return current_node[element]
     return None
 
+def getVarAll(tds, pile, variable_name):
+    current_node = getBloc(tds, pile)
+    for element in current_node:
+        if element == variable_name:
+            return current_node[element]
+    if pile != []:
+        pile.pop()
+        return getVarAll(tds, pile, variable_name)
+    return None
+
 # Retourne la valeur correspondant au nom de la variable indiquée, si la variable n'est pas déclaré retourne None
 def getValue(tds, pile, variable_name):
     variable = getVar(tds, pile, variable_name)
@@ -116,8 +126,8 @@ def variableTypeControl(pile_originale, tds, variable_gauche_name, variable_droi
     pile = deepcopy(pile_originale)
     while (pile[-1][:4]=='else' or pile[-1][:5]=='elsif' or pile[-1][:2]=='if' or pile[-1][:3]=='for' or pile[-1][:5]=='while'):
         pile.pop()
-    variable_gauche = getVar(tds, pile, variable_gauche_name)
-    variable_droite = getVar(tds, pile, variable_droite_name)
+    variable_gauche = getVarAll(tds, pile, variable_gauche_name)
+    variable_droite = getVarAll(tds, pile, variable_droite_name)
     if variable_gauche != None and variable_droite != None:
         return variable_gauche.type == variable_droite.type
     return False
