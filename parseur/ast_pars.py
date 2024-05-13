@@ -132,7 +132,7 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     tds.import_variable(var)
             
             # l'affectation d'une varible : 'name = valeur'. On vérifie si la variable a été déclarée avant affectation et on affecte la variable, on verifie aussi le type de la variable pour qu'il soit du même type que la variable
-            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="=":
+            elif lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]=="=" or lexical_table[list_tokens[ind+1][0]][list_tokens[ind+1][1]]==":=":
                 # Il faut faire la distinction entre une valeur, une  variable, une fonction (donc voir le type de retour de la fonction), une operation entre deux valeurs ou variables
                 
                 # On controle sur la varaible de gauche est bien déclarée

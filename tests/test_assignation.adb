@@ -4,5 +4,5 @@ procedure test_assignation_procedure is
 test_assignation_var : integer;
 -- PROCEDURE PRINCIPALE
 begin
-  test_assignation_var := 8;
+    test_assignation_var := 8;
 end test_assignation_procedure ; eof

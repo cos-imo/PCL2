@@ -7,6 +7,12 @@ from assembly.asm_generator.assembly_generator import *
 
 import parseur.show as show
 
+def valid_file(param):
+    base, ext = os.path.splitext(param)
+    if not os.path.exists(param):
+        raise argparse.ArgumentTypeError(f"Le fichier {param} n'existe pas.")
+    return open(param, 'r')  # retourne l'objet fichier ouvert
+
 
 class Parser:
     def __init__(self):
@@ -14,14 +20,14 @@ class Parser:
         self.parse_arguments()
 
     def parse_arguments(self):
-        self.parser.add_argument('sourcefile', type=open)
+        self.parser.add_argument('sourcefile', type=valid_file)
 
-        self.parser.add_argument('-h','--help', action='help', help="Affiche ce message d'aide")
-        self.parser.add_argument('-v','--verbose', help="Active le mode verbose")
-        self.parser.add_argument('-T', '--tree', help="Affiche l'arbre")
-        self.parser.add_argument('-a', '--assembly', help="Génère le code assembleur")
-        self.parser.add_argument('-d', '--debug', help="Active le mode débogueur")
-        self.parser.add_argument('-f', '--forcewrite', help="Ecrase l'éventuel fichier assembleur pré-existant")
+        self.parser.add_argument('-h', '--help', action='help', help="Affiche ce message d'aide")
+        self.parser.add_argument('-v', '--verbose', action='store_true', help="Active le mode verbose")
+        self.parser.add_argument('-T', '--tree', action='store_true', help="Affiche l'arbre")
+        self.parser.add_argument('-a', '--assembly', action='store_true', help="Génère le code assembleur")
+        self.parser.add_argument('-d', '--debug', action='store_true', help="Active le mode débogueur")
+        self.parser.add_argument('-f', '--forcewrite', action='store_true', help="Ecrase l'éventuel fichier assembleur pré-existant")
 
         self.args = self.parser.parse_args()
 
