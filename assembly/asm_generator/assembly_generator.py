@@ -100,7 +100,7 @@ class assembly_generator:
         if variable_type == "string":
             declaration = "\t.asciz " + variable_value
         elif variable_type == "integer":
-            if variable_value: #pourquoi on a des values nul part???
+            if variable_value != None: #pourquoi on a des values nul part???
                 declaration = f"\t{variable_name}\tDW\t{variable_value}\n"
             else:
                 declaration = f"\t{variable_name}\tRESW\t1\n"
@@ -125,22 +125,45 @@ class assembly_generator:
             snippet = [element.replace("X", str(numero_bloc)).replace("<var_indice_start>", str(for_node.children[3].value)).replace("<var_indice_stop>", str(for_node.children[5].value)) for element in code.readlines()]
 
         self.write_data(snippet, self.current_placement)
-
+        
         self.placement_history.append(self.current_placement)
         self.current_placement = f"  <FOR_LOOP_CODE_{numero_bloc}>\n"
+        
+           
+        
 
     def operation(self,element):
+        #Si c'est une addition
         if element.fct == "OPE5" :
-            if element.children[0].fct == "Number":
+            if element.children[0].fct == "Number" or element.children[0].fct == "Ident":
                 if element.children[1].children[0].value == "+":
-                    if element.children[1].children[1].fct == "Number":
-                        with open("assembly/snippets/addition.s", 'r') as code:
-                            snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                        self.write_data(snippet, self.current_placement)
-
+                    if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
+                        if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
+                            with open("assembly/snippets/addition.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", "["+str(element.children[1].children[1].value)+"]") for elem in code.readlines()]
+                                return snippet
+                        elif element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Number":
+                            with open("assembly/snippets/addition.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
+                                return snippet
+                        elif element.children[0].fct == "Number" and element.children[1].children[1].fct == "Ident":
+                            with open("assembly/snippets/addition.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", "["+ str(element.children[1].children[1].value)+ "]") for elem in code.readlines()]
+                                return snippet
+                        else :
+                            with open("assembly/snippets/addition.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)).replace("<RESULT>", ) for elem in code.readlines()]
+                                return snippet
+                        
     def initialize_variables(self, variables_liste):
         for element in variables_liste:
-            self.add_variable(self.tds.tds_data[element].name, self.tds.tds_data[element].value, self.tds.tds_data[element].type)
+            #On vérifie si la valeur est un int (self.tds.tds_data[element].value.isdigit())
+            if self.tds.tds_data[element].value == None:
+                self.add_variable(self.tds.tds_data[element].name, None, self.tds.tds_data[element].type)
+            elif self.tds.tds_data[element].value.isdigit():
+                self.add_variable(self.tds.tds_data[element].name, self.tds.tds_data[element].value, self.tds.tds_data[element].type)       
+            else:
+                self.add_variable(self.tds.tds_data[element].name, 0, self.tds.tds_data[element].type)
 
     def write_file(self):
         self.data = [element for element in self.data if ((element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n", "  <FUNCTION_CODE>\n"]) and ("FOR_LOOP_CODE_" not in element))]
@@ -183,8 +206,11 @@ class assembly_generator:
         if element.fct == "INSTR":
             if element.children[0].fct == "Ident":
                 if element.children[1].value == ":=":
-                    if element.children[2].value == None:
-                        self.add_assignation(element.children[0].value, str(0))
+                    if element.children[2].fct[:3] == "OPE" and element.children[2].value == None:
+                        snip = self.operation(element.children[2])
+                        snippet = [elem.replace("<RESULT>", str(element.children[0].value)) for elem in snip]
+                        self.write_data(snippet, self.current_placement)
+                        element.children[2].value = 1
                     else:
                         self.add_assignation(element.children[0].value, str(element.children[2].value))
                     # on print l'assignation
@@ -198,8 +224,11 @@ class assembly_generator:
                 elif element.children[0].value == "while":
                     print("while loop")
                 elif element.children[0].value == "for":
+                    print("On rentre dans le for loop")
                     self.add_for_loop(element)
-        if element.fct[:3] == "OPE":
+                    print("On sort du for loop")
+                    
+        if element.fct[:3] == "OPE" and element.value == None:
             self.operation(element)
 
     def dfs(self, node):
