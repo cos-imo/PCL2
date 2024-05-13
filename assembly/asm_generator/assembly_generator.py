@@ -79,7 +79,7 @@ class assembly_generator:
             snippet = [element.replace("<FUNCTION_NAME>", function_name) for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
         with open("assembly/snippets/function_frame.s", 'r') as code:
-            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "X") for element in code.readlines()]
+            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "2") for element in code.readlines()]
         self.write_data(snippet, "<FUNCTIONS>\n")
 
         self.placement_history.append(self.current_placement)
@@ -87,10 +87,10 @@ class assembly_generator:
 
     def add_procedure(self, function_name, node):
         with open("assembly/snippets/calling.s", 'r') as code:
-            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "0") for element in code.readlines()]
+            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "2") for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
         with open("assembly/snippets/function_frame.s", 'r') as code:
-            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "X") for element in code.readlines()]
+            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "2") for element in code.readlines()]
         self.write_data(snippet, "<FUNCTIONS>\n")
 
         self.placement_history.append(self.current_placement)
