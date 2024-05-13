@@ -129,6 +129,15 @@ class assembly_generator:
         self.placement_history.append(self.current_placement)
         self.current_placement = f"  <FOR_LOOP_CODE_{numero_bloc}>\n"
 
+    def operation(self,element):
+        if element.fct == "OPE5" :
+            if element.children[0].fct == "Number":
+                if element.children[1].children[0].value == "+":
+                    if element.children[1].children[1].fct == "Number":
+                        with open("assembly/snippets/addition.s", 'r') as code:
+                            snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
+                        self.write_data(snippet, self.current_placement)
+
     def initialize_variables(self, variables_liste):
         for element in variables_liste:
             self.add_variable(self.tds.tds_data[element].name, self.tds.tds_data[element].value, self.tds.tds_data[element].type)
@@ -186,6 +195,8 @@ class assembly_generator:
                         print("while loop")
                     elif element.children[0].value == "for":
                         self.add_for_loop(element)
+        if element.fct[:3] == "OPE":
+            self.operation(element)
 
     def dfs(self, node):
         self.write_assembly(node)

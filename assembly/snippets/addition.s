@@ -1,3 +1,6 @@
+mov rax,<VALUE1>
+mov rbx,<VALUE2>
+
 mov dword [saved_eax], rax
 mov dword [saved_ebx], rbx
 
