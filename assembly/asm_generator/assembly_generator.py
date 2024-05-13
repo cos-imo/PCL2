@@ -181,21 +181,24 @@ class assembly_generator:
             if element.value not in self.generated:
                 pass
         if element.fct == "INSTR":
-                if element.children[0].fct == "Ident":
-                    if element.children[1].value == ":=":
+            if element.children[0].fct == "Ident":
+                if element.children[1].value == ":=":
+                    if element.children[2].value == None:
+                        self.add_assignation(element.children[0].value, str(0))
+                    else:
                         self.add_assignation(element.children[0].value, str(element.children[2].value))
-                        # on print l'assignation
-                        print(f"{element.children[0].value} := {element.children[2].value}") ##########################################################
-                        pass
-                        # calculer membre de droite
-                        # assigner valeur dans membre de gauche
-                elif element.children[0].fct == "Keyword":
-                    if element.children[0].value == "if":
-                        print("if statement")
-                    elif element.children[0].value == "while":
-                        print("while loop")
-                    elif element.children[0].value == "for":
-                        self.add_for_loop(element)
+                    # on print l'assignation
+                    print(f"{element.children[0].value} := {element.children[2].value}") ##########################################################
+                    pass
+                    # calculer membre de droite
+                    # assigner valeur dans membre de gauche
+            elif element.children[0].fct == "Keyword":
+                if element.children[0].value == "if":
+                    print("if statement")
+                elif element.children[0].value == "while":
+                    print("while loop")
+                elif element.children[0].value == "for":
+                    self.add_for_loop(element)
         if element.fct[:3] == "OPE":
             self.operation(element)
 
