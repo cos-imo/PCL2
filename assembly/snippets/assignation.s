@@ -1,2 +1,2 @@
-  mov ax, <VALUE>
-  mov [<VARIABLE>], ax 
+  mov eax, <VALUE>
+  mov [<VARIABLE>], eax 

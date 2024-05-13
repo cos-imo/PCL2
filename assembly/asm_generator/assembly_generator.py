@@ -109,6 +109,20 @@ class assembly_generator:
         with open("assembly/snippets/assignation.s", 'r') as code:
             snippet = [element.replace("<VALUE>", value).replace("<VARIABLE>", variable) for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
+        
+    def process_addition(self, result_var, expression):
+        # Identifie les opérandes
+        operand1 = expression.children[0].value
+        operand2 = expression.children[1].children[1].value
+        # Appelle la méthode pour ajouter le code d'addition
+        self.add_addition(operand1, operand2, result_var)
+            
+    def add_addition(self, op1, op2, result):
+        with open("assembly/snippets/addition.s", 'r') as file:
+            addition_code = [line.replace("<OP1>", op1).replace("<OP2>", op2).replace("<RESULT>", result) for line in file.readlines()]
+        self.write_data(addition_code, self.current_placement)
+
+
 
     def initialize_variables(self, variables_liste):
         for element in variables_liste:
@@ -155,10 +169,18 @@ class assembly_generator:
         if element.fct == "INSTR":
                 if element.children[0].fct == "Ident":
                     if element.children[1].value == ":=":
-                        self.add_assignation(element.children[0].value, str(element.children[2].value))
-                        pass
-                        # calculer membre de droite
-                        # assigner valeur dans membre de gauche
+                        left_var = element.children[0].value
+                        right_expr = element.children[2]
+                        if right_expr.fct == "OPE5":
+                            # Vérifie si c'est une addition
+                            if right_expr.children[1].children[0].value == "+":
+                                self.process_addition(left_var, right_expr)
+                        else:
+                            # Cas général d'assignation simple
+                            self.add_assignation(left_var, str(right_expr.value))
+                            pass
+                            # calculer membre de droite
+                            # assigner valeur dans membre de gauche
                 elif element.children[0].fct == "Keyword":
                     if element.children[0].value == "if":
                         print("if statement")
