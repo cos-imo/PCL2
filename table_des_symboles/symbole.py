@@ -2,7 +2,7 @@ import sys
 
 class variable:
 
-    def __init__(self, name, type_entree="None", mode="in", value = None, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None, parametre = 0):
+    def __init__(self, name, type_entree="None", mode="in", value = None, size=2, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None, parametre = 0):
         self.name = name
         self.type = type_entree
         self.value = value
@@ -34,7 +34,7 @@ class variable:
 
 class fonction:
 
-    def __init__(self, name, parametres = {}, var_de_retour = {}, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
+    def __init__(self, name, parametres = {}, var_de_retour = {}, size=2, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
         self.name = name
         self.parametres = parametres
         self.var_de_retour = var_de_retour
@@ -71,7 +71,7 @@ class fonction:
 
 class procedure:
 
-    def __init__(self, name, parametres = {}, size=0, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
+    def __init__(self, name, parametres = {}, size=2, Dimension=0, ligne_declaration=None, ligne_utilisation=None, address=None):
         self.name = name
         self.parametres = parametres
         self.size = size
