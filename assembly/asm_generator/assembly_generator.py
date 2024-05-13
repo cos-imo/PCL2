@@ -152,7 +152,7 @@ class assembly_generator:
                                 return snippet
                         else :
                             with open("assembly/snippets/addition.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)).replace("<RESULT>", ) for elem in code.readlines()]
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
                                 return snippet
                         
     def initialize_variables(self, variables_liste):
@@ -160,6 +160,8 @@ class assembly_generator:
             #On vérifie si la valeur est un int (self.tds.tds_data[element].value.isdigit())
             if self.tds.tds_data[element].value == None:
                 self.add_variable(self.tds.tds_data[element].name, None, self.tds.tds_data[element].type)
+            elif type(self.tds.tds_data[element].value) == int:
+                self.add_variable(self.tds.tds_data[element].name, self.tds.tds_data[element].value, self.tds.tds_data[element].type)     
             elif self.tds.tds_data[element].value.isdigit():
                 self.add_variable(self.tds.tds_data[element].name, self.tds.tds_data[element].value, self.tds.tds_data[element].type)       
             else:
