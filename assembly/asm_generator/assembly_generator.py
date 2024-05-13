@@ -100,10 +100,10 @@ class assembly_generator:
         if variable_type == "string":
             declaration = "\t.asciz " + variable_value
         elif variable_type == "integer":
-            #if variable_value: pourquoi on a des values nul part???
-            declaration = f"\t{variable_name}\tDW\t{variable_value}\n"
-            #else:
-             #   declaration = f"\t{variable_name}\tRSW\n"
+            if variable_value: #pourquoi on a des values nul part???
+                declaration = f"\t{variable_name}\tDW\t{variable_value}\n"
+            else:
+                declaration = f"\t{variable_name}\tRESW\t1\n"
         self.write_data([declaration], "<DATA>\n")
 
     def add_assignation(self, variable, value):
@@ -184,7 +184,8 @@ class assembly_generator:
                 if element.children[0].fct == "Ident":
                     if element.children[1].value == ":=":
                         self.add_assignation(element.children[0].value, str(element.children[2].value))
-                        print("ouais")
+                        # on print l'assignation
+                        print(f"{element.children[0].value} := {element.children[2].value}") ##########################################################
                         pass
                         # calculer membre de droite
                         # assigner valeur dans membre de gauche
