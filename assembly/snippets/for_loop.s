@@ -1,15 +1,16 @@
 begin_for_loop_X:
-  mov R8, <var_indice_start>
-  mov R9, <var_indice_stop>
+  mov r8d, <var_indice_start>
+  mov r9d, <var_indice_stop>
   jmp for_loop_X
-  ret
 
 for_loop_X:
-  cmp r8, r9
-  je end_for_loop
+  cmp r8d, r9d
+  jg end_for_loop ; Saute hors de la boucle si r8d > r9d
   <FOR_LOOP_CODE_X>
-  add r8, 1 
+  add r8d, 1 
   jmp for_loop_X
 
 end_for_loop:
+  mov rsp, rbp
+  pop rbp
   ret
