@@ -15,7 +15,7 @@ class Node:
         :param value: Valeur du nœud (utile pour les feuilles comme les nombres ou les identifiants).
         """
         self.fct = fct
-        self.children = children if children is not None else []
+        self.children = children if children else []
         self.value = value
 
     def add_child(self, child):
@@ -470,7 +470,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
             token_lu_table = (token_lu[0], 0, token_lu[2]) if token_lu[0] in [3, 4] else token_lu
             rule = table_ll1[sommet_pile].get((token_lu_table[0], token_lu_table[1]))
 
-            if rule is not None:
+            if rule:
                 if rule != ["epsilon"]:
                     
                     pile.pop()
@@ -529,8 +529,7 @@ def parseur(list_tokens, lexical_table, table_ll1):
 
     if succes:
         print("L'analyse syntaxique a réussi sans erreur.")
-        print(tds)
-        return pile_arbre
+        return pile_arbre, tds
     else:
         print("L'analyse syntaxique a échoué en raison d'une erreur de syntaxe.")
         return []
@@ -544,9 +543,11 @@ def inverser_enfants_arbre(node):
             inverser_enfants_arbre(enfant)  # Répéter récursivement pour chaque enfant
 
 def construire_arbre(liste_regles):
+    
     if liste_regles == []:
         print("La liste des règles est vide, la construction de l'arbre est impossible.")
         return None
+    liste_regles = liste_regles[0]
     arbre = Node(liste_regles[0][0])  # On crée la racine de l'arbre
     pile_arbre = []  # On crée une pile qui va contenir les noeuds de l'arbre
     pile_arbre.append(arbre)  # On empile la racine de l'arbre

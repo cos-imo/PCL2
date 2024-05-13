@@ -1,4 +1,4 @@
--- Test avec une erreur d'imbrication : une variable est initialisée sans avoir était déclarée
+-- Test avec une erreur d'imbrication : une variable est initialisée sans avoir été déclarée
 
 with Ada.Text_IO ; use Ada.Text_IO ;
 
