@@ -191,7 +191,8 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     else :
                         params.append(list_tokens[i])
                         i+=1
-                if not (sc.fonctionImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]])):
+
+                if not (sc.fonctionImbricationControl(tds.path, tds.tds, lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]) or lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]=="put"):
                     print(f"\tErreur de sémantique: la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'a pas été déclarée avant utilisation.  Voir ligne: {list_tokens[ind][2]}")
                 # On récupère la fonction et on compte le nombre de paramètres avec lesquels on l'appelle
                 # Puis on appelle fonctionParamControl pour vérifier que le nombre de paramètres est correct
