@@ -1,12 +1,8 @@
-mov dword [saved_eax], rax
-mov dword [saved_ebx], rbx
+  
+  ; division
+  mov ax,<VALUE1>
+  mov bx,<VALUE2>
+  idiv ax, bx
+  mov [<RESULT>], ax  ;
+  ; fin division
 
-pop rax
-pop rbx
-xor rdx, rdx
-idiv rbx
-
-mov dword [result], rax
-
-mov rax, dword [saved_eax]
-mov rbx, dword [saved_ebx]
