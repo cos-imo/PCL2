@@ -7,5 +7,7 @@ begin
   test_if_var := 2;
   if test_if_var > 1 then
     test_if_var := 0;
+  else
+    test_if_var := 4;
   end if;
 end test_if_procedure ; eof
