@@ -174,10 +174,36 @@ class assembly_generator:
                             with open("assembly/snippets/soustraction.s", 'r') as code:
                                 snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
                                 return snippet
-                    
                 else : 
-                    print("Opération non reconnue")
-                    
+                    print("Opération non reconnue dans OPE5")
+           
+        #Si c'est une multiplication         
+        elif element.fct == "OPE6" :
+            if element.children[0].fct == "Number" or element.children[0].fct == "Ident":
+                # Cas ou on a une multiplication de deux nombres ou deux variables
+                if element.children[1].children[0].value == "*":
+                    if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
+                        if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
+                            with open("assembly/snippets/multiplication.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", "["+str(element.children[1].children[1].value)+"]") for elem in code.readlines()]
+                                return snippet
+                        elif element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Number":
+                            with open("assembly/snippets/multiplication.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
+                                return snippet
+                        elif element.children[0].fct == "Number" and element.children[1].children[1].fct == "Ident":
+                            with open("assembly/snippets/multiplication.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", "["+ str(element.children[1].children[1].value)+ "]") for elem in code.readlines()]
+                                return snippet
+                        else :
+                            with open("assembly/snippets/multiplication.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
+                                return snippet
+                else:
+                    print("Opération non reconnue dans OPE6")
+            
+        
+                  
                 
                         
     def initialize_variables(self, variables_liste):
@@ -241,7 +267,7 @@ class assembly_generator:
                     else:
                         self.add_assignation(element.children[0].value, str(element.children[2].value))
                     # on print l'assignation
-                    print(f"{element.children[0].value} := {element.children[2].value}") ##########################################################
+                    #print(f"{element.children[0].value} := {element.children[2].value}") ##########################################################
                     pass
                     # calculer membre de droite
                     # assigner valeur dans membre de gauche
