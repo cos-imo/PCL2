@@ -2,10 +2,12 @@ import os
 import sys
 from collections import deque
 
+cunt_put = 0
+
 class assembly_generator:
 
     def __init__(self, arbre, tds, forcewrite: True, table_lexicale):
-
+        
         self.current_placement = "<INSTRUCTIONS>\n"
         self.placement_history = []
 
@@ -85,15 +87,15 @@ class assembly_generator:
         self.placement_history.append(self.current_placement)
         self.current_placement = "  <FUNCTION_CODE>\n"
 
-    def add_put_var(self, var):
+    def add_put_var(self, var, cunt_put):
         with open("assembly/snippets/put.s", 'r') as code:
-            snippet = [element.replace("<VALUE>", "["+var.name+"]") for element in code.readlines()]
+            snippet = [element.replace("<VALUE>", "["+var.name+"]").replace("X", str(cunt_put)) for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
         type = self.tds.tds_data[var.name].type
-        self.add_var_de_put(type)
+        self.add_var_de_put(type, cunt_put)
 
-    def add_put_cst(self, cst):
-        var_name = "var_print_cst"
+    def add_put_cst(self, cst, cunt_put):
+        var_name = f"var_print_cst_{cunt_put}"
         type_cst = str(type(cst)).split("'")[1]
         if type_cst == "int":
             type_cst = "integer"
@@ -101,21 +103,21 @@ class assembly_generator:
             type_cst = "character"
         self.add_variable(var_name, str(cst), type_cst)
         with open("assembly/snippets/put.s", 'r') as code:
-            snippet = [element.replace("<VALUE>", "["+var_name+"]") for element in code.readlines()]
+            snippet = [element.replace("<VALUE>", "["+var_name+"]").replace("X", str(cunt_put)) for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
         if type(cst) == int:
-            declaration = f"\tformat\tdb\t\"%d\",\t10,\t0\n"
+            declaration = f"\tformat_{cunt_put}\tdb\t\"%d\",\t10,\t0\n"
         else: #elif type(cst) == str:
-            declaration = f"\tformat\tdb\t\"%s\",\t10,\t0\n"
+            declaration = f"\tformat_{cunt_put}\tdb\t\"%s\",\t10,\t0\n"
         self.write_data([declaration], "<DATA>\n")
 
-    def add_var_de_put(self, type):
+    def add_var_de_put(self, type, cunt_put):
         param = ""
         if type == "integer":
             param = "d"
         elif type == "character":
             param = "s"
-        declaration = f"\tformat\tdb\t\"%{param}\",\t10,\t0\n"
+        declaration = f"\tformat_{cunt_put}\tdb\t\"%{param}\",\t10,\t0\n"
         self.write_data([declaration], "<DATA>\n")
 
 
@@ -341,11 +343,12 @@ class assembly_generator:
         if element.children!=[]:
             if element.children[0].value == "put":
                 print("put statement")
-                
+                global cunt_put
+                cunt_put +=1
                 if element.children[1].fct == "Ident":
-                    self.add_put_var(self.tds.tds_data[element.children[1].value])
+                    self.add_put_var(self.tds.tds_data[element.children[1].value], cunt_put)
                 elif element.children[1].fct == "Number":
-                    self.add_put_cst(element.children[1].value)
+                    self.add_put_cst(element.children[1].value, cunt_put)
 
         if element.fct=="Keyword":
             if element.value == "procedure":

@@ -7,4 +7,6 @@ begin
     test_put_var := 8;
     -- Affichage de la valeur de test_put_var
     Put(15584);
+    Put(32454);
+    put(14);
 end test_put ; eof
