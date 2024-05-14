@@ -93,8 +93,15 @@ class assembly_generator:
         self.add_var_de_put(type)
 
     def add_put_cst(self, cst):
+        var_name = "var_print_cst"
+        type_cst = str(type(cst)).split("'")[1]
+        if type_cst == "int":
+            type_cst = "integer"
+        else :
+            type_cst = "character"
+        self.add_variable(var_name, str(cst), type_cst)
         with open("assembly/snippets/put.s", 'r') as code:
-            snippet = [element.replace("<VALUE>", str(cst)) for element in code.readlines()]
+            snippet = [element.replace("<VALUE>", "["+var_name+"]") for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
         if type(cst) == int:
             declaration = f"\tformat\tdb\t\"%d\",\t10,\t0\n"
