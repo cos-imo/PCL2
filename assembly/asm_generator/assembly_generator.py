@@ -160,21 +160,25 @@ class assembly_generator:
 
     def add_for_loop(self, for_node):
         numero_bloc = self.blocks_number[1]
-
         self.blocks_number[1] += 1
 
+        # Ajouter l'appel à la boucle for générée
         self.write_data([f"  call begin_for_loop_{numero_bloc}\n\n"], self.current_placement)
 
+        # Sauvegarder le placement actuel et passer à la génération de la boucle for
         self.placement_history.append(self.current_placement)
-        self.current_placement = f"  <FUNCTION_{self.blocks_number[3] - 1}_CODE>\n"
+        self.current_placement = "  <INSTRUCTION_BOUCLE>\n"
 
+        # Lire et adapter le code de la boucle for
         with open("assembly/snippets/for_loop.s") as code:
             snippet = [element.replace("X", str(numero_bloc)).replace("<var_indice_start>", str(for_node.children[3].value)).replace("<var_indice_stop>", str(for_node.children[5].value)) for element in code.readlines()]
 
+        # Ecrire le snipper de la boucle for
         self.write_data(snippet, self.current_placement)
         
-        self.placement_history.append(self.current_placement)
-        self.current_placement = f"  <FOR_LOOP_CODE_{numero_bloc}>\n"
+        
+        
+        self.current_placement = f"    <FOR_LOOP_CODE_{numero_bloc}>\n"
 
     def operation(self,element):
         #Si c'est une addition
@@ -324,7 +328,8 @@ class assembly_generator:
                          and ("FOR_LOOP_CODE_" not in element) 
                          and ("IF_CODE" not in element) 
                          and ("IF_TRUE_CODE" not in element) 
-                         and ("IF_FALSE_CODE" not in element))
+                         and ("IF_FALSE_CODE" not in element) 
+                         and ("INSTRUCTION_BOUCLE" not in element))
                          and not pattern.match(element)]
         with open("asm_output/output.s", "a") as file:
             for line in self.data:
@@ -377,7 +382,9 @@ class assembly_generator:
                 self.writing_flags[1] = 1
                 return
             elif element.value == "end":
-                self.writing_flags[4] = 1
+                self.current_placement = self.placement_history[-1]
+                self.placement_history.pop()
+                self.writing_flags[4] = 0
                 if self.is_writing_function:
                     self.is_writing_function = 0
                     self.data = [element for element in self.data if f"<FUNCTION_{self.blocks_number[3]}_CODE>" not in element]

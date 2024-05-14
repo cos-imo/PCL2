@@ -7,6 +7,7 @@ i : integer;
 begin
   test_for_var := 0;
   for i in 2_5 loop
-    test_for_var := 1 ;
+    test_for_var := test_for_var + 1;
   end loop;
+  put(test_for_var);
 end test_for_procedure ; eof
