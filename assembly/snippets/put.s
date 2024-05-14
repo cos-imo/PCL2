@@ -1,5 +1,5 @@
 
-  ; appeler la fonction printf pour afficher l'entier 42
+  ; appeler la fonction printf pour afficher
   mov rdi, format
   xor rsi, rsi
   movzx rsi, word <VALUE>
