@@ -128,9 +128,6 @@ class assembly_generator:
         
         self.placement_history.append(self.current_placement)
         self.current_placement = f"  <FOR_LOOP_CODE_{numero_bloc}>\n"
-        
-           
-        
 
     def operation(self,element):
         #Si c'est une addition
@@ -221,10 +218,24 @@ class assembly_generator:
                 else:
                     print("Opération non reconnue dans OPE6")
             
-        
-                  
-                
-                        
+    def add_if_loop(self, for_node):
+        numero_bloc = self.blocks_number[0]
+
+        self.blocks_number[0] += 1
+
+        self.write_data([f"  call if_loop_{numero_bloc}\n\n"], self.current_placement)
+
+        self.placement_history.append(self.current_placement)
+        self.current_placement = "  <FUNCTION_CODE>\n"
+
+        with open("assembly/snippets/if_loop.s") as code:
+            snippet = [element.replace("X", str(numero_bloc)) for element in code.readlines()]
+
+        self.write_data(snippet, self.current_placement)
+
+        self.placement_history.append(self.current_placement)
+        self.current_placement = f"  <IF_CODE_{numero_bloc}>\n"
+
     def initialize_variables(self, variables_liste):
         for element in variables_liste:
             #On vérifie si la valeur est un int (self.tds.tds_data[element].value.isdigit())
