@@ -199,6 +199,25 @@ class assembly_generator:
                             with open("assembly/snippets/multiplication.s", 'r') as code:
                                 snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
                                 return snippet
+                elif element.children[1].children[0].value == "/":
+                    if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
+                        if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
+                            with open("assembly/snippets/division.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", "["+str(element.children[1].children[1].value)+"]") for elem in code.readlines()]
+                                return snippet
+                        elif element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Number":
+                            with open("assembly/snippets/division.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
+                                return snippet
+                        elif element.children[0].fct == "Number" and element.children[1].children[1].fct == "Ident":
+                            with open("assembly/snippets/division.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", "["+ str(element.children[1].children[1].value)+ "]") for elem in code.readlines()]
+                                return snippet
+                        else :
+                            with open("assembly/snippets/division.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
+                                return snippet
+                
                 else:
                     print("Opération non reconnue dans OPE6")
             
