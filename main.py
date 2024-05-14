@@ -1,4 +1,5 @@
 import argparse
+import subprocess
 
 from lexeur.lexeur import lexical_analysis
 from parseur.ast_pars import Node, construire_arbre, elaguer, parseur
@@ -53,7 +54,13 @@ def pcl1(source_code: str) -> Node:
             assembly = assembly_generator(tree, parseur_obj[1], False, lexical_table)
         else:
             assembly = assembly_generator(tree, parseur_obj[1], True, lexical_table)
-
+        new_rep = "./asm_output"
+        command = ["nasm", "-f", "elf64", "output.s", "-o", "output.o"]
+        nasm = subprocess.run(command, cwd=new_rep, capture_output=True, text=True)
+        print(nasm.stdout)
+        command = ["ld", "output.o", "-o", "test_output"]
+        ld = subprocess.run(command, cwd=new_rep, capture_output=True, text=True)
+        print(ld.stdout)
 
     if parser.args.debug:
         print(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))))
