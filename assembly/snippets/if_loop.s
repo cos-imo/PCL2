@@ -1,5 +1,5 @@
 if_loop_X:
-  <IF_CODE_X>
+  <IF_CODE>
   cmp R8, 1
   jeq if_loop_X_true
   jne if_loop_X_false

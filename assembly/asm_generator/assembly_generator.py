@@ -36,7 +36,7 @@ class assembly_generator:
         """
         self.blocks_number = [0, 0, 0, 0]
 
-        self.writing_flags = [0 for i in range(6)]
+        self.writing_flags = [0 for i in range(7)]
 
         self.generated = []
 
@@ -291,13 +291,24 @@ class assembly_generator:
 
         self.blocks_number[0] += 1
 
+        if if_node.children[1].children[0].value == ">":
+            with open("assembly/snippets/comparaison_if.s") as code:
+                snippet_condition = [element.replace("<VAR_1>", str(if_node.children[1].children[1].value)).replace("<VAR_2>", str(if_node.children[0].value)) for element in code]
+        elif if_node.children[1].children[0].value == "<":
+            with open("assembly/snippets/comparaison_if.s") as code:
+                snippet_condition = [element.replace("<VAR_1>", str(if_node.children[0].value)).replace("<VAR_2>", str(if_node.children[1].children[1].value)) for element in code]
+        elif if_node.children[1].children[0].value == "=":
+            with open("assembly/snippets/comparaison_if.s") as code:
+                snippet_condition = [element.replace("<VAR_1>", str(if_node.children[0].value)).replace("<VAR_2>", str(if_node.children[1].children[1].value)) for element in code]
         self.write_data([f"  call if_loop_{numero_bloc}\n\n"], self.current_placement)
 
         self.placement_history.append(self.current_placement)
         self.current_placement = f"  <FUNCTION_{self.blocks_number[3] - 1}_CODE>\n"
 
         with open("assembly/snippets/if_loop.s") as code:
-            snippet = [element.replace("X", str(numero_bloc)) for element in code.readlines()]
+            snippet = [element.replace("X", str(numero_bloc)).replace("  <IF_CODE>\n", ''.join(snippet_condition)) for element in code.readlines()]
+        
+        snippet = [element for element in snippet if element!="  <IF_CODE>\n"]
 
         self.write_data(snippet, self.current_placement)
 
@@ -364,6 +375,12 @@ class assembly_generator:
                 self.add_return(element.value)
                 self.writing_flags[5] = 0
 
+        if self.writing_flags[6] == 1:
+            if element.fct[:-1] == "OPE":
+                self.add_if_loop(element)
+                self.writing_flags[6] = 0
+            self.writing_flags[6] = 0
+
         if element.children!=[]:
             if element.children[0].value == "put":
                 print("put statement")
@@ -397,6 +414,9 @@ class assembly_generator:
             elif element.value == "return":
                 if self.writing_flags[5] == 0:
                     self.writing_flags[5] = 1 
+            elif element.value == "if":
+                self.writing_flags[6] = 1
+
 
         if element.fct== "Ident":
             if element.value not in self.generated:
@@ -417,9 +437,7 @@ class assembly_generator:
                     # calculer membre de droite
                     # assigner valeur dans membre de gauche
             elif element.children[0].fct == "Keyword":
-                if element.children[0].value == "if":
-                    self.add_if_loop(element)
-                elif element.children[0].value == "while":
+                if element.children[0].value == "while":
                     print("while loop")
                 elif element.children[0].value == "for":
                     self.add_for_loop(element)
