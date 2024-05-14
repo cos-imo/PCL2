@@ -1,4 +1,5 @@
 global _start
+extern printf
 
 _start:
 

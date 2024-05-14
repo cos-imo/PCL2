@@ -85,6 +85,35 @@ class assembly_generator:
         self.placement_history.append(self.current_placement)
         self.current_placement = "  <FUNCTION_CODE>\n"
 
+    def add_put_var(self, var):
+        with open("assembly/snippets/put.s", 'r') as code:
+            snippet = [element.replace("<VALUE>", var.name) for element in code.readlines()]
+        self.write_data(snippet, self.current_placement)
+        type = self.tds.tds_data[var.name].type
+        self.add_var_de_put(type)
+
+    def add_put_cst(self, cst):
+        with open("assembly/snippets/put.s", 'r') as code:
+            snippet = [element.replace("<VALUE>", str(cst)) for element in code.readlines()]
+        self.write_data(snippet, self.current_placement)
+        if type(cst) == int:
+            declaration = f"\tformat\tdb\t\"%d\",\t10,\t0\n"
+        else: #elif type(cst) == str:
+            declaration = f"\tformat\tdb\t\"%s\",\t10,\t0\n"
+        self.write_data([declaration], "<DATA>\n")
+
+    def add_var_de_put(self, type):
+        param = ""
+        if type == "integer":
+            param = "d"
+        elif type == "character":
+            param = "s"
+        declaration = f"\tformat\tdb\t\"%{param}\",\t10,\t0\n"
+        self.write_data([declaration], "<DATA>\n")
+
+
+
+
     def add_procedure(self, function_name, node):
         with open("assembly/snippets/calling.s", 'r') as code:
             snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "2") for element in code.readlines()]
@@ -273,6 +302,15 @@ class assembly_generator:
             self.current_placement = self.placement_history[-1]
             self.placement_history.pop()
             self.writing_flags[4] = 0
+
+        if element.children!=[]:
+            if element.children[0].value == "put":
+                print("put statement")
+                
+                if element.children[1].fct == "Ident":
+                    self.add_put_var(self.tds.tds_data[element.children[1].value])
+                elif element.children[1].fct == "Number":
+                    self.add_put_cst(element.children[1].value)
 
         if element.fct=="Keyword":
             if element.value == "procedure":
