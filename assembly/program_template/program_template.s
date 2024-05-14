@@ -1,5 +1,6 @@
-global _start
-extern printf
+section .text
+  global _start
+  extern printf
 
 _start:
 

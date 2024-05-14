@@ -87,7 +87,7 @@ class assembly_generator:
 
     def add_put_var(self, var):
         with open("assembly/snippets/put.s", 'r') as code:
-            snippet = [element.replace("<VALUE>", var.name) for element in code.readlines()]
+            snippet = [element.replace("<VALUE>", "["+var.name+"]") for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
         type = self.tds.tds_data[var.name].type
         self.add_var_de_put(type)

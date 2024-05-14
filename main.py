@@ -58,7 +58,7 @@ def pcl1(source_code: str) -> Node:
         command = ["nasm", "-f", "elf64", "output.s", "-o", "output.o"]
         nasm = subprocess.run(command, cwd=new_rep, capture_output=True, text=True)
         print(nasm.stdout)
-        command = ["ld", "output.o", "-o", "test_output"]
+        command = ["ld", "output.o", "-o", "test_output", "-lc", "-dynamic-linker", "/lib64/ld-linux-x86-64.so.2"]
         ld = subprocess.run(command, cwd=new_rep, capture_output=True, text=True)
         print(ld.stdout)
 
