@@ -7,5 +7,5 @@ result : Integer;
 begin
   a := 5;
   b := 3;
-  result := 104+26;  
+  result := a+b;  
 end Test_Addition; eof

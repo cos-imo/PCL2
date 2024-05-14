@@ -1,7 +1,7 @@
   
   ; addition
-  mov rax,<VALUE1>
-  mov rbx,<VALUE2>
-  add rax, rbx
-  mov [<RESULT>], rax  ;
+  mov ax,<VALUE1>
+  mov bx,<VALUE2>
+  add ax, bx
+  mov [<RESULT>], ax  ;
   ; fin addition
