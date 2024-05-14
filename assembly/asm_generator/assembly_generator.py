@@ -154,13 +154,29 @@ class assembly_generator:
         self.write_data([declaration], "<DATA>\n")
 
     def add_assignation(self, variable, value):
+        # Vérifiez si la valeur est un nombre
+        if value.isdigit():
+            value_str = value
+        else:
+            value_str = f"[{value}]"
+        
         with open("assembly/snippets/assignation.s", 'r') as code:
-            snippet = [element.replace("<VALUE>", value).replace("<VARIABLE>", variable) for element in code.readlines()]
+            snippet = [element.replace("<VALUE>", value_str).replace("<VARIABLE>", variable) for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
+
 
     def add_for_loop(self, for_node):
         numero_bloc = self.blocks_number[1]
         self.blocks_number[1] += 1
+        
+         # Récupérer la variable de la boucle for
+        loop_variable = for_node.children[1].value  # Assuming children[1] contains the loop variable
+        start_value = for_node.children[3].value    # Assuming children[3] contains the start value
+        stop_value = for_node.children[5].value     # Assuming children[5] contains the stop value
+
+        # Vérifier si start_value et stop_value sont des nombres ou des variables
+        start_value_str = str(start_value) if str(start_value).isdigit() else f"[{start_value}]"
+        stop_value_str = str(stop_value) if str(stop_value).isdigit() else f"[{stop_value}]"
 
         # Ajouter l'appel à la boucle for générée
         self.write_data([f"  call begin_for_loop_{numero_bloc}\n\n"], self.current_placement)
@@ -171,13 +187,15 @@ class assembly_generator:
 
         # Lire et adapter le code de la boucle for
         with open("assembly/snippets/for_loop.s") as code:
-            snippet = [element.replace("X", str(numero_bloc)).replace("<var_indice_start>", str(for_node.children[3].value)).replace("<var_indice_stop>", str(for_node.children[5].value)) for element in code.readlines()]
-
+            snippet = [
+                element.replace("X", str(numero_bloc))
+                    .replace("<var_indice_start>", start_value_str)
+                    .replace("<var_indice_stop>", stop_value_str)
+                    .replace("<loop_var>", loop_variable)
+                for element in code.readlines()
+            ]
         # Ecrire le snipper de la boucle for
         self.write_data(snippet, self.current_placement)
-        
-        
-        
         self.current_placement = f"    <FOR_LOOP_CODE_{numero_bloc}>\n"
 
     def operation(self,element):
