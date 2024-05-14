@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 from collections import deque
 
 cunt_put = 0
@@ -18,6 +19,8 @@ class assembly_generator:
         # Dictionnaire contenant les addresses des variables, de la forme {'nom_de_la_variable': 'addresse'}
         self.variables_addresses = {}
 
+        self.is_writing_function = 0
+
         self.arbre = arbre
 
         self.tds = tds
@@ -29,8 +32,9 @@ class assembly_generator:
             0. if blocks
             1. for loops
             2. while loops
+            3. fonctions
         """
-        self.blocks_number = [0, 0, 0]
+        self.blocks_number = [0, 0, 0, 0]
 
         self.writing_flags = [0 for i in range(6)]
 
@@ -81,11 +85,15 @@ class assembly_generator:
             snippet = [element.replace("<FUNCTION_NAME>", function_name) for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
         with open("assembly/snippets/function_frame.s", 'r') as code:
-            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "16") for element in code.readlines()]
+            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "16").replace("<FUNCTION_CODE>", f"<FUNCTION_{self.blocks_number[3]}_CODE>") for element in code.readlines()]
         self.write_data(snippet, "<FUNCTIONS>\n")
 
         self.placement_history.append(self.current_placement)
-        self.current_placement = "  <FUNCTION_CODE>\n"
+        self.current_placement = f"  <FUNCTION_{self.blocks_number[3]}_CODE>\n"
+
+        self.blocks_number[3] += 1
+
+        self.is_writing_function = 1
 
     def add_put_var(self, var, cunt_put):
         with open("assembly/snippets/put.s", 'r') as code:
@@ -128,11 +136,12 @@ class assembly_generator:
             snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "16") for element in code.readlines()]
         self.write_data(snippet, self.current_placement)
         with open("assembly/snippets/function_frame.s", 'r') as code:
-            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "16") for element in code.readlines()]
+            snippet = [element.replace("<FUNCTION_NAME>", function_name).replace("<RETURN_SIZE>", "16").replace("<FUNCTION_CODE>", f"<FUNCTION_{self.blocks_number[3]}_CODE>") for element in code.readlines()]
         self.write_data(snippet, "<FUNCTIONS>\n")
 
         self.placement_history.append(self.current_placement)
-        self.current_placement = "  <FUNCTION_CODE>\n"
+        self.current_placement = f"  <FUNCTION_{self.blocks_number[3]}_CODE>\n"
+        self.blocks_number[3] += 1
 
     def add_variable(self, variable_name, variable_value, variable_type):
         if variable_type == "string":
@@ -157,7 +166,7 @@ class assembly_generator:
         self.write_data([f"  call begin_for_loop_{numero_bloc}\n\n"], self.current_placement)
 
         self.placement_history.append(self.current_placement)
-        self.current_placement = "  <FUNCTION_CODE>\n"
+        self.current_placement = f"  <FUNCTION_{self.blocks_number[3] - 1}_CODE>\n"
 
         with open("assembly/snippets/for_loop.s") as code:
             snippet = [element.replace("X", str(numero_bloc)).replace("<var_indice_start>", str(for_node.children[3].value)).replace("<var_indice_stop>", str(for_node.children[5].value)) for element in code.readlines()]
@@ -281,7 +290,7 @@ class assembly_generator:
         self.write_data([f"  call if_loop_{numero_bloc}\n\n"], self.current_placement)
 
         self.placement_history.append(self.current_placement)
-        self.current_placement = "  <FUNCTION_CODE>\n"
+        self.current_placement = f"  <FUNCTION_{self.blocks_number[3] - 1}_CODE>\n"
 
         with open("assembly/snippets/if_loop.s") as code:
             snippet = [element.replace("X", str(numero_bloc)) for element in code.readlines()]
@@ -309,7 +318,14 @@ class assembly_generator:
                 self.add_variable(self.tds.tds_data[element].name, 0, self.tds.tds_data[element].type)
 
     def write_file(self):
-        self.data = [element for element in self.data if ((element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n", "  <FUNCTION_CODE>\n"]) and ("FOR_LOOP_CODE_" not in element) and ("IF_CODE" not in element) and ("IF_TRUE_CODE" not in element) and ("IF_FALSE_CODE" not in element))]
+        pattern = re.compile(r"  <FUNCTION_.*_CODE>\n")
+        self.data = [element for element in self.data 
+                     if ((element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n", "  <FUNCTION_CODE>\n"]) 
+                         and ("FOR_LOOP_CODE_" not in element) 
+                         and ("IF_CODE" not in element) 
+                         and ("IF_TRUE_CODE" not in element) 
+                         and ("IF_FALSE_CODE" not in element))
+                         and not pattern.match(element)]
         with open("asm_output/output.s", "a") as file:
             for line in self.data:
                 file.write(line)
@@ -335,8 +351,11 @@ class assembly_generator:
             self.writing_flags[4] = 0
 
         if self.writing_flags[5] == 1:
+            if element.fct == "Keyword" and element.value == "return":
+                self.writing_flags[5] = 2 
+
+        if self.writing_flags[5] == 2:
             if element.fct == "Ident":
-                print(element.value)
                 self.add_return(element.value)
                 self.writing_flags[5] = 0
 
@@ -359,6 +378,9 @@ class assembly_generator:
                 return
             elif element.value == "end":
                 self.writing_flags[4] = 1
+                if self.is_writing_function:
+                    self.is_writing_function = 0
+                    self.data = [element for element in self.data if f"<FUNCTION_{self.blocks_number[3]}_CODE>" not in element]
             elif element.value == "then":
                 current_if_block = self.blocks_number[0]-1
                 self.current_placement = f"  <IF_TRUE_CODE_{current_if_block}>\n"
@@ -366,7 +388,8 @@ class assembly_generator:
                 current_if_block = self.blocks_number[0]-1
                 self.current_placement = f"  <IF_FALSE_CODE_{current_if_block}>\n"
             elif element.value == "return":
-                self.writing_flags[5] = 1 
+                if self.writing_flags[5] == 0:
+                    self.writing_flags[5] = 1 
 
         if element.fct== "Ident":
             if element.value not in self.generated:
