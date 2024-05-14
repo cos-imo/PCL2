@@ -218,7 +218,7 @@ class assembly_generator:
                 else:
                     print("Opération non reconnue dans OPE6")
             
-    def add_if_loop(self, for_node):
+    def add_if_loop(self, if_node):
         numero_bloc = self.blocks_number[0]
 
         self.blocks_number[0] += 1
@@ -249,7 +249,7 @@ class assembly_generator:
                 self.add_variable(self.tds.tds_data[element].name, 0, self.tds.tds_data[element].type)
 
     def write_file(self):
-        self.data = [element for element in self.data if ((element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n", "  <FUNCTION_CODE>\n"]) and ("FOR_LOOP_CODE_" not in element))]
+        self.data = [element for element in self.data if ((element not in ["<DATA>\n", "<FUNCTIONS>\n", "<INSTRUCTIONS>\n", "  <FUNCTION_CODE>\n"]) and ("FOR_LOOP_CODE_" not in element) and ("IF_CODE" not in element) and ("IF_TRUE_CODE" not in element) and ("IF_FALSE_CODE" not in element))]
         with open("asm_output/output.s", "a") as file:
             for line in self.data:
                 file.write(line)
@@ -283,6 +283,12 @@ class assembly_generator:
                 return
             elif element.value == "end":
                 self.writing_flags[4] == 1
+            elif element.value == "then":
+                current_if_block = self.blocks_number[0]-1
+                self.current_placement = f"  <IF_TRUE_CODE_{current_if_block}>\n"
+            elif element.value == "else":
+                current_if_block = self.blocks_number[0]-1
+                self.current_placement = f"  <IF_FALSE_CODE_{current_if_block}>\n"
         if element.fct== "Ident":
             if element.value not in self.generated:
                 pass
@@ -303,13 +309,11 @@ class assembly_generator:
                     # assigner valeur dans membre de gauche
             elif element.children[0].fct == "Keyword":
                 if element.children[0].value == "if":
-                    print("if statement")
+                    self.add_if_loop(element)
                 elif element.children[0].value == "while":
                     print("while loop")
                 elif element.children[0].value == "for":
-                    print("On rentre dans le for loop")
                     self.add_for_loop(element)
-                    print("On sort du for loop")
                     
         if element.fct[:3] == "OPE" and element.value == None:
             self.operation(element)
