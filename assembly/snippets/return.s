@@ -1,2 +1,2 @@
-  mov ax, <RETURN_VAR>
-  mov [rsp], ax
+  mov rax, <RETURN_VAR>
+  mov [rsp], rax
