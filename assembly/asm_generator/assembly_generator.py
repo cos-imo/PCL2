@@ -136,6 +136,7 @@ class assembly_generator:
         #Si c'est une addition
         if element.fct == "OPE5" :
             if element.children[0].fct == "Number" or element.children[0].fct == "Ident":
+                # Cas ou on a une addition de deux nombres ou deux variables
                 if element.children[1].children[0].value == "+":
                     if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
                         if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
@@ -154,6 +155,30 @@ class assembly_generator:
                             with open("assembly/snippets/addition.s", 'r') as code:
                                 snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
                                 return snippet
+                # Cas ou on a une soustraction de deux nombres ou deux variables
+                elif element.children[1].children[0].value == "-":
+                    if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
+                        if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
+                            with open("assembly/snippets/soustraction.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", "["+str(element.children[1].children[1].value)+"]") for elem in code.readlines()]
+                                return snippet
+                        elif element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Number":
+                            with open("assembly/snippets/soustraction.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
+                                return snippet
+                        elif element.children[0].fct == "Number" and element.children[1].children[1].fct == "Ident":
+                            with open("assembly/snippets/soustraction.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", "["+ str(element.children[1].children[1].value)+ "]") for elem in code.readlines()]
+                                return snippet
+                        else :
+                            with open("assembly/snippets/soustraction.s", 'r') as code:
+                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
+                                return snippet
+                    
+                else : 
+                    print("Opération non reconnue")
+                    
+                
                         
     def initialize_variables(self, variables_liste):
         for element in variables_liste:
