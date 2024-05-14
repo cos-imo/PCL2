@@ -7,5 +7,10 @@ result : Integer;
 begin
   a := 5;
   b := 3;
-  result := 10 - 1;  
+  result := 10 - 1;
+  result := a - b;
+
+  result := 10 - 12;  
+
+  result := 10 + 12;
 end Test_Soustraction; eof
