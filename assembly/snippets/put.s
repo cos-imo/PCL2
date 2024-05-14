@@ -2,7 +2,7 @@
   ; appeler la fonction printf pour afficher l'entier 42
   mov rdi, format
   xor rsi, rsi
-  mov rsi, <VALUE>
+  movzx rsi, word <VALUE>
   xor rax, rax
   call printf
 
