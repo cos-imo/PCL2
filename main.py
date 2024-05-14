@@ -48,6 +48,7 @@ def pcl1(source_code: str) -> Node:
         arbre_élagué = elaguer(tree)
         show.afficher(arbre_élagué, 'LR', 'test_pres_syntax_tree_elagué_LR', './output/reduced')
         show.afficher(arbre_élagué, '', 'test_pres_syntax_tree_elagué', './output/reduced')
+        print("Arbre élagué :", arbre_élagué)
 
     if parser.args.assembly:
         if parser.args.forcewrite:
@@ -64,7 +65,7 @@ def pcl1(source_code: str) -> Node:
 
     if parser.args.debug:
         print(elaguer(construire_arbre(parseur(token, lexical_table, table_syntaxique))))
-
+    
     return tree
 
 if __name__=="__main__":

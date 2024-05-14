@@ -132,95 +132,56 @@ class assembly_generator:
            
         
 
-    def operation(self,element):
-        #Si c'est une addition
-        if element.fct == "OPE5" :
-            if element.children[0].fct == "Number" or element.children[0].fct == "Ident":
-                # Cas ou on a une addition de deux nombres ou deux variables
-                if element.children[1].children[0].value == "+":
-                    if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
-                        if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
-                            with open("assembly/snippets/addition.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", "["+str(element.children[1].children[1].value)+"]") for elem in code.readlines()]
-                                return snippet
-                        elif element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Number":
-                            with open("assembly/snippets/addition.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                                return snippet
-                        elif element.children[0].fct == "Number" and element.children[1].children[1].fct == "Ident":
-                            with open("assembly/snippets/addition.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", "["+ str(element.children[1].children[1].value)+ "]") for elem in code.readlines()]
-                                return snippet
-                        else :
-                            with open("assembly/snippets/addition.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                                return snippet
-                # Cas ou on a une soustraction de deux nombres ou deux variables
-                elif element.children[1].children[0].value == "-":
-                    if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
-                        if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
-                            with open("assembly/snippets/soustraction.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", "["+str(element.children[1].children[1].value)+"]") for elem in code.readlines()]
-                                return snippet
-                        elif element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Number":
-                            with open("assembly/snippets/soustraction.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                                return snippet
-                        elif element.children[0].fct == "Number" and element.children[1].children[1].fct == "Ident":
-                            with open("assembly/snippets/soustraction.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", "["+ str(element.children[1].children[1].value)+ "]") for elem in code.readlines()]
-                                return snippet
-                        else :
-                            with open("assembly/snippets/soustraction.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                                return snippet
-                else : 
-                    print("Opération non reconnue dans OPE5")
-           
-        #Si c'est une multiplication         
-        elif element.fct == "OPE6" :
-            if element.children[0].fct == "Number" or element.children[0].fct == "Ident":
-                # Cas ou on a une multiplication de deux nombres ou deux variables
-                if element.children[1].children[0].value == "*":
-                    if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
-                        if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
-                            with open("assembly/snippets/multiplication.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", "["+str(element.children[1].children[1].value)+"]") for elem in code.readlines()]
-                                return snippet
-                        elif element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Number":
-                            with open("assembly/snippets/multiplication.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                                return snippet
-                        elif element.children[0].fct == "Number" and element.children[1].children[1].fct == "Ident":
-                            with open("assembly/snippets/multiplication.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", "["+ str(element.children[1].children[1].value)+ "]") for elem in code.readlines()]
-                                return snippet
-                        else :
-                            with open("assembly/snippets/multiplication.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                                return snippet
-                elif element.children[1].children[0].value == "/":
-                    if element.children[1].children[1].fct == "Number" or element.children[1].children[1].fct == "Ident":
-                        if element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Ident":
-                            with open("assembly/snippets/division.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", "["+str(element.children[1].children[1].value)+"]") for elem in code.readlines()]
-                                return snippet
-                        elif element.children[0].fct == "Ident" and element.children[1].children[1].fct == "Number":
-                            with open("assembly/snippets/division.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", "["+str(element.children[0].value)+"]").replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                                return snippet
-                        elif element.children[0].fct == "Number" and element.children[1].children[1].fct == "Ident":
-                            with open("assembly/snippets/division.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", "["+ str(element.children[1].children[1].value)+ "]") for elem in code.readlines()]
-                                return snippet
-                        else :
-                            with open("assembly/snippets/division.s", 'r') as code:
-                                snippet = [elem.replace("<VALUE1>", str(element.children[0].value)).replace("<VALUE2>", str(element.children[1].children[1].value)) for elem in code.readlines()]
-                                return snippet
-                
-                else:
-                    print("Opération non reconnue dans OPE6")
-            
+    def operation(self, element):
+        if element.fct == "OPE5":
+            return self.handle_addition_subtraction(element)
+        elif element.fct == "OPE6":
+            return self.handle_multiplication_division(element)
+        else:
+            print("Opération non reconnue")
+            return []
+
+    def handle_addition_subtraction(self, element):
+        # Cas basique entre deux membres
+        if element.children[0].fct in ["Number", "Ident"]:
+            left_operand = element.children[0].value
+            operator = element.children[1].children[0].value
+            right_operand = element.children[1].children[1].value
+
+            if operator == "+":
+                return self.generate_snippet("addition.s", left_operand, right_operand)
+            elif operator == "-":
+                return self.generate_snippet("soustraction.s", left_operand, right_operand)
+        # Cas ou l'opération continue avec OPE5'
+        elif element.children[1].fct == "OPE5'":
+            self.handle_addition_subtraction(element.children[1])
+        else:
+            print("Erreur dans OPE5")
+
+    def handle_multiplication_division(self, element):
+        if element.children[0].fct in ["Number", "Ident"]:
+            left_operand = element.children[0].value
+            operator = element.children[1].children[0].value
+            right_operand = element.children[1].children[1].value
+
+            if operator == "*":
+                return self.generate_snippet("multiplication.s", left_operand, right_operand)
+            elif operator == "/":
+                return self.generate_snippet("division.s", left_operand, right_operand)
+        else:
+            print("Erreur dans OPE6")
+
+    def generate_snippet(self, snippet_file, value1, value2):
+        with open(f"assembly/snippets/{snippet_file}", 'r') as code:
+            snippet = [elem.replace("<VALUE1>", self.format_value(value1)).replace("<VALUE2>", self.format_value(value2)) for elem in code.readlines()]
+        return snippet
+
+    def format_value(self, value):
+        if isinstance(value, int):
+            return str(value)
+        else:
+            return f"[{value}]"
+
         
                   
                 
