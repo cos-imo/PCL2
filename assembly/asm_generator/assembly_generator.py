@@ -30,7 +30,7 @@ class assembly_generator:
         """
         self.blocks_number = [0, 0, 0]
 
-        self.writing_flags = [0 for i in range(5)]
+        self.writing_flags = [0 for i in range(6)]
 
         self.generated = []
 
@@ -289,6 +289,11 @@ class assembly_generator:
         self.placement_history.append(self.current_placement)
         self.current_placement = f"  <IF_CODE_{numero_bloc}>\n"
 
+    def add_return(self, variable):
+        with open("assembly/snippets/return.s") as code:
+            snippet = [element.replace("<RETURN_VAR>", variable) for element in code]
+        self.write_data(snippet, self.current_placement)
+
     def initialize_variables(self, variables_liste):
         for element in variables_liste:
             #On vérifie si la valeur est un int (self.tds.tds_data[element].value.isdigit())
@@ -327,6 +332,12 @@ class assembly_generator:
             self.placement_history.pop()
             self.writing_flags[4] = 0
 
+        if self.writing_flags[5] == 1:
+            if element.fct == "Ident":
+                print(element.value)
+                self.add_return(element.value)
+                self.writing_flags[5] = 0
+
         if element.children!=[]:
             if element.children[0].value == "put":
                 print("put statement")
@@ -344,13 +355,16 @@ class assembly_generator:
                 self.writing_flags[1] = 1
                 return
             elif element.value == "end":
-                self.writing_flags[4] == 1
+                self.writing_flags[4] = 1
             elif element.value == "then":
                 current_if_block = self.blocks_number[0]-1
                 self.current_placement = f"  <IF_TRUE_CODE_{current_if_block}>\n"
             elif element.value == "else":
                 current_if_block = self.blocks_number[0]-1
                 self.current_placement = f"  <IF_FALSE_CODE_{current_if_block}>\n"
+            elif element.value == "return":
+                self.writing_flags[5] = 1 
+
         if element.fct== "Ident":
             if element.value not in self.generated:
                 pass
