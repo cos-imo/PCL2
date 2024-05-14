@@ -137,26 +137,35 @@ class assembly_generator:
             return self.handle_addition_subtraction(element)
         elif element.fct == "OPE6":
             return self.handle_multiplication_division(element)
+        elif element.fct == "OPE5'":
+            return self.handle_addition_subtraction(element)
         else:
             print("Opération non reconnue")
             return []
 
     def handle_addition_subtraction(self, element):
-        # Cas basique entre deux membres
-        if element.children[0].fct in ["Number", "Ident"]:
+        
+        if element.fct == "OPE5" and len(element.children) == 2:    # Cas basique entre deux membres a+b (donc OPE 5 avec 2 enfant: premier valeur du a et deuxième OPE5' avec 2 fils: operateur et valur du b)
+            if element.children[0].fct in ["Number", "Ident"]:
+                left_operand = element.children[0].value
+                operator = element.children[1].children[0].value
+                right_operand = element.children[1].children[1].value
+
+                if operator == "+":
+                    return self.generate_snippet("addition.s", left_operand, right_operand)
+                elif operator == "-":
+                    return self.generate_snippet("soustraction.s", left_operand, right_operand)
+            # Cas ou l'opération continue avec OPE5'
+            elif element.children[1].fct == "OPE5'":
+                self.handle_addition_subtraction(element.children[1])
+            else:
+                print("Erreur dans OPE5")
+                
+        elif element.children[1].fct == "OPE5'" and len(element.children[1].children)==3: # Cas ou l'opération continue avec OPE5' donc OPE5' à 3 fils: operateur, valeur du b et une autre OPE5'
             left_operand = element.children[0].value
             operator = element.children[1].children[0].value
-            right_operand = element.children[1].children[1].value
-
-            if operator == "+":
-                return self.generate_snippet("addition.s", left_operand, right_operand)
-            elif operator == "-":
-                return self.generate_snippet("soustraction.s", left_operand, right_operand)
-        # Cas ou l'opération continue avec OPE5'
-        elif element.children[1].fct == "OPE5'":
-            self.handle_addition_subtraction(element.children[1])
-        else:
-            print("Erreur dans OPE5")
+            right_operand = s
+            
 
     def handle_multiplication_division(self, element):
         if element.children[0].fct in ["Number", "Ident"]:
