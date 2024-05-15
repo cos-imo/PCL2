@@ -202,8 +202,8 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                     if len(params)!=len(funct.parametres):
                         print(f"\tErreur de sémantique: le nombre de paramètres de la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'est pas correct.Voir ligne: {list_tokens[ind][2]}")
                         
-                    elif not sc.fonctionParamTypeControl(tds.path, tds.tds, funct, params, tds.tds_data):
-                        print(f"\tErreur de sémantique: les paramètres de la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'ont pas le même type que les paramètres déclarés. Voir ligne: {list_tokens[ind][2]}")
+                    #elif not sc.fonctionParamTypeControl(tds.path, tds.tds, funct, params, tds.tds_data):
+                     #   print(f"\tErreur de sémantique: les paramètres de la fonction {lexical_table[list_tokens[ind][0]][list_tokens[ind][1]]} n'ont pas le même type que les paramètres déclarés. Voir ligne: {list_tokens[ind][2]}")
                         
                         
             # On vérifie si c'est une variable de boucle for
