@@ -439,9 +439,9 @@ def import_tds(token_lu, lexical_table, list_tokens, ind, tds):
                 else :
                     print(f"\tErreur de sémantique: la fonction {function_name} n'est pas bien déclaré.")
                     break
-            if verif_return:
-                print(f"\tErreur de sémantique: Le fonction {function_name} ne return rien. Voir ligne: {list_tokens[index][2]}")
-                pass
+            #if verif_return:
+                #print(f"\tErreur de sémantique: Le fonction {function_name} ne return rien. Voir ligne: {list_tokens[index][2]}")
+                #pass
 
 
 
