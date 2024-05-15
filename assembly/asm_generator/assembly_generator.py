@@ -169,14 +169,21 @@ class assembly_generator:
         numero_bloc = self.blocks_number[1]
         self.blocks_number[1] += 1
         
-         # Récupérer la variable de la boucle for
+        # Récupérer la variable de la boucle for
         loop_variable = for_node.children[1].value  # Assuming children[1] contains the loop variable
         start_value = for_node.children[3].value    # Assuming children[3] contains the start value
         stop_value = for_node.children[5].value     # Assuming children[5] contains the stop value
 
-        # Vérifier si start_value et stop_value sont des nombres ou des variables
-        start_value_str = str(start_value) if str(start_value).isdigit() else f"[{start_value}]"
-        stop_value_str = str(stop_value) if str(stop_value).isdigit() else f"[{stop_value}]"
+        # Générer les lignes pour start_value et stop_value
+        if str(start_value).isdigit():
+            start_value_line = f"mov r8d, {start_value}"
+        else:
+            start_value_line = f"movzx r8d, word [{start_value}]"
+
+        if str(stop_value).isdigit():
+            stop_value_line = f"mov r9d, {stop_value}"
+        else:
+            stop_value_line = f"movzx r9d, word [{stop_value}]"
 
         # Ajouter l'appel à la boucle for générée
         self.write_data([f"  call begin_for_loop_{numero_bloc}\n\n"], self.current_placement)
@@ -189,12 +196,12 @@ class assembly_generator:
         with open("assembly/snippets/for_loop.s") as code:
             snippet = [
                 element.replace("X", str(numero_bloc))
-                    .replace("<var_indice_start>", start_value_str)
-                    .replace("<var_indice_stop>", stop_value_str)
+                    .replace("<var_indice_start>", start_value_line)
+                    .replace("<var_indice_stop>", stop_value_line)
                     .replace("<loop_var>", loop_variable)
                 for element in code.readlines()
             ]
-        # Ecrire le snipper de la boucle for
+        # Écrire le snippet de la boucle for
         self.write_data(snippet, self.current_placement)
         self.current_placement = f"    <FOR_LOOP_CODE_{numero_bloc}>\n"
 
@@ -401,7 +408,7 @@ class assembly_generator:
 
         if element.children!=[]:
             if element.children[0].value == "put":
-                print("put statement")
+
                 global cunt_put
                 cunt_put +=1
                 if element.children[1].fct == "Ident":

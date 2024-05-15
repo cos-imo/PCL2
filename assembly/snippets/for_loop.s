@@ -1,6 +1,6 @@
   begin_for_loop_X:
-    mov r8d, <var_indice_start>
-    mov r9d, <var_indice_stop>
+    <var_indice_start>
+    <var_indice_stop>
     jmp for_loop_X
 
   for_loop_X:
