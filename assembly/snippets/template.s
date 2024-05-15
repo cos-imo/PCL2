@@ -5,7 +5,6 @@ section .text
     global _start
 
 _start:
-
   ; code
 
   ; exiting program
